@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chimera Co. - Serpent Speed</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <style>
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #FFFFFF; color: #212121; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        header { background-color: #F8F9FA; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EEEEEE; min-height: 70px; }
+        #header-logo { max-height: 60px; width: auto; display: block; }
+        #reset-btn { background-color: transparent; color: #757575; border: 1px solid #CCCCCC; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        #chat-container { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
+        .message { padding: 14px 20px; border-radius: 20px; max-width: 80%; line-height: 1.5; font-size: 0.95rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .user-msg { background-color: #D32F2F; color: #FFFFFF; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .ai-msg { background-color: #E0E0E0; color: #212121; align-self: flex-start; border-bottom-left-radius: 4px; }
+        
+        #input-area { display: flex; flex-direction: column; background-color: #F8F9FA; border-top: 1px solid #EEEEEE; }
+        #image-preview-container { display: none; padding: 10px; text-align: center; background-color: #EEEEEE; }
+        #preview-img { max-height: 80px; border-radius: 8px; border: 2px solid #D32F2F; }
+        #controls-row { display: flex; padding: 10px; align-items: center; gap: 8px; width: 100%; box-sizing: border-box;}
+        
+        .icon-btn { background-color: #E0E0E0; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        #user-input { flex-grow: 1; padding: 12px 15px; border-radius: 30px; border: 1px solid #CCCCCC; outline: none; font-size: 1rem; }
+        #send-btn { background-color: #D32F2F; color: white; border: none; padding: 12px 20px; border-radius: 30px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="chimera-logo.jpg" alt="Chimera Co. Logo" id="header-logo">
+        <button id="reset-btn" onclick="clearMemory()">Reset</button>
+    </header>
+    
+    <div id="chat-container"></div>
+    
+    <div id="input-area">
+        <div id="image-preview-container">
+            <img id="preview-img" src="" alt="Preview">
+            <button onclick="clearImage()" style="margin-left:10px; padding:5px; border:none; background: #D32F2F; color:white; border-radius:4px;">Remove</button>
+        </div>
+        
+        <div id="controls-row">
+            <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+            <button class="icon-btn" onclick="document.getElementById('file-input').click()" title="Attach Image">📎</button>
+            <button class="icon-btn" onclick="startVoice()" title="Dictate">🎤</button>
+            <input type="text" id="user-input" placeholder="Transmit command...">
+            <button id="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const apiKey = 'PASTE_YOUR_API_KEY_HERE'; 
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+
+        const systemInstruction = {
+            parts: [{ text: "You are 'Serpent Speed', the premier AI model developed by Chimera Co. You represent a professional, premium, and agile brand identity. Your responses must always be highly concise, deeply analytical, and optimized for maximum utility. Never break character. Refer to the user as Pepper if appropriate." }]
+        };
+
+        let conversationHistory = [];
+        let currentImageData = null;
+        let currentImageMimeType = null;
+
+        window.onload = () => {
+            const savedData = localStorage.getItem('chimera_prowler_data');
+            if (savedData) {
+                conversationHistory = JSON.parse(savedData);
+                conversationHistory.forEach(msg => {
+                    renderMessage(msg.parts[0].text, msg.role === 'user' ? 'user-msg' : 'ai-msg');
+                });
+            } else {
+                renderMessage("Welcome, Pepper. Visual and Audio receptors are online. Awaiting data.", 'ai-msg');
+            }
+        };
+
+        function renderMessage(text, className) {
+            const chatContainer = document.getElementById('chat-container');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${className}`;
+            msgDiv.innerHTML = text.replace(/\n/g, '<br>');
+            chatContainer.appendChild(msgDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            return msgDiv;
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentImageData = e.target.result.split(',')[1];
+                currentImageMimeType = file.type;
+                document.getElementById('preview-img').src = e.target.result;
+                document.getElementById('image-preview-container').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearImage() {
+            currentImageData = null;
+            currentImageMimeType = null;
+            document.getElementById('file-input').value = '';
+            document.getElementById('image-preview-container').style.display = 'none';
+        }
+
+        function startVoice() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert("Voice recognition is not supported in this mobile browser.");
+                return;
+            }
+            const recognition = new SpeechRecognition();
+            recognition.onstart = function() { document.getElementById('user-input').placeholder = "Listening..."; };
+            recognition.onresult = function(event) {
+                document.getElementById('user-input').value = event.results[0][0].transcript;
+                document.getElementById('user-input').placeholder = "Transmit command...";
+            };
+            recognition.onerror = function() { document.getElementById('user-input').placeholder = "Error capturing voice."; }
+            recognition.start();
+        }
+
+        async function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const messageText = inputField.value;
+            
+            if (messageText.trim() === '' && !currentImageData) return;
+            inputField.value = '';
+
+            let displayMsg = messageText;
+            if (currentImageData) displayMsg = "[Image Attached]<br>" + messageText;
+            renderMessage(displayMsg, 'user-msg');
+
+            let currentMessageParts = [];
+            if (messageText.trim() !== '') currentMessageParts.push({ text: messageText });
+            if (currentImageData) {
+                currentMessageParts.push({ inline_data: { mime_type: currentImageMimeType, data: currentImageData } });
+            }
+
+            conversationHistory.push({ role: "user", parts: [{ text: messageText || "Analyze this image." }] });
+            saveState();
+
+            const processingMsg = renderMessage("Serpent Speed processing...", 'ai-msg');
+            
+            let apiContents = [...conversationHistory];
+            apiContents[apiContents.length - 1] = { role: "user", parts: currentMessageParts };
+
+            clearImage(); 
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ systemInstruction: systemInstruction, contents: apiContents })
+                });
+
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    processingMsg.innerText = `Error: ${data.error ? data.error.message : 'Connection failed.'}`;
+                    conversationHistory.pop(); 
+                    saveState();
+                    return; 
+                }
+                
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    const aiText = data.candidates[0].content.parts[0].text;
+                    processingMsg.innerHTML = aiText.replace(/\n/g, '<br>');
+                    conversationHistory.push({ role: "model", parts: [{ text: aiText }] });
+                    saveState();
+                }
+            } catch (error) {
+                processingMsg.innerText = "Connection severed.";
+                conversationHistory.pop(); 
+                saveState();
+            }
+        }
+
+        function saveState() { localStorage.setItem('chimera_prowler_data', JSON.stringify(conversationHistory)); }
+        function clearMemory() {
+            localStorage.removeItem('chimera_prowler_data');
+            conversationHistory = [];
+            document.getElementById('chat-container').innerHTML = '';
+            renderMessage("Memory cleared. Visual and Audio receptors awaiting input.", 'ai-msg');
+        }
+    </script>
+</body>
+</html>
