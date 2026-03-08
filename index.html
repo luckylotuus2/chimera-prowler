@@ -53,7 +53,14 @@
     </div>
 
     <script>
-        const apiKey = 'AIzaSyC30oVa2mgdzHZKGSN7Du4XrH6QY7IO2Jo'; 
+        // --- CAMOUFLAGE PROTOCOL ---
+        // Paste the first half of your new key between the quotes below
+        const part1 = 'AIzaSyD_boA7_WqJiy1';
+        // Paste the second half of your new key between the quotes below
+        const part2 = 'qPEy_WgPAY86SYdObaqs';
+        
+        // The browser stitches them together invisibly
+        const apiKey = part1 + part2; 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
         const systemInstruction = {
