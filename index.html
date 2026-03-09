@@ -23,7 +23,7 @@
             --header-bg: #FFFFFF;
             --border-color: #E5E5E5;
             --ai-msg-bg: #F4F4F5;
-            --user-msg-bg: #D32F2F;
+            --user-msg-bg: #D32F2F; /* Default Serpent Crimson */
             --user-text: #FFFFFF;
             --input-bg: #FFFFFF;
             --input-shadow: 0 -4px 15px rgba(0,0,0,0.05);
@@ -45,18 +45,15 @@
             --header-bg: #1A1A1A;
             --border-color: #2A2A2A;
             --ai-msg-bg: #242424;
-            --user-msg-bg: #D32F2F; 
-            --user-text: #FFFFFF;
             --input-bg: #1A1A1A;
             --input-shadow: 0 -4px 15px rgba(0,0,0,0.3);
             --code-bg: #000000;
-            --code-text: #D32F2F;
+            --code-text: var(--user-msg-bg);
             --icon-color: #EAEAEA;
             --logo-blend: normal;
             --logo-bg: #FFFFFF;
             --logo-padding: 4px;
             --logo-radius: 50%;
-            --logo-shadow: 0 0 12px rgba(211, 47, 47, 0.4);
             --sidebar-bg: rgba(26, 26, 26, 0.95);
             --modal-bg: #1A1A1A;
         }
@@ -70,15 +67,19 @@
         #header-logo:active { transform: scale(0.92); box-shadow: 0 0 4px rgba(211, 47, 47, 0.6); }
         
         .custom-dropdown { position: relative; user-select: none; display: inline-block; }
-        .dropdown-selected { background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; transition: border-color 0.2s; min-width: 90px; }
+        .dropdown-selected { background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; transition: border-color 0.2s, color 0.3s; min-width: 90px; }
         .dropdown-selected:hover { border-color: var(--user-msg-bg); }
-        .dropdown-selected svg { transition: transform 0.2s; width: 14px; height: 14px; stroke: var(--user-msg-bg); }
+        .dropdown-selected svg { transition: transform 0.2s, stroke 0.3s; width: 14px; height: 14px; stroke: var(--user-msg-bg); }
         .dropdown-selected.active svg { transform: rotate(180deg); }
         
-        .dropdown-options { display: none; position: absolute; top: 115%; left: 0; background-color: var(--header-bg); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); width: 100%; box-sizing: border-box; z-index: 100; overflow: hidden; }
+        /* Expanded Arsenal Dropdown UI */
+        .dropdown-options { display: none; position: absolute; top: 115%; left: 0; background-color: var(--header-bg); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); width: 220px; z-index: 100; overflow: hidden; }
         .dropdown-options.show { display: block; }
-        .dropdown-option { padding: 12px 16px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: background-color 0.2s; color: var(--text-color); text-align: center; }
-        .dropdown-option:hover { background-color: rgba(211,47,47,0.1); color: var(--user-msg-bg); }
+        .dropdown-option { padding: 12px 16px; cursor: pointer; transition: background-color 0.2s; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .dropdown-option:last-child { border-bottom: none; }
+        .dropdown-option:hover { background-color: rgba(128,128,128,0.1); }
+        .model-title { font-weight: 700; font-size: 0.95rem; color: var(--text-color); }
+        .model-subtitle { font-size: 0.7rem; color: #888; margin-top: 4px; font-weight: 500; line-height: 1.2; }
         
         .header-controls { display: flex; gap: 12px; align-items: center; }
         .icon-btn { background: transparent; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; border-radius: 50%; color: var(--icon-color); transition: background-color 0.2s, transform 0.1s; padding: 8px;}
@@ -86,13 +87,19 @@
         .icon-btn:active { transform: scale(0.9); }
         .icon-btn svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
         
-        #title-bar { background-color: var(--bg-color); padding: 8px 20px; font-size: 0.85rem; font-weight: 700; color: var(--user-msg-bg); border-bottom: 1px solid var(--border-color); display: flex; justify-content: flex-start; align-items: center; z-index: 9; flex-shrink: 0; }
+        #title-bar { background-color: var(--bg-color); padding: 8px 20px; font-size: 0.85rem; font-weight: 700; color: var(--user-msg-bg); border-bottom: 1px solid var(--border-color); display: flex; justify-content: flex-start; align-items: center; z-index: 9; flex-shrink: 0; transition: color 0.3s; }
         #title-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
         #chat-container { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; }
         
-        .message { padding: 14px 18px; border-radius: 18px; max-width: 82%; line-height: 1.5; font-size: 0.95rem; word-wrap: break-word; }
-        .user-msg { background-color: var(--user-msg-bg); color: var(--user-text); align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 2px 8px rgba(211,47,47,0.2); }
+        /* New Kinetic Message Animation */
+        @keyframes messageFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message { padding: 14px 18px; border-radius: 18px; max-width: 82%; line-height: 1.5; font-size: 0.95rem; word-wrap: break-word; transition: background-color 0.3s; animation: messageFadeIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .user-msg { background-color: var(--user-msg-bg); color: var(--user-text); align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         .ai-msg { background-color: var(--ai-msg-bg); color: var(--text-color); align-self: flex-start; border-bottom-left-radius: 4px; position: relative; }
         
         .user-edit-btn { background: transparent; border: none; font-size: 0.7rem; font-weight: 600; color: rgba(255,255,255,0.7); cursor: pointer; display: flex; align-items: center; gap: 4px; text-transform: uppercase; letter-spacing: 0.5px; padding: 0; margin-top: 10px; transition: color 0.2s; width: 100%; justify-content: flex-end; }
@@ -118,25 +125,24 @@
         .dot:nth-child(3) { animation-delay: 0.6s; }
         @keyframes blink { 0% { opacity: .2; } 20% { opacity: 1; } 100% { opacity: .2; } }
 
-        /* Elevated Input Area */
         #input-area { display: flex; flex-direction: column; background-color: var(--input-bg); padding: 12px 16px; border-top: 1px solid var(--border-color); box-shadow: var(--input-shadow); transition: background-color 0.3s; z-index: 10; flex-shrink: 0; }
         
-        /* Premium Image Attachment UI */
         #image-preview-container { display: none; padding-bottom: 10px; }
         .preview-wrapper { position: relative; display: inline-block; }
-        #preview-img { max-height: 60px; border-radius: 8px; border: 2px solid var(--user-msg-bg); display: block; }
-        .remove-img-btn { position: absolute; top: -8px; right: -8px; background-color: var(--user-msg-bg); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 10px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3); transition: transform 0.2s; padding: 0; }
+        #preview-img { max-height: 60px; border-radius: 8px; border: 2px solid var(--user-msg-bg); display: block; transition: border-color 0.3s; }
+        .remove-img-btn { position: absolute; top: -8px; right: -8px; background-color: var(--user-msg-bg); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 10px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3); transition: transform 0.2s, background-color 0.3s; padding: 0; }
         .remove-img-btn:active { transform: scale(0.85); }
         
         #controls-row { display: flex; align-items: flex-end; gap: 8px; width: 100%; box-sizing: border-box; }
         .left-buttons { display: flex; gap: 2px; align-items: center; }
         .left-buttons .icon-btn { width: 44px; height: 44px; padding: 0; min-width: 44px; display: flex; justify-content: center; align-items: center; }
         
-        #user-input { flex-grow: 1; width: 100%; padding: 12px 16px; border-radius: 24px; border: 1px solid var(--border-color); background-color: var(--ai-msg-bg); color: var(--text-color); outline: none; font-size: 1rem; font-family: inherit; resize: none; overflow: hidden; min-height: 20px; max-height: 120px; line-height: 1.4; box-sizing: border-box; transition: border-color 0.2s; }
+        #user-input { flex-grow: 1; width: 100%; padding: 12px 16px; border-radius: 24px; border: 1px solid var(--border-color); background-color: var(--ai-msg-bg); color: var(--text-color); outline: none; font-size: 1rem; font-family: inherit; resize: none; overflow: hidden; min-height: 20px; max-height: 120px; line-height: 1.4; box-sizing: border-box; transition: border-color 0.3s; }
         #user-input:focus { border-color: var(--user-msg-bg); }
         
-        #send-btn { background-color: var(--user-msg-bg); color: white; border: none; width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.1s; padding: 0; min-width: 44px; flex-shrink: 0; }
+        #send-btn { background-color: var(--user-msg-bg); color: white; border: none; width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.1s, background-color 0.3s, opacity 0.3s; padding: 0; min-width: 44px; flex-shrink: 0; }
         #send-btn:active { transform: scale(0.90); }
+        #send-btn.disabled { opacity: 0.5; pointer-events: none; }
         #send-btn svg { width: 20px; height: 20px; stroke: white; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; margin-left: -2px; }
 
         /* Sidebar & Modals */
@@ -150,17 +156,17 @@
         .close-sidebar-btn { background: transparent; border: none; color: var(--text-color); font-size: 1.5rem; cursor: pointer; padding: 0; transition: transform 0.1s; }
         .close-sidebar-btn:active { transform: scale(0.85); }
         
-        .new-chat-btn { margin: 15px 20px; padding: 12px; background-color: var(--user-msg-bg); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s, transform 0.1s; }
+        .new-chat-btn { margin: 15px 20px; padding: 12px; background-color: var(--user-msg-bg); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s, transform 0.1s, background-color 0.3s; }
         .new-chat-btn:active { opacity: 0.8; transform: scale(0.98); }
         .new-chat-btn svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 
         .chat-list { flex-grow: 1; overflow-y: auto; padding: 0 10px 10px 10px; display: flex; flex-direction: column; gap: 5px; }
-        .chat-item { padding: 12px 15px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background-color 0.2s; }
+        .chat-item { padding: 12px 15px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background-color 0.2s, border-left 0.3s; border-left: 0px solid transparent; }
         .chat-item:hover { background-color: rgba(128,128,128,0.1); }
-        .chat-item.active { background-color: rgba(211,47,47,0.1); }
+        .chat-item.active { background-color: rgba(128,128,128,0.05); border-left: 4px solid var(--user-msg-bg); }
         .chat-title-wrapper { display: flex; align-items: center; overflow: hidden; flex-grow: 1; margin-right: 10px; }
         .chat-title { font-size: 0.9rem; font-weight: 600; color: var(--text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
-        .pinned-indicator { width: 12px; height: 12px; stroke: var(--user-msg-bg); fill: var(--user-msg-bg); margin-right: 6px; flex-shrink: 0; }
+        .pinned-indicator { width: 12px; height: 12px; stroke: var(--user-msg-bg); fill: var(--user-msg-bg); margin-right: 6px; flex-shrink: 0; transition: stroke 0.3s, fill 0.3s;}
         
         .chat-actions { display: flex; gap: 8px; opacity: 0.6; }
         .chat-action-btn { background: transparent; border: none; padding: 0; cursor: pointer; color: var(--text-color); transition: color 0.2s, transform 0.1s; display: flex; align-items: center; justify-content: center; }
@@ -177,16 +183,22 @@
         .settings-item:last-child { border-bottom: none; }
         .settings-item:hover { background-color: rgba(128,128,128,0.1); }
         .settings-item svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: 0.5; }
+        
+        /* New Gold Pulse Animation */
+        @keyframes goldPulse {
+            0% { filter: drop-shadow(0 0 2px rgba(212,175,55,0.4)); }
+            50% { filter: drop-shadow(0 0 8px rgba(212,175,55,0.8)); }
+            100% { filter: drop-shadow(0 0 2px rgba(212,175,55,0.4)); }
+        }
         .gold-tier { color: #D4AF37; background: linear-gradient(90deg, rgba(212,175,55,0.05) 0%, transparent 100%); border-left: 4px solid #D4AF37; }
-        .gold-tier svg { stroke: #D4AF37; opacity: 1; }
+        .gold-tier svg { stroke: #D4AF37; opacity: 1; animation: goldPulse 2s infinite; }
 
-        /* Rename Specifics */
         #rename-modal { padding: 20px; box-sizing: border-box; }
         .rename-header { font-weight: bold; font-size: 1.1rem; color: var(--text-color); margin-bottom: 15px; }
         #rename-input-field { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); font-size: 1rem; outline: none; box-sizing: border-box; margin-bottom: 20px; transition: border-color 0.2s; }
         #rename-input-field:focus { border-color: var(--user-msg-bg); }
         .rename-buttons { display: flex; justify-content: flex-end; gap: 10px; }
-        .rename-btn { padding: 10px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 0.9rem; transition: transform 0.1s; }
+        .rename-btn { padding: 10px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 0.9rem; transition: transform 0.1s, background-color 0.3s; }
         .rename-btn:active { transform: scale(0.95); }
         .rename-cancel { background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); }
         .rename-save { background-color: var(--user-msg-bg); color: white; }
@@ -203,9 +215,18 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </div>
                 <div class="dropdown-options" id="dropdown-options">
-                    <div class="dropdown-option" onclick="selectModel('Serpent')">Serpent</div>
-                    <div class="dropdown-option" onclick="selectModel('Ram')">Ram</div>
-                    <div class="dropdown-option" onclick="selectModel('Lion')">Lion</div>
+                    <div class="dropdown-option" onclick="selectModel('Serpent')">
+                        <div class="model-title">Serpent</div>
+                        <div class="model-subtitle">Rapid analytics & high-capacity</div>
+                    </div>
+                    <div class="dropdown-option" onclick="selectModel('Ram')">
+                        <div class="model-title">Ram</div>
+                        <div class="model-subtitle">Deep processing & mathematics</div>
+                    </div>
+                    <div class="dropdown-option" onclick="selectModel('Lion')">
+                        <div class="model-title">Lion</div>
+                        <div class="model-subtitle">Flagship coding & complex tasks</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -261,7 +282,7 @@
             <div class="settings-item">About Us <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
             <div class="settings-item">Support <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
             <div class="settings-item">Language: English <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
-            <div class="settings-item">Version: 1.0.0 <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+            <div class="settings-item">Version: 1.2.0 <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
         </div>
     </div>
 
@@ -299,7 +320,19 @@
         let currentImageMimeType = null;
         let chatToRenameId = null;
         
-        // --- CHUNKING AUDIO ENGINE ---
+        // --- SYNAPTIC THEME ENGINE ---
+        const themeColors = {
+            'Serpent': '#D32F2F', // Crimson
+            'Ram': '#0F52BA',    // Sapphire Blue
+            'Lion': '#D4AF37'    // Chimera Gold
+        };
+
+        const introMessages = {
+            'Serpent': "Welcome to the Chimera Chamber. I am Serpent, your rapid analytical engine. My systems are fully operational and awaiting your command.",
+            'Ram': "Welcome to the Chimera Chamber. I am Ram, your deep processing and computational engine. My systems are fully calibrated and awaiting your command.",
+            'Lion': "Welcome to the Chimera Chamber. I am Lion, the flagship creative and architectural engine. My systems are fully synchronized and awaiting your command."
+        };
+        
         let ttsQueue = [];
         let ttsIndex = 0;
         let isTTSPaused = false;
@@ -322,19 +355,23 @@
             document.getElementById('dropdown-options').classList.toggle('show');
             document.getElementById('dropdown-selected').classList.toggle('active');
         }
+        
         function selectModel(modelName) {
             currentModel = modelName;
             document.getElementById('selected-model-name').innerText = modelName;
             document.getElementById('dropdown-options').classList.remove('show');
             document.getElementById('dropdown-selected').classList.remove('active');
             
+            document.documentElement.style.setProperty('--user-msg-bg', themeColors[modelName]);
+            
             const currentChat = chats.find(c => c.id === currentChatId);
             if (currentChat && currentChat.messages.length === 0) {
                 const chatContainer = document.getElementById('chat-container');
                 chatContainer.innerHTML = '';
-                renderMessage(`Model switched to ${currentModel}. All systems are fully operational and I am ready to assist you.`, 'ai-msg');
+                renderMessage(introMessages[currentModel], 'ai-msg');
             }
         }
+        
         window.onclick = function(event) {
             if (!event.target.closest('.custom-dropdown')) {
                 document.getElementById('dropdown-options').classList.remove('show');
@@ -347,12 +384,14 @@
                 document.body.classList.add('dark-mode');
                 document.getElementById('theme-icon').innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
             }
+            
+            document.documentElement.style.setProperty('--user-msg-bg', themeColors[currentModel]);
+            
             loadChats();
             window.visualViewport.addEventListener("resize", () => {
                 document.body.style.height = `${window.visualViewport.height}px`;
             });
             
-            // Enter key to save rename
             document.getElementById('rename-input-field').addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -395,7 +434,6 @@
             }, 200);
         }
 
-        // --- ENHANCED RENAME MODAL ---
         function openRenameModal(id, currentName) {
             chatToRenameId = id;
             const inputField = document.getElementById('rename-input-field');
@@ -591,7 +629,6 @@
             } catch (e) { console.log("AI Title Gen skipped due to network load."); }
         }
 
-        // --- STABILIZED CHUNKING AUDIO ENGINE ---
         function resetAudioBtn(btn) {
             btn.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Play';
         }
@@ -693,7 +730,7 @@
             const chat = chats.find(c => c.id === currentChatId);
             
             if (!chat || chat.messages.length === 0) {
-                renderMessage(`Welcome to Chimera Chatbot. I am ${currentModel}. All systems are fully operational and I am ready to assist you.`, 'ai-msg');
+                renderMessage(introMessages[currentModel], 'ai-msg');
                 return;
             }
 
@@ -793,8 +830,13 @@
         async function sendMessage() {
             const inputField = document.getElementById('user-input');
             const messageText = inputField.value;
+            const sendBtn = document.getElementById('send-btn');
             
             if (messageText.trim() === '' && !currentImageData) return;
+            
+            // UI Polish: Disable button while processing
+            sendBtn.classList.add('disabled');
+            
             inputField.value = '';
             inputField.style.height = 'auto';
 
@@ -844,6 +886,7 @@
                 const data = await response.json();
                 
                 if (chatContainer.contains(typingDiv)) chatContainer.removeChild(typingDiv);
+                sendBtn.classList.remove('disabled');
                 
                 if (!response.ok) {
                     let errorMessage = "**[Nexus Network Alert]** Connection severed. Please check parameters.";
@@ -880,6 +923,7 @@
                 }
             } catch (error) {
                 if (chatContainer.contains(typingDiv)) chatContainer.removeChild(typingDiv);
+                sendBtn.classList.remove('disabled');
                 
                 const failedMessage = chat.messages.pop(); 
                 saveChats();
@@ -894,6 +938,14 @@
                 
                 renderMessage("**[Nexus Network Alert]** Complete signal loss. The connection to the server has been severed. Your transmission has been safely returned to the command console.", 'ai-msg');
             }
+        }
+    </script>
+    
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js');
+            });
         }
     </script>
 </body>
