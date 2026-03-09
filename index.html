@@ -60,8 +60,8 @@
         header { background-color: var(--header-bg); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); min-height: 60px; transition: background-color 0.3s; z-index: 10; flex-shrink: 0; }
         .header-left { display: flex; align-items: center; gap: 15px; }
         
-        #header-logo { height: 42px; width: 42px; object-fit: contain; display: block; background-color: var(--logo-bg); padding: var(--logo-padding); border-radius: var(--logo-radius); box-shadow: var(--logo-shadow); transition: all 0.3s ease; mix-blend-mode: var(--logo-blend); cursor: pointer; }
-        #header-logo:active { transform: scale(0.95); }
+        #header-logo { height: 42px; width: 42px; object-fit: contain; display: block; background-color: var(--logo-bg); padding: var(--logo-padding); border-radius: var(--logo-radius); box-shadow: var(--logo-shadow); transition: transform 0.2s ease, box-shadow 0.2s ease; mix-blend-mode: var(--logo-blend); cursor: pointer; }
+        #header-logo:active { transform: scale(0.92); box-shadow: 0 0 4px rgba(211, 47, 47, 0.6); }
         
         .custom-dropdown { position: relative; user-select: none; display: inline-block; }
         .dropdown-selected { background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; transition: border-color 0.2s; min-width: 90px; }
@@ -125,10 +125,9 @@
         #send-btn:active { transform: scale(0.95); }
         #send-btn svg { width: 20px; height: 20px; stroke: white; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; margin-left: -2px; }
 
-        /* Sidebar Overlay */
+        /* Sidebar & Modals */
         .full-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 999; display: none; opacity: 0; transition: opacity 0.3s; }
         
-        /* The Chimera Chamber Sidebar */
         #sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100vh; background: var(--sidebar-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: -4px 0 15px rgba(0,0,0,0.1); z-index: 1000; transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; border-left: 1px solid var(--border-color); }
         #sidebar.open { right: 0; }
         
@@ -153,20 +152,20 @@
         .chat-action-btn:hover { color: var(--user-msg-bg); }
         .chat-action-btn svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 
-        /* Settings Modal */
-        #settings-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 320px; background: var(--modal-bg); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; overflow: hidden; border: 1px solid var(--border-color); display: none; flex-direction: column; opacity: 0; transition: opacity 0.2s; }
+        /* Animated Modals */
+        #settings-modal, #rename-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -45%); width: 85%; max-width: 320px; background: var(--modal-bg); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; overflow: hidden; border: 1px solid var(--border-color); display: none; flex-direction: column; opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease; }
+        
         .settings-header { padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1rem; color: var(--text-color);}
         .settings-list { display: flex; flex-direction: column; }
         .settings-item { padding: 16px 20px; border-bottom: 1px solid var(--border-color); cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: var(--text-color); font-weight: 600; font-size: 0.95rem; transition: background-color 0.2s; }
         .settings-item:last-child { border-bottom: none; }
         .settings-item:hover { background-color: rgba(128,128,128,0.1); }
         .settings-item svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: 0.5; }
-        
         .gold-tier { color: #D4AF37; background: linear-gradient(90deg, rgba(212,175,55,0.05) 0%, transparent 100%); border-left: 4px solid #D4AF37; }
         .gold-tier svg { stroke: #D4AF37; opacity: 1; }
 
-        /* Rename Modal */
-        #rename-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 320px; background: var(--modal-bg); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; overflow: hidden; border: 1px solid var(--border-color); display: none; flex-direction: column; opacity: 0; transition: opacity 0.2s; padding: 20px; box-sizing: border-box; }
+        /* Rename Specifics */
+        #rename-modal { padding: 20px; box-sizing: border-box; }
         .rename-header { font-weight: bold; font-size: 1.1rem; color: var(--text-color); margin-bottom: 15px; }
         #rename-input-field { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); font-size: 1rem; outline: none; box-sizing: border-box; margin-bottom: 20px; transition: border-color 0.2s; }
         #rename-input-field:focus { border-color: var(--user-msg-bg); }
@@ -248,8 +247,8 @@
     </div>
 
     <div id="rename-modal">
-        <div class="rename-header">Enter New Archive ID:</div>
-        <input type="text" id="rename-input-field" placeholder="Enter ID...">
+        <div class="rename-header">Rename Archive ID:</div>
+        <input type="text" id="rename-input-field" placeholder="Rename Archive ID...">
         <div class="rename-buttons">
             <button class="rename-btn rename-cancel" onclick="closeRenameModal()">Cancel</button>
             <button class="rename-btn rename-save" onclick="saveRenamedChat()">Save</button>
@@ -333,6 +332,14 @@
             window.visualViewport.addEventListener("resize", () => {
                 document.body.style.height = `${window.visualViewport.height}px`;
             });
+            
+            // Enter key to save rename
+            document.getElementById('rename-input-field').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    saveRenamedChat();
+                }
+            });
         };
 
         function toggleTheme() {
@@ -349,38 +356,49 @@
         }
 
         function openSettings() {
-            document.getElementById('settings-modal').style.display = 'flex';
+            const modal = document.getElementById('settings-modal');
+            modal.style.display = 'flex';
             document.getElementById('sidebar-overlay').style.display = 'block';
             setTimeout(() => { 
-                document.getElementById('settings-modal').style.opacity = '1'; 
+                modal.style.opacity = '1'; 
+                modal.style.transform = 'translate(-50%, -50%)';
                 document.getElementById('sidebar-overlay').style.opacity = '1'; 
             }, 10);
         }
         function closeSettings() {
-            document.getElementById('settings-modal').style.opacity = '0';
+            const modal = document.getElementById('settings-modal');
+            modal.style.opacity = '0';
+            modal.style.transform = 'translate(-50%, -45%)';
             document.getElementById('sidebar-overlay').style.opacity = '0';
             setTimeout(() => { 
-                document.getElementById('settings-modal').style.display = 'none'; 
+                modal.style.display = 'none'; 
                 document.getElementById('sidebar-overlay').style.display = 'none'; 
             }, 200);
         }
 
-        // --- CUSTOM RENAME MODAL ---
+        // --- ENHANCED RENAME MODAL ---
         function openRenameModal(id, currentName) {
             chatToRenameId = id;
-            document.getElementById('rename-input-field').value = currentName;
-            document.getElementById('rename-modal').style.display = 'flex';
+            const inputField = document.getElementById('rename-input-field');
+            inputField.value = currentName;
+            
+            const modal = document.getElementById('rename-modal');
+            modal.style.display = 'flex';
             document.getElementById('sidebar-overlay').style.display = 'block';
             setTimeout(() => { 
-                document.getElementById('rename-modal').style.opacity = '1'; 
+                modal.style.opacity = '1'; 
+                modal.style.transform = 'translate(-50%, -50%)';
                 document.getElementById('sidebar-overlay').style.opacity = '1'; 
-                document.getElementById('rename-input-field').focus();
+                inputField.focus();
+                inputField.select(); // Co-pilot enhancement: auto-highlight
             }, 10);
         }
         function closeRenameModal() {
-            document.getElementById('rename-modal').style.opacity = '0';
+            const modal = document.getElementById('rename-modal');
+            modal.style.opacity = '0';
+            modal.style.transform = 'translate(-50%, -45%)';
             setTimeout(() => { 
-                document.getElementById('rename-modal').style.display = 'none'; 
+                modal.style.display = 'none'; 
                 if(!document.getElementById('sidebar').classList.contains('open')) {
                     document.getElementById('sidebar-overlay').style.display = 'none'; 
                     document.getElementById('sidebar-overlay').style.opacity = '0';
@@ -393,7 +411,7 @@
                 const chat = chats.find(c => c.id === chatToRenameId);
                 if (chat) {
                     chat.title = newName;
-                    chat.customTitle = true; // Lock the title from AI updates
+                    chat.customTitle = true; 
                     saveChats();
                     renderChatList();
                     updateTitleBar();
@@ -528,7 +546,6 @@
             });
         }
 
-        // --- AI AUTO-TITLING ENGINE ---
         async function generateChatTitle(userText, chatObj) {
             const titleSystemInstruction = {
                 parts: [{ text: "You are a title generator. Summarize the user's prompt into a concise, professional title (2-4 words). Respond ONLY with the title. No quotes, no punctuation." }]
@@ -590,10 +607,10 @@
                 if (isTTSPaused) {
                     isTTSPaused = false;
                     btnElement.innerHTML = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg> Pause';
-                    playNextTTSChunk(); // Resume from exact saved chunk
+                    playNextTTSChunk(); 
                 } else {
                     isTTSPaused = true;
-                    window.speechSynthesis.cancel(); // Kills current chunk safely
+                    window.speechSynthesis.cancel(); 
                     btnElement.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Resume';
                 }
                 return;
@@ -605,7 +622,6 @@
             activeAudioBtn = btnElement;
             isTTSPaused = false;
             
-            // Clean text and split into manageable sentence chunks
             const cleanText = text.replace(/[*_#`~]/g, '').replace(/<[^>]*>?/gm, '');
             ttsQueue = cleanText.match(/[^.!?\n]+[.!?\n]*/g) || [cleanText];
             ttsIndex = 0;
@@ -772,7 +788,6 @@
             const chat = chats.find(c => c.id === currentChatId);
             chat.messages.push({ role: "user", parts: [{ text: messageText || "Analyze this image." }] });
             
-            // Trigger AI Auto-Titling in the background if it's the first message
             if (chat.title === "New Calibration" && chat.messages.length === 1 && !chat.customTitle) {
                 generateChatTitle(messageText || "Image Analysis", chat);
             }
