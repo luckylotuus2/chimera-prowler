@@ -1,20 +1,9 @@
 {
-  "name": "Chimera Co. Serpent Speed",
-  "short_name": "Chimera AI",
+  "name": "Chimera Chatbot",
+  "short_name": "Chimera Chatbot",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#FFFFFF",
+  "background_color": "#121212",
   "theme_color": "#D32F2F",
-  "icons": [
-    {
-      "src": "chimera-logo.jpg",
-      "sizes": "192x192",
-      "type": "image/jpeg"
-    },
-    {
-      "src": "chimera-logo.jpg",
-      "sizes": "512x512",
-      "type": "image/jpeg"
-    }
-  ]
+  "description": "Chimera Co. Premier AI Assistant"
 }
