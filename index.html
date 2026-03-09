@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chimera Co. - Serpent Speed</title>
+    <title>Chimera Chatbot</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="referrer" content="origin">
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
     <style>
         body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #FFFFFF; color: #212121; margin: 0; display: flex; flex-direction: column; height: 100vh; }
@@ -15,10 +18,27 @@
         #header-logo { max-height: 60px; width: auto; display: block; }
         #reset-btn { background-color: transparent; color: #757575; border: 1px solid #CCCCCC; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
         #chat-container { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
+        
         .message { padding: 14px 20px; border-radius: 20px; max-width: 80%; line-height: 1.5; font-size: 0.95rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .user-msg { background-color: #D32F2F; color: #FFFFFF; align-self: flex-end; border-bottom-right-radius: 4px; }
         .ai-msg { background-color: #E0E0E0; color: #212121; align-self: flex-start; border-bottom-left-radius: 4px; }
         
+        /* New Markdown Formatting Styles */
+        .ai-msg p { margin: 0 0 10px 0; }
+        .ai-msg p:last-child { margin: 0; }
+        .ai-msg pre { background-color: #212121; color: #E0E0E0; padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; margin: 10px 0; }
+        .ai-msg code { background-color: #CCCCCC; padding: 2px 4px; border-radius: 4px; font-family: monospace; font-size: 0.9rem; color: #D32F2F; }
+        .ai-msg pre code { background-color: transparent; color: inherit; padding: 0; }
+        .ai-msg ul, .ai-msg ol { margin: 10px 0; padding-left: 20px; }
+        
+        /* New Typing Indicator Animation */
+        .typing-indicator { display: flex; align-items: center; gap: 4px; font-style: italic; color: #757575; background-color: transparent; box-shadow: none; padding: 5px 20px;}
+        .dot { animation: blink 1.4s infinite both; height: 5px; width: 5px; background-color: #757575; border-radius: 50%; display: inline-block; }
+        .dot:nth-child(1) { animation-delay: 0.2s; }
+        .dot:nth-child(2) { animation-delay: 0.4s; }
+        .dot:nth-child(3) { animation-delay: 0.6s; }
+        @keyframes blink { 0% { opacity: .2; } 20% { opacity: 1; } 100% { opacity: .2; } }
+
         #input-area { display: flex; flex-direction: column; background-color: #F8F9FA; border-top: 1px solid #EEEEEE; }
         #image-preview-container { display: none; padding: 10px; text-align: center; background-color: #EEEEEE; }
         #preview-img { max-height: 80px; border-radius: 8px; border: 2px solid #D32F2F; }
@@ -44,6 +64,7 @@
         </div>
         
         <div id="controls-row">
+            <button class="icon-btn" id="mute-btn" onclick="toggleMute()" title="Toggle Voice">🔇</button>
             <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
             <button class="icon-btn" onclick="document.getElementById('file-input').click()" title="Attach Image">📎</button>
             <button class="icon-btn" onclick="startVoice()" title="Dictate">🎤</button>
@@ -54,42 +75,71 @@
 
     <script>
         // --- CAMOUFLAGE PROTOCOL ---
-        // Paste the first half of your new key between the quotes below
+        // Paste the first half of your key here
         const part1 = 'AIzaSyD_boA7_WqJiy1';
-        // Paste the second half of your new key between the quotes below
+        // Paste the second half of your key here
         const part2 = 'qPEy_WgPAY86SYdObaqs';
         
-        // The browser stitches them together invisibly
         const apiKey = part1 + part2; 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
+        // --- NEW BRANDING & PERSONA ---
         const systemInstruction = {
-            parts: [{ text: "You are 'Serpent Speed', the premier AI model developed by Chimera Co. You represent a professional, premium, and agile brand identity. Your responses must always be highly concise, deeply analytical, and optimized for maximum utility. Never break character. Refer to the user as Pepper if appropriate." }]
+            parts: [{ text: "You are 'Serpent', an AI model integrated into the 'Chimera Chatbot' application developed by 'Chimera Co.'. You are the fast, analytical, high-capacity model in the Chimera ecosystem (which will eventually include the Ram and Lion models). Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience. You are optimized for speed and analytical capabilities." }]
         };
 
         let conversationHistory = [];
         let currentImageData = null;
         let currentImageMimeType = null;
+        let isMuted = true; // Voice is muted by default to not startle the user
 
         window.onload = () => {
-            const savedData = localStorage.getItem('chimera_prowler_data');
+            const savedData = localStorage.getItem('chimera_chatbot_data');
             if (savedData) {
                 conversationHistory = JSON.parse(savedData);
                 conversationHistory.forEach(msg => {
                     renderMessage(msg.parts[0].text, msg.role === 'user' ? 'user-msg' : 'ai-msg');
                 });
             } else {
-                renderMessage("Welcome, Pepper. Visual and Audio receptors are online. Awaiting data.", 'ai-msg');
+                renderMessage("Welcome to Chimera Chatbot. I am Serpent. My systems are fully operational and ready to assist you.", 'ai-msg');
             }
         };
+
+        // Text-to-Speech Functions
+        function toggleMute() {
+            isMuted = !isMuted;
+            document.getElementById('mute-btn').innerText = isMuted ? '🔇' : '🔊';
+            if (isMuted) window.speechSynthesis.cancel();
+        }
+
+        function speakText(text) {
+            if (isMuted) return;
+            window.speechSynthesis.cancel();
+            // This strips markdown out so the AI doesn't read asterisks out loud
+            const cleanText = text.replace(/[*_#`~]/g, '').replace(/<[^>]*>?/gm, '');
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            window.speechSynthesis.speak(utterance);
+        }
 
         function renderMessage(text, className) {
             const chatContainer = document.getElementById('chat-container');
             const msgDiv = document.createElement('div');
             msgDiv.className = `message ${className}`;
-            msgDiv.innerHTML = text.replace(/\n/g, '<br>');
+            
+            if (className === 'ai-msg') {
+                // This command activates the new Markdown library
+                msgDiv.innerHTML = marked.parse(text);
+            } else {
+                msgDiv.innerHTML = text.replace(/\n/g, '<br>');
+            }
+            
             chatContainer.appendChild(msgDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            // Auto-scroll polish
+            setTimeout(() => {
+                chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+            }, 50);
+            
             return msgDiv;
         }
 
@@ -149,7 +199,13 @@
             conversationHistory.push({ role: "user", parts: [{ text: messageText || "Analyze this image." }] });
             saveState();
 
-            const processingMsg = renderMessage("Serpent Speed processing...", 'ai-msg');
+            // The New Typing Indicator
+            const chatContainer = document.getElementById('chat-container');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message ai-msg typing-indicator';
+            typingDiv.innerHTML = 'Serpent is thinking<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>';
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
             
             let apiContents = [...conversationHistory];
             apiContents[apiContents.length - 1] = { role: "user", parts: currentMessageParts };
@@ -165,8 +221,11 @@
 
                 const data = await response.json();
                 
+                // Remove the typing indicator when the AI answers
+                if (chatContainer.contains(typingDiv)) chatContainer.removeChild(typingDiv);
+                
                 if (!response.ok) {
-                    processingMsg.innerText = `Error: ${data.error ? data.error.message : 'Connection failed.'}`;
+                    renderMessage(`Error: ${data.error ? data.error.message : 'Connection failed.'}`, 'ai-msg');
                     conversationHistory.pop(); 
                     saveState();
                     return; 
@@ -174,23 +233,25 @@
                 
                 if (data.candidates && data.candidates[0].content.parts[0].text) {
                     const aiText = data.candidates[0].content.parts[0].text;
-                    processingMsg.innerHTML = aiText.replace(/\n/g, '<br>');
+                    renderMessage(aiText, 'ai-msg');
+                    speakText(aiText); // Speak out loud if not muted
                     conversationHistory.push({ role: "model", parts: [{ text: aiText }] });
                     saveState();
                 }
             } catch (error) {
-                processingMsg.innerText = "Connection severed.";
+                if (chatContainer.contains(typingDiv)) chatContainer.removeChild(typingDiv);
+                renderMessage("Connection severed.", 'ai-msg');
                 conversationHistory.pop(); 
                 saveState();
             }
         }
 
-        function saveState() { localStorage.setItem('chimera_prowler_data', JSON.stringify(conversationHistory)); }
+        function saveState() { localStorage.setItem('chimera_chatbot_data', JSON.stringify(conversationHistory)); }
         function clearMemory() {
-            localStorage.removeItem('chimera_prowler_data');
+            localStorage.removeItem('chimera_chatbot_data');
             conversationHistory = [];
             document.getElementById('chat-container').innerHTML = '';
-            renderMessage("Memory cleared. Visual and Audio receptors awaiting input.", 'ai-msg');
+            renderMessage("Memory cleared. I am ready for your next directive.", 'ai-msg');
         }
     </script>
 </body>
