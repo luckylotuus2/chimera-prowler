@@ -13,14 +13,13 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
     <style>
-        /* Neo-Modern CSS Variables */
         :root {
-            --bg-color: #FFFFFF; /* Absolute crisp white */
+            --bg-color: #FFFFFF;
             --text-color: #1A1A1A;
             --header-bg: #FFFFFF;
             --border-color: #E5E5E5;
             --ai-msg-bg: #F4F4F5;
-            --user-msg-bg: #D32F2F; /* Chimera Crimson */
+            --user-msg-bg: #D32F2F;
             --user-text: #FFFFFF;
             --input-bg: #FFFFFF;
             --code-bg: #1A1A1A;
@@ -33,9 +32,8 @@
             --logo-shadow: none;
         }
 
-        /* Obsidian Protocol (Dark Mode) */
         body.dark-mode {
-            --bg-color: #121212; /* Absolute obsidian */
+            --bg-color: #121212;
             --text-color: #EAEAEA;
             --header-bg: #1A1A1A;
             --border-color: #2A2A2A;
@@ -47,7 +45,7 @@
             --code-text: #D32F2F;
             --icon-color: #EAEAEA;
             --logo-blend: normal;
-            --logo-bg: #FFFFFF; /* Creates the Enamel Pin effect for JPGs */
+            --logo-bg: #FFFFFF;
             --logo-padding: 4px;
             --logo-radius: 50%;
             --logo-shadow: 0 0 12px rgba(211, 47, 47, 0.4);
@@ -58,48 +56,25 @@
         header { background-color: var(--header-bg); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); min-height: 60px; transition: background-color 0.3s; }
         .header-left { display: flex; align-items: center; gap: 15px; }
         
-        /* The JPG Logo Enamel Pin Hack */
-        #header-logo { 
-            height: 45px; 
-            width: 45px; 
-            object-fit: contain;
-            display: block; 
-            mix-blend-mode: var(--logo-blend);
-            background-color: var(--logo-bg);
-            padding: var(--logo-padding);
-            border-radius: var(--logo-radius);
-            box-shadow: var(--logo-shadow);
-            transition: all 0.3s ease;
-        }
+        #header-logo { height: 45px; width: 45px; object-fit: contain; display: block; mix-blend-mode: var(--logo-blend); background-color: var(--logo-bg); padding: var(--logo-padding); border-radius: var(--logo-radius); box-shadow: var(--logo-shadow); transition: all 0.3s ease; }
         
-        /* Premium Custom Dropdown */
-        .custom-select-wrapper { position: relative; display: inline-block; }
-        #model-selector { 
-            appearance: none; -webkit-appearance: none; 
-            background-color: transparent; 
-            color: var(--text-color); 
-            border: 1px solid var(--border-color); 
-            padding: 8px 36px 8px 16px; 
-            border-radius: 20px; 
-            font-weight: 600; 
-            font-size: 0.9rem; 
-            cursor: pointer; 
-            outline: none; 
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%23D32F2F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>'); 
-            background-repeat: no-repeat; 
-            background-position: right 12px center; 
-            transition: border-color 0.2s;
-        }
-        #model-selector:focus { border-color: var(--user-msg-bg); }
+        /* New Custom Dropdown Architecture */
+        .custom-dropdown { position: relative; user-select: none; }
+        .dropdown-selected { background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: border-color 0.2s; }
+        .dropdown-selected:hover { border-color: var(--user-msg-bg); }
+        .dropdown-selected svg { transition: transform 0.2s; width: 14px; height: 14px; stroke: var(--user-msg-bg); }
+        .dropdown-selected.active svg { transform: rotate(180deg); }
+        
+        .dropdown-options { display: none; position: absolute; top: 115%; left: 0; background-color: var(--header-bg); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); width: 140px; z-index: 100; overflow: hidden; }
+        .dropdown-options.show { display: block; }
+        .dropdown-option { padding: 12px 16px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: background-color 0.2s; color: var(--text-color); }
+        .dropdown-option:hover { background-color: rgba(211,47,47,0.1); color: var(--user-msg-bg); }
         
         .header-controls { display: flex; gap: 12px; align-items: center; }
-        
-        /* Sleek Neo-Modern Buttons */
         .icon-btn { background: transparent; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; padding: 8px; border-radius: 50%; color: var(--icon-color); transition: background-color 0.2s; }
         .icon-btn:hover { background-color: rgba(128,128,128,0.1); }
         .icon-btn svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
         
-        /* Reset Text Button */
         #reset-btn { background: transparent; color: var(--text-color); border: none; font-size: 0.75rem; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; transition: opacity 0.2s; }
         #reset-btn:hover { opacity: 1; }
         
@@ -109,13 +84,17 @@
         .user-msg { background-color: var(--user-msg-bg); color: var(--user-text); align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 2px 8px rgba(211,47,47,0.2); }
         .ai-msg { background-color: var(--ai-msg-bg); color: var(--text-color); align-self: flex-start; border-bottom-left-radius: 4px; position: relative; }
         
+        /* Dynamic Edit Button */
+        .user-edit-btn { background: transparent; border: none; font-size: 0.7rem; font-weight: 600; color: rgba(255,255,255,0.7); cursor: pointer; display: flex; align-items: center; gap: 4px; text-transform: uppercase; letter-spacing: 0.5px; padding: 0; margin-top: 10px; transition: color 0.2s; width: 100%; justify-content: flex-end; }
+        .user-edit-btn:hover { color: #FFFFFF; }
+        .user-edit-btn svg { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
         .ai-msg p { margin: 0 0 10px 0; }
         .ai-msg p:last-child { margin: 0; }
         .ai-msg pre { background-color: var(--code-bg); color: var(--code-text); padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; margin: 10px 0; border: 1px solid var(--border-color); }
         .ai-msg code { background-color: rgba(128,128,128,0.15); padding: 2px 4px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.85rem; color: var(--user-msg-bg); }
         .ai-msg pre code { background-color: transparent; padding: 0; color: var(--code-text); }
         
-        /* Minimalist Action Deck */
         .message-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 12px; padding-top: 8px; }
         .action-btn { background: transparent; border: none; font-size: 0.7rem; font-weight: 600; color: var(--text-color); cursor: pointer; opacity: 0.4; display: flex; align-items: center; gap: 4px; text-transform: uppercase; letter-spacing: 0.5px; padding: 0; transition: opacity 0.2s; }
         .action-btn:hover { opacity: 1; }
@@ -137,8 +116,7 @@
         #user-input { flex-grow: 1; padding: 12px 16px; border-radius: 24px; border: 1px solid var(--border-color); background-color: var(--ai-msg-bg); color: var(--text-color); outline: none; font-size: 1rem; font-family: inherit; resize: none; overflow: hidden; min-height: 20px; max-height: 120px; line-height: 1.4; box-sizing: border-box; transition: border-color 0.2s; }
         #user-input:focus { border-color: var(--user-msg-bg); }
         
-        /* Modern Solid Send Button */
-        #send-btn { background-color: var(--user-msg-bg); color: white; border: none; width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.2s; padding: 0; }
+        #send-btn { background-color: var(--user-msg-bg); color: white; border: none; width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.2s; padding: 0; min-width: 44px; }
         #send-btn:active { transform: scale(0.95); }
         #send-btn svg { width: 20px; height: 20px; stroke: white; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; margin-left: -2px; }
     </style>
@@ -147,13 +125,19 @@
     <header>
         <div class="header-left">
             <img src="chimera-logo.jpg" alt="Chimera Co." id="header-logo" onerror="this.style.display='none'">
-            <div class="custom-select-wrapper">
-                <select id="model-selector">
-                    <option value="serpent">Serpent</option>
-                    <option value="ram">Ram</option>
-                    <option value="lion">Lion</option>
-                </select>
+            
+            <div class="custom-dropdown" id="model-dropdown">
+                <div class="dropdown-selected" id="dropdown-selected" onclick="toggleDropdown()">
+                    <span id="selected-model-name">Serpent</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+                <div class="dropdown-options" id="dropdown-options">
+                    <div class="dropdown-option" onclick="selectModel('Serpent')">Serpent</div>
+                    <div class="dropdown-option" onclick="selectModel('Ram')">Ram</div>
+                    <div class="dropdown-option" onclick="selectModel('Lion')">Lion</div>
+                </div>
             </div>
+
         </div>
         <div class="header-controls">
             <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" title="Obsidian Protocol">
@@ -188,14 +172,16 @@
 
     <script>
         // --- CAMOUFLAGE PROTOCOL ---
-        const part1 = 'PASTE_THE_FIRST_HALF_OF_YOUR_KEY_HERE';
-        const part2 = 'PASTE_THE_SECOND_HALF_OF_YOUR_KEY_HERE';
-        
+        const part1 = 'AIzaSyD_boA7_WqJiy1';
+        const part2 = 'qPEy_WgPAY86SYdObaqs';
         const apiKey = part1 + part2; 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
+        let currentModel = 'Serpent';
+
+        // Clean Slate Protocol: No hardcoded name.
         const systemInstruction = {
-            parts: [{ text: "You are an AI model integrated into the 'Chimera Chatbot' application developed by 'Chimera Co.'. The user may select the Serpent, Ram, or Lion model. Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience." }]
+            parts: [{ text: "You are an AI model integrated into the 'Chimera Chatbot' application developed by 'Chimera Co.'. Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience. If the user provides their name or identifier, remember and use it for the remainder of this session. Each session is a clean slate." }]
         };
 
         let conversationHistory = [];
@@ -214,6 +200,26 @@
             }
         });
 
+        // Dropdown Logic
+        function toggleDropdown() {
+            document.getElementById('dropdown-options').classList.toggle('show');
+            document.getElementById('dropdown-selected').classList.toggle('active');
+        }
+
+        function selectModel(modelName) {
+            currentModel = modelName;
+            document.getElementById('selected-model-name').innerText = modelName;
+            document.getElementById('dropdown-options').classList.remove('show');
+            document.getElementById('dropdown-selected').classList.remove('active');
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.closest('.custom-dropdown')) {
+                document.getElementById('dropdown-options').classList.remove('show');
+                document.getElementById('dropdown-selected').classList.remove('active');
+            }
+        }
+
         window.onload = () => {
             if (localStorage.getItem('chimera_theme') === 'dark') {
                 document.body.classList.add('dark-mode');
@@ -221,13 +227,11 @@
             }
             
             const savedData = localStorage.getItem('chimera_chatbot_data');
-            if (savedData) {
+            if (savedData && JSON.parse(savedData).length > 0) {
                 conversationHistory = JSON.parse(savedData);
-                conversationHistory.forEach(msg => {
-                    renderMessage(msg.parts[0].text, msg.role === 'user' ? 'user-msg' : 'ai-msg');
-                });
+                redrawChat();
             } else {
-                renderMessage("Welcome to Chimera Chatbot. Systems are fully operational and ready to assist you.", 'ai-msg');
+                renderMessage("Welcome to Chimera Chatbot. I am " + currentModel + ". Systems are fully operational. To calibrate my protocols, please state your name or identifier.", 'ai-msg');
             }
         };
 
@@ -266,7 +270,59 @@
             });
         }
 
-        function renderMessage(text, className) {
+        // Time Travel Logic (Rewinds the database)
+        function editUserMessage(originalText) {
+            const inputField = document.getElementById('user-input');
+            inputField.value = originalText;
+            inputField.style.height = 'auto';
+            inputField.style.height = (inputField.scrollHeight) + 'px';
+            inputField.focus();
+
+            let lastUserIdx = -1;
+            for (let i = conversationHistory.length - 1; i >= 0; i--) {
+                if (conversationHistory[i].role === 'user') {
+                    lastUserIdx = i;
+                    break;
+                }
+            }
+            if (lastUserIdx !== -1) {
+                conversationHistory.splice(lastUserIdx);
+            }
+            saveState();
+            redrawChat();
+        }
+
+        // Deep-State Sync (Redraws the entire chat perfectly)
+        function redrawChat() {
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.innerHTML = '';
+            
+            if (conversationHistory.length === 0) {
+                renderMessage("Memory cleared. I am " + currentModel + ". Systems are fully operational. To calibrate my protocols, please state your name or identifier.", 'ai-msg');
+                return;
+            }
+
+            conversationHistory.forEach((msg, index) => {
+                const msgDiv = renderMessage(msg.parts[0].text, msg.role === 'user' ? 'user-msg' : 'ai-msg', true);
+                
+                // Only attach the Edit button to the absolute LAST user message
+                let isLastUserMsg = true;
+                for (let i = index + 1; i < conversationHistory.length; i++) {
+                    if (conversationHistory[i].role === 'user') isLastUserMsg = false;
+                }
+                
+                if (msg.role === 'user' && isLastUserMsg) {
+                    const editBtn = document.createElement('button');
+                    editBtn.className = 'user-edit-btn';
+                    editBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Edit';
+                    editBtn.onclick = function() { editUserMessage(msg.parts[0].text); };
+                    msgDiv.appendChild(editBtn);
+                }
+            });
+        }
+
+        // Modified to not auto-append edit buttons, it is handled by redrawChat
+        function renderMessage(text, className, isRedraw = false) {
             const chatContainer = document.getElementById('chat-container');
             const msgDiv = document.createElement('div');
             msgDiv.className = `message ${className}`;
@@ -299,7 +355,7 @@
             }
             
             chatContainer.appendChild(msgDiv);
-            setTimeout(() => { chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); }, 50);
+            if(!isRedraw) setTimeout(() => { chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); }, 50);
             return msgDiv;
         }
 
@@ -348,10 +404,6 @@
             inputField.value = '';
             inputField.style.height = 'auto';
 
-            let displayMsg = messageText;
-            if (currentImageData) displayMsg = "[Image Attached]<br>" + messageText;
-            renderMessage(displayMsg, 'user-msg');
-
             let currentMessageParts = [];
             if (messageText.trim() !== '') currentMessageParts.push({ text: messageText });
             if (currentImageData) {
@@ -360,6 +412,9 @@
 
             conversationHistory.push({ role: "user", parts: [{ text: messageText || "Analyze this image." }] });
             saveState();
+            
+            // Calling redrawChat ensures the edit button is properly moved to this absolute newest message
+            redrawChat();
 
             const chatContainer = document.getElementById('chat-container');
             const typingDiv = document.createElement('div');
@@ -386,7 +441,6 @@
                 
                 if (!response.ok) {
                     let errorMessage = "**[Nexus Network Alert]** Connection severed. Please check parameters.";
-                    
                     if (data.error && data.error.message) {
                         if (data.error.message.includes("Quota exceeded")) {
                             errorMessage = "**[Nexus Network Alert]** Engine speed limit reached. Please allow time for the system to cool down before transmitting again.";
@@ -396,33 +450,34 @@
                             errorMessage = `**[Nexus Network Alert]** System anomaly detected: ${data.error.message}`;
                         }
                     }
-                    
                     renderMessage(errorMessage, 'ai-msg');
                     conversationHistory.pop(); 
                     saveState();
+                    redrawChat(); // Re-sync the edit button state
                     return; 
                 }
                 
                 if (data.candidates && data.candidates[0].content.parts[0].text) {
                     const aiText = data.candidates[0].content.parts[0].text;
-                    renderMessage(aiText, 'ai-msg');
                     conversationHistory.push({ role: "model", parts: [{ text: aiText }] });
                     saveState();
+                    redrawChat(); // Syncs the final view with the AI response
                 }
             } catch (error) {
                 if (chatContainer.contains(typingDiv)) chatContainer.removeChild(typingDiv);
                 renderMessage("**[Nexus Network Alert]** Complete signal loss. The connection to the server has been severed.", 'ai-msg');
                 conversationHistory.pop(); 
                 saveState();
+                redrawChat(); // Re-sync the edit button state
             }
         }
 
         function saveState() { localStorage.setItem('chimera_chatbot_data', JSON.stringify(conversationHistory)); }
+        
         function clearMemory() {
             localStorage.removeItem('chimera_chatbot_data');
             conversationHistory = [];
-            document.getElementById('chat-container').innerHTML = '';
-            renderMessage("**[Nexus Network Alert]** Memory cleared. Systems awaiting new directive.", 'ai-msg');
+            redrawChat();
         }
     </script>
 </body>
