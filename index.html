@@ -39,12 +39,14 @@
             
             --user-text: #FFFFFF;
             --input-bg: #FFFFFF;
-            --input-shadow: 0 -5px 25px rgba(0,0,0,0.06);
+            --input-shadow: 0 -5px 30px rgba(0,0,0,0.08);
             --code-bg: #0D0D0D;
             --code-text: #F0F0F0;
             --icon-color: #050505;
             --sidebar-bg: rgba(255, 255, 255, 0.98);
             --modal-bg: #FFFFFF;
+            --watermark-opacity: 0.05;
+            --rose-color: rgba(0,0,0,0.06);
             
             --font-gothic: 'Cinzel', serif;
             --font-modern: 'Montserrat', sans-serif;
@@ -60,20 +62,22 @@
             --border-color: #222222;
             --ai-msg-bg: #141414;
             --input-bg: #0A0A0A;
-            --input-shadow: 0 -5px 25px rgba(0,0,0,0.4);
+            --input-shadow: 0 -5px 30px rgba(0,0,0,0.5);
             --code-bg: #000000;
             --code-text: var(--user-msg-bg);
             --icon-color: #F0F0F0;
             --sidebar-bg: rgba(10, 10, 10, 0.98);
             --modal-bg: #141414;
+            --watermark-opacity: 0.12; /* Increased visibility in dark mode */
+            --rose-color: rgba(255,255,255,0.06); /* White rose in dark mode */
         }
 
         body { font-family: var(--font-modern); background-color: var(--bg-color); color: var(--text-color); margin: 0; display: flex; flex-direction: column; height: 100vh; height: 100dvh; width: 100vw; position: fixed; top: 0; left: 0; overflow: hidden; transition: background-color 0.4s ease, color 0.4s ease; }
         
-        /* LAUNCH SENTINEL */
-        #launch-sentinel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #FFFFFF; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
-        .launch-logo { width: 90px; height: 90px; animation: pulseLogo 2s infinite ease-in-out; }
-        @keyframes pulseLogo { 0% { opacity: 0.4; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.05); } 100% { opacity: 0.4; transform: scale(0.95); } }
+        /* 1. FIXED LAUNCH SENTINEL */
+        #launch-sentinel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--bg-color); z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s; }
+        .launch-logo { width: 100px; height: 100px; animation: pulseLogo 2s infinite ease-in-out; border-radius: 50%; box-shadow: 0 0 25px rgba(211, 47, 47, 0.4); mix-blend-mode: normal; }
+        @keyframes pulseLogo { 0% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.05); } 100% { opacity: 0.5; transform: scale(0.95); } }
 
         /* THE AIRLOCK SYSTEM (SPA CONTAINERS) */
         #spa-portals { width: 100vw; height: 100vh; display: none; flex-direction: column; background-color: var(--bg-color); z-index: 5000; overflow-y: auto; }
@@ -90,68 +94,67 @@
         .splash-title { font-family: var(--font-gothic); font-size: 2.2rem; font-weight: 800; color: var(--text-color); letter-spacing: 2px; margin: 0; text-transform: uppercase; }
         .splash-subtitle { font-size: 1.1rem; color: #888; margin: 5px 0 50px 0; font-weight: 500; letter-spacing: 0.5px; }
         
-        /* DECIDEDLY CLEAR GATEWAY BUTTONS with Dynamic Stars on CTAs */
-        .gateway-btn-gold { width: 85%; max-width: 320px; padding: 18px; border-radius: 14px; background: linear-gradient(135deg, #D4AF37 0%, #AA8020 100%); color: #FFF; font-family: var(--font-gothic); font-weight: 700; font-size: 1.1rem; border: none; cursor: pointer; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); display: flex; justify-content: center; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 1.5px; transition: transform 0.1s; }
+        .gateway-btn-gold { width: 85%; max-width: 320px; padding: 18px; border-radius: 14px; background: linear-gradient(135deg, #D4AF37 0%, #AA8020 100%); color: #FFF; font-family: var(--font-gothic); font-weight: 800; font-size: 1.15rem; border: none; cursor: pointer; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); display: flex; justify-content: center; align-items: center; gap: 12px; letter-spacing: 1px; transition: transform 0.1s; }
         .gateway-btn-gold:active { transform: scale(0.96); }
-        .gateway-btn-gold svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+        .gateway-btn-gold svg { width: 20px; height: 20px; fill: currentColor; }
         
-        .gateway-btn-economy { width: 85%; max-width: 320px; padding: 16px; border-radius: 14px; background-color: transparent; color: var(--text-color); border: 2px solid var(--border-color); font-family: var(--font-modern); font-weight: 600; font-size: 1.1rem; cursor: pointer; margin-bottom: 20px; transition: transform 0.1s, background-color 0.2s; }
+        .gateway-btn-economy { width: 85%; max-width: 320px; padding: 16px; border-radius: 14px; background-color: transparent; color: var(--text-color); border: 2px solid var(--border-color); font-family: var(--font-modern); font-weight: 700; font-size: 1.05rem; cursor: pointer; margin-bottom: 30px; transition: transform 0.1s, background-color 0.2s; }
         .gateway-btn-economy:active { transform: scale(0.96); background-color: rgba(128,128,128,0.1); }
-        .text-link-btn { background: transparent; border: none; color: #888; font-weight: 600; font-size: 1rem; cursor: pointer; padding: 10px; text-decoration: underline; }
+        
+        .text-link-title { color: #888; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;}
+        .text-link-btn { background: transparent; border: none; color: var(--text-color); font-weight: 700; font-size: 1.05rem; cursor: pointer; padding: 5px; text-decoration: underline; }
 
-        /* PORTAL HEADERS */
+        /* PORTAL HEADERS (UNIFIED) */
         .portal-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); width: 100%; box-sizing: border-box; }
-        .portal-header span { font-family: var(--font-gothic); font-weight: 700; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
+        .portal-header span { font-family: var(--font-gothic); font-weight: 700; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-color);}
         .back-btn { background: transparent; border: none; color: var(--text-color); font-size: 1.6rem; cursor: pointer; padding: 5px; }
 
         /* AUTH & SIGNUP PAGES */
         .auth-container { padding: 30px 25px; text-align: center; max-width: 400px; margin: 0 auto; width: 100%; box-sizing: border-box; }
-        .auth-hero-title { font-family: var(--font-gothic); font-size: 1.8rem; font-weight: 800; color: var(--text-color); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
-        .auth-hero-subtitle { color: #888; margin-bottom: 35px; font-size: 0.95rem; font-weight: 500; line-height: 1.4; }
+        .auth-hero-title { font-family: var(--font-gothic); font-size: 2rem; font-weight: 800; color: var(--text-color); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
+        .auth-hero-subtitle { color: #888; margin-bottom: 35px; font-size: 0.95rem; font-weight: 500; line-height: 1.5; }
         
-        .google-auth-btn { width: 100%; padding: 15px; border-radius: 10px; background-color: transparent; color: var(--text-color); border: 2px solid var(--border-color); font-weight: 600; font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 25px; transition: background-color 0.2s; }
+        .google-auth-btn { width: 100%; padding: 15px; border-radius: 10px; background-color: transparent; color: var(--text-color); border: 2px solid var(--border-color); font-weight: 700; font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 25px; transition: background-color 0.2s; }
         .google-auth-btn:active { background-color: rgba(128,128,128,0.06); }
-        .google-auth-btn svg { width: 20px; height: 20px; }
+        /* Repaired Google Logo SVG */
+        .google-auth-btn svg { width: 22px; height: 22px; }
         
-        .auth-divider { display: flex; align-items: center; text-align: center; color: #888; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; }
+        .auth-divider { display: flex; align-items: center; text-align: center; color: #888; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; }
         .auth-divider::before, .auth-divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-color); }
         .auth-divider:not(:empty)::before { margin-right: 1em; }
         .auth-divider:not(:empty)::after { margin-left: 1em; }
 
-        .auth-input { width: 100%; padding: 16px; border-radius: 10px; border: 2px solid var(--border-color); background-color: var(--ai-msg-bg); color: var(--text-color); font-size: 1rem; font-family: var(--font-modern); font-weight: 500; outline: none; box-sizing: border-box; margin-bottom: 15px; transition: border-color 0.3s; }
+        .auth-input { width: 100%; padding: 16px; border-radius: 10px; border: 2px solid var(--border-color); background-color: var(--ai-msg-bg); color: var(--text-color); font-size: 1rem; font-family: var(--font-modern); font-weight: 600; outline: none; box-sizing: border-box; margin-bottom: 15px; transition: border-color 0.3s; }
         .auth-input:focus { border-color: rgba(211,47,47,0.5); }
         
-        .auth-submit-btn { width: 100%; padding: 16px; border-radius: 10px; background-color: var(--text-color); color: var(--bg-color); font-family: var(--font-gothic); font-weight: 700; font-size: 1.05rem; border: none; cursor: pointer; margin-top: 10px; transition: transform 0.1s; text-transform: uppercase; letter-spacing: 1px; }
+        .auth-submit-btn { width: 100%; padding: 18px; border-radius: 10px; background-color: var(--text-color); color: var(--bg-color); font-family: var(--font-gothic); font-weight: 800; font-size: 1.1rem; border: none; cursor: pointer; margin-top: 10px; transition: transform 0.1s; text-transform: uppercase; letter-spacing: 1px; }
         .auth-submit-btn:active { transform: scale(0.98); }
         .auth-error-msg { color: #D32F2F; font-size: 0.85rem; font-weight: 600; min-height: 20px; margin-top: 15px; }
 
-        /* GOLD SHOWCASE PAGE - ENHANCED UX/MARKETING Overhaul */
+        /* GOLD SHOWCASE PAGE */
         #page-gold { background: linear-gradient(180deg, rgba(212,175,55,0.08) 0%, var(--bg-color) 40%); padding: 0 20px 40px 20px; }
-        .gold-hero-title { font-family: var(--font-gothic); font-size: 2.2rem; font-weight: 800; color: #AA8020; text-transform: uppercase; letter-spacing: 2.5px; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(212,175,55,0.2);}
-        .gold-hero-subtitle { color: #888; font-size: 1.1rem; font-weight: 500; margin-bottom: 40px;}
+        .gold-hero-title { font-family: var(--font-gothic); font-size: 2.2rem; font-weight: 800; color: #AA8020; text-transform: uppercase; letter-spacing: 2.5px; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(212,175,55,0.2); text-align: center; padding-top: 20px;}
+        .gold-hero-subtitle { color: #888; font-size: 1.05rem; font-weight: 500; margin-bottom: 40px; text-align: center; line-height: 1.5;}
         
         .arsenal-list { display: flex; flex-direction: column; gap: 25px; text-align: left; max-width: 600px; margin: 0 auto; }
         .arsenal-item { display: flex; gap: 20px; align-items: flex-start; background-color: var(--modal-bg); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
         .arsenal-icon-container { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; gap: 15px;}
-        .arsenal-icon { width: 52px; height: 52px; border-radius: 12px; display: flex; justify-content: center; align-items: center; border: 1.5px solid rgba(212,175,55,0.3); color: #D4AF37; }
+        .arsenal-icon { width: 52px; height: 52px; border-radius: 12px; display: flex; justify-content: center; align-items: center; border: 1.5px solid rgba(212,175,55,0.3); color: #D4AF37; background: rgba(212,175,55,0.05); }
         .arsenal-item.ram-themed .arsenal-icon { border-color: rgba(15,82,186,0.3); color: #0F52BA; background: rgba(15,82,186,0.05); }
-        .arsenal-item.lion-themed .arsenal-icon { border-color: rgba(212,175,55,0.3); color: #D4AF37; background: rgba(212,175,55,0.05); }
+        .arsenal-item.lion-themed .arsenal-icon { border-color: rgba(211,47,47,0.3); color: #D32F2F; background: rgba(211,47,47,0.05); }
         
-        .arsenal-icon svg { width: 24px; height: 24px; stroke-width: 2.5;}
+        .arsenal-icon svg { width: 26px; height: 26px; stroke-width: 2.5;}
         
         .arsenal-title { font-family: var(--font-gothic); font-weight: 700; font-size: 1.1rem; color: var(--text-color); margin: 0; text-transform: uppercase; letter-spacing: 0.5px; }
         .arsenal-desc { font-size: 0.95rem; color: #888; margin: 8px 0 0 0; line-height: 1.6; font-weight: 500; }
         
-        .arsenal-demo-image { width: 100%; height: 120px; background-color: rgba(128,128,128,0.1); border-radius: 8px; margin-top: 15px; border: 1px solid var(--border-color); display: flex; justify-content: center; align-items: center; color: #666; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
+        .arsenal-demo-image { width: 100%; height: 120px; background-color: rgba(128,128,128,0.08); border-radius: 10px; margin-top: 15px; border: 1px solid var(--border-color); display: flex; justify-content: center; align-items: center; color: #888; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
 
-        .subscription-matrix { color: var(--text-color); font-weight: 800; font-size: 1.8rem; margin: 50px 0 20px 0; font-family: var(--font-gothic); text-align: center; text-transform: uppercase; letter-spacing: 1px; }
+        .subscription-matrix { color: var(--text-color); font-weight: 800; font-size: 2rem; margin: 50px 0 20px 0; font-family: var(--font-gothic); text-align: center; text-transform: uppercase; letter-spacing: 1px; }
         .subscription-matrix span { font-size: 1rem; font-family: var(--font-modern); font-weight: 600; color: #888; text-transform: none; letter-spacing: 0;}
 
-        /* CTA button in gold dimension needs dynamic styling based on auth */
-        #gold-cta-btn { font-size: 1.15rem; letter-spacing: 2px; }
-
         /* --- MAIN APP CORE UI --- */
-        header { background-color: var(--header-bg); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); min-height: 60px; z-index: 10; flex-shrink: 0; }
+        header { background-color: var(--header-bg); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); min-height: 60px; z-index: 10; flex-shrink: 0; transition: background-color 0.4s ease;}
         .header-left { display: flex; align-items: center; gap: 15px; }
         
         #header-logo { height: 42px; width: 42px; object-fit: contain; display: block; background-color: #FFFFFF; padding: 4px; border-radius: 50%; box-shadow: 0 0 15px var(--theme-glow); border: 2px solid var(--theme-glow); transition: box-shadow 0.4s var(--ease-in-out), border-color 0.4s var(--ease-in-out); cursor: pointer; }
@@ -163,7 +166,7 @@
         
         .dropdown-options { display: none; position: absolute; top: 115%; left: 0; background-color: var(--header-bg); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); width: 240px; z-index: 2000; overflow: hidden; }
         .dropdown-options.show { display: block; animation: slideUpFade 0.2s var(--ease-out); }
-        .dropdown-option { padding: 14px 18px; cursor: pointer; border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; }
+        .dropdown-option { padding: 14px 18px; cursor: pointer; border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; transition: background-color 0.2s;}
         .dropdown-option:last-child { border-bottom: none; }
         .dropdown-option:hover { background-color: rgba(128,128,128,0.05); }
         
@@ -179,26 +182,22 @@
         .icon-btn { background: transparent; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; border-radius: 50%; color: var(--icon-color); padding: 10px; transition: background-color 0.2s; }
         .icon-btn svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2.2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
         
-        #title-bar { background-color: var(--bg-color); padding: 10px 20px; font-size: 0.9rem; font-weight: 700; color: var(--user-msg-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; z-index: 9; flex-shrink: 0; font-family: var(--font-gothic); letter-spacing: 0.5px; text-transform: uppercase; transition: color 0.4s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.02);}
+        #title-bar { background-color: var(--bg-color); padding: 10px 20px; font-size: 0.9rem; font-weight: 700; color: var(--user-msg-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; z-index: 9; flex-shrink: 0; font-family: var(--font-gothic); letter-spacing: 0.5px; text-transform: uppercase; transition: color 0.4s ease, background-color 0.4s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.02);}
 
-        #chat-wrapper { position: relative; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; background-color: var(--bg-color); }
-        /* Chatbox Logo Watermark */
-        #chat-bg-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 75%; height: 75%; background-image: url('chimera-logo.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.03; z-index: 0; pointer-events: none; mix-blend-mode: luminosity; }
+        #chat-wrapper { position: relative; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; background-color: transparent; }
+        #chat-bg-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 75%; height: 75%; background-image: url('chimera-logo.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: var(--watermark-opacity); z-index: 0; pointer-events: none; transition: opacity 0.4s ease; }
         
         #chat-container { position: relative; flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; z-index: 1; scroll-behavior: smooth; }
 
         .message { padding: 15px 20px; border-radius: 20px; max-width: 82%; line-height: 1.5; font-size: 0.95rem; word-wrap: break-word; animation: messageFadeIn 0.35s var(--ease-out) forwards; }
-        @keyframes messageFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .user-msg { background-color: var(--user-msg-bg); color: var(--user-text); align-self: flex-end; border-bottom-right-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-weight: 500; transition: background-color 0.4s ease; }
-        .ai-msg { background-color: var(--ai-msg-bg); color: var(--text-color); align-self: flex-start; border-bottom-left-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); font-weight: 500; border: 1px solid var(--border-color); }
+        .user-msg { background-color: var(--user-msg-bg); color: var(--user-text); align-self: flex-end; border-bottom-right-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500; transition: background-color 0.4s ease; }
+        .ai-msg { background-color: var(--ai-msg-bg); color: var(--text-color); align-self: flex-start; border-bottom-left-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); font-weight: 500; border: 1px solid var(--border-color); backdrop-filter: blur(5px); }
         
-        .ai-msg pre { background-color: var(--code-bg); color: var(--code-text); padding: 14px; border-radius: 10px; overflow-x: auto; font-size: 0.85rem; margin: 12px 0; border: 1px solid rgba(255,255,255,0.1); }
+        .ai-msg pre { background-color: var(--code-bg); color: var(--code-text); padding: 14px; border-radius: 10px; overflow-x: auto; font-size: 0.85rem; margin: 12px 0; border: 1px solid rgba(128,128,128,0.2); }
         .ai-msg code { background-color: rgba(128,128,128,0.15); padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.85rem; color: var(--user-msg-bg); font-weight: 600; transition: color 0.4s ease;}
         .ai-msg pre code { background-color: transparent; padding: 0; color: inherit; }
         
         .message-actions { display: flex; justify-content: flex-end; gap: 15px; margin-top: 14px; padding-top: 10px; border-top: 1px solid rgba(128,128,128,0.15); }
-        .ai-msg .message-actions { border-color: rgba(128,128,128,0.1); }
         .action-btn { background: transparent; border: none; font-size: 0.7rem; font-weight: 700; color: var(--text-color); cursor: pointer; opacity: 0.5; display: flex; align-items: center; gap: 5px; text-transform: uppercase; letter-spacing: 0.5px; padding: 0; transition: opacity 0.2s; }
         .action-btn:hover { opacity: 1; }
         .action-btn svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2.5; fill: none; }
@@ -208,92 +207,83 @@
         .dot:nth-child(1) { animation-delay: 0.2s; }
         .dot:nth-child(2) { animation-delay: 0.4s; }
         .dot:nth-child(3) { animation-delay: 0.6s; }
-        @keyframes blink { 0% { opacity: .2; } 20% { opacity: 1; } 100% { opacity: .2; } }
 
-        #input-area { display: flex; flex-direction: column; background-color: var(--input-bg); padding: 14px 18px; border-top: 1px solid var(--border-color); box-shadow: var(--input-shadow); z-index: 10; flex-shrink: 0; }
+        /* INCREASED INPUT BAR SIZE */
+        #input-area { display: flex; flex-direction: column; background-color: var(--input-bg); padding: 18px 24px; border-top: 1px solid var(--border-color); box-shadow: var(--input-shadow); z-index: 10; flex-shrink: 0; transition: background-color 0.4s ease;}
         
-        /* 4. PROMINENT IMAGE ATTACHMENT */
         #image-preview-container { display: none; padding-bottom: 15px; }
         .preview-wrapper { position: relative; display: inline-block; animation: popIn 0.3s var(--ease-out); }
-        @keyframes popIn { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
-        #preview-img { height: 160px; width: auto; max-width: 200px; object-fit: cover; border-radius: 12px; border: 3px solid var(--user-msg-bg); box-shadow: 0 8px 20px rgba(0,0,0,0.15); transition: border-color 0.4s ease; display: block; }
+        #preview-img { height: 180px; width: auto; max-width: 240px; object-fit: cover; border-radius: 12px; border: 3px solid var(--user-msg-bg); box-shadow: 0 8px 20px rgba(0,0,0,0.15); transition: border-color 0.4s ease; display: block; }
         .remove-img-btn { position: absolute; top: -10px; right: -10px; background-color: var(--user-msg-bg); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: background-color 0.4s ease; padding: 0; }
         
-        #controls-row { display: flex; align-items: flex-end; gap: 10px; width: 100%; box-sizing: border-box; }
-        .left-buttons { display: flex; gap: 2px; }
+        #controls-row { display: flex; align-items: flex-end; gap: 12px; width: 100%; box-sizing: border-box; }
+        .left-buttons { display: flex; gap: 4px; }
         
-        #user-input { flex-grow: 1; width: 100%; padding: 14px 18px; border-radius: 24px; border: 2px solid var(--border-color); background-color: var(--ai-msg-bg); color: var(--text-color); font-size: 1rem; font-family: var(--font-modern); font-weight: 500; outline: none; box-sizing: border-box; resize: none; overflow: hidden; min-height: 20px; max-height: 120px; line-height: 1.4; transition: border-color 0.3s; }
+        #user-input { flex-grow: 1; width: 100%; padding: 16px 20px; border-radius: 28px; border: 2px solid var(--border-color); background-color: var(--ai-msg-bg); color: var(--text-color); font-size: 1.05rem; font-family: var(--font-modern); font-weight: 500; outline: none; box-sizing: border-box; resize: none; overflow: hidden; min-height: 56px; max-height: 150px; line-height: 1.4; transition: border-color 0.3s; }
         #user-input:focus { border-color: rgba(211,47,47,0.4); }
         
-        /* 6. CENTERED PLACEHOLDER TEXT sentinel: apply horizontal centering only for placeholder */
-        #user-input::-webkit-input-placeholder { text-align: center; color: #AAAAAA; font-weight: 600; font-family: var(--font-gothic); text-transform: uppercase; letter-spacing: 1px;}
-        #user-input:-moz-placeholder { text-align: center; color: #AAAAAA; font-weight: 600; font-family: var(--font-gothic); text-transform: uppercase; letter-spacing: 1px;}
-        #user-input::-moz-placeholder { text-align: center; color: #AAAAAA; font-weight: 600; font-family: var(--font-gothic); text-transform: uppercase; letter-spacing: 1px;}
-        #user-input:-ms-input-placeholder { text-align: center; color: #AAAAAA; font-weight: 600; font-family: var(--font-gothic); text-transform: uppercase; letter-spacing: 1px;}
+        /* CENTERED PLACEHOLDER */
+        #user-input::placeholder { text-align: center; color: #A0A0A0; font-weight: 600; font-family: var(--font-gothic); text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s; }
+        body.dark-mode #user-input::placeholder { color: #666666; }
         
-        /* Dark mode placeholder accessibility */
-        body.dark-mode #user-input::-webkit-input-placeholder { color: #888888; }
-        body.dark-mode #user-input:-moz-placeholder { color: #888888; }
-        
-        #send-btn { background-color: var(--user-msg-bg); color: white; border: none; width: 48px; height: 48px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; padding: 0; min-width: 48px; flex-shrink: 0; transition: background-color 0.4s ease, opacity 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        #send-btn { background-color: var(--user-msg-bg); color: white; border: none; width: 52px; height: 52px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; padding: 0; min-width: 52px; flex-shrink: 0; transition: background-color 0.4s ease, opacity 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
         #send-btn.disabled { opacity: 0.5; pointer-events: none; }
-        #send-btn svg { width: 20px; height: 20px; stroke: white; stroke-width: 2.5; fill: none; margin-left: -2px; }
+        #send-btn svg { width: 22px; height: 22px; stroke: white; stroke-width: 2.5; fill: none; margin-left: -2px; }
 
         /* OVERLAYS & SIDEBAR */
         #sidebar-overlay, #modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 6000; display: none; opacity: 0; transition: opacity 0.3s; }
         
-        #sidebar { position: fixed; top: 0; right: -320px; width: 300px; height: 100vh; background: var(--sidebar-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: -5px 0 25px rgba(0,0,0,0.15); z-index: 6001; transition: right 0.4s var(--ease-gothic); display: flex; flex-direction: column; border-left: 1px solid var(--border-color); overflow: hidden; }
+        #sidebar { position: fixed; top: 0; right: -320px; width: 300px; height: 100vh; background: var(--sidebar-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: -5px 0 30px rgba(0,0,0,0.2); z-index: 6001; transition: right 0.4s var(--ease-gothic); display: flex; flex-direction: column; border-left: 1px solid var(--border-color); overflow: hidden; }
         #sidebar.open { right: 0; }
         
-        /* 3. AESTHETIC sidebar update: real black rose asset with thorny branches */
-        #sidebar-watermark { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; background-image: url('black-rose.jpg'); background-size: cover; background-position: center; opacity: 0.05; transition: color 0.4s ease; mix-blend-mode: luminosity; }
+        /* THE NEO-GOTHIC INLINE ROSE WATERMARK (Unbreakable & Color-Shifting) */
+        #sidebar-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 350px; height: 350px; color: var(--rose-color); pointer-events: none; z-index: -1; transition: color 0.4s ease; display: flex; justify-content: center; align-items: center;}
         
         .sidebar-header { padding: 25px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; z-index: 1; }
         .sidebar-header h2 { margin: 0; font-family: var(--font-gothic); font-size: 1.25rem; color: var(--text-color); text-transform: uppercase; letter-spacing: 1px; }
         .close-sidebar-btn { background: transparent; border: none; color: var(--text-color); font-size: 1.8rem; cursor: pointer; padding: 0; }
         
-        .new-chat-btn { margin: 20px; padding: 14px; background-color: var(--user-msg-bg); color: white; border: none; border-radius: 12px; font-family: var(--font-modern); font-weight: 700; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; transition: background-color 0.4s ease; z-index: 1; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .new-chat-btn { margin: 20px; padding: 16px; background-color: var(--user-msg-bg); color: white; border: none; border-radius: 12px; font-family: var(--font-modern); font-weight: 700; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; transition: background-color 0.4s ease; z-index: 1; box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
         .new-chat-btn svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2.5; fill: none; }
 
         .chat-list { flex-grow: 1; overflow-y: auto; padding: 0 15px 20px 15px; display: flex; flex-direction: column; gap: 8px; z-index: 1; }
-        .chat-item { padding: 14px 16px; border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px solid transparent; transition: background-color 0.3s, border-color 0.3s; }
+        .chat-item { padding: 15px 16px; border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px solid transparent; transition: background-color 0.3s, border-color 0.3s; }
         .chat-item:hover { background-color: rgba(128,128,128,0.05); }
         .chat-item.active { background-color: var(--active-bg); border-color: rgba(211,47,47,0.1); }
         
         .chat-title-wrapper { display: flex; align-items: center; overflow: hidden; flex-grow: 1; margin-right: 10px; }
-        .chat-title { font-family: var(--font-modern); font-size: 1rem; font-weight: 600; color: var(--text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .chat-title { font-family: var(--font-modern); font-size: 0.95rem; font-weight: 700; color: var(--text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .pinned-indicator { width: 14px; height: 14px; stroke: var(--user-msg-bg); fill: var(--user-msg-bg); margin-right: 8px; flex-shrink: 0; transition: stroke 0.4s ease, fill 0.4s ease;}
         
         .chat-actions { display: flex; gap: 10px; opacity: 0.5; transition: opacity 0.2s;}
         .chat-item:hover .chat-actions, .chat-item.active .chat-actions { opacity: 1; }
         .chat-action-btn { background: transparent; border: none; padding: 4px; cursor: pointer; color: var(--text-color); transition: color 0.2s; display: flex; }
         .chat-action-btn:hover { color: var(--user-msg-bg); }
-        .chat-action-btn svg { width: 15px; height: 15px; stroke: currentColor; stroke-width: 2; fill: none; }
+        .chat-action-btn svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; }
 
         /* MODALS */
-        .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -45%); width: 85%; max-width: 340px; background: var(--modal-bg); border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); z-index: 6005; border: 1px solid var(--border-color); display: none; flex-direction: column; opacity: 0; transition: opacity 0.3s ease, transform 0.3s var(--ease-out); }
+        .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -45%); width: 85%; max-width: 360px; background: var(--modal-bg); border-radius: 18px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); z-index: 6005; border: 1px solid var(--border-color); display: none; flex-direction: column; opacity: 0; transition: opacity 0.3s ease, transform 0.3s var(--ease-out); overflow: hidden;}
         
-        .modal-header { padding: 18px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-family: var(--font-gothic); font-weight: 700; font-size: 1.15rem; color: var(--text-color); text-transform: uppercase; letter-spacing: 1px;}
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-family: var(--font-gothic); font-weight: 800; font-size: 1.2rem; color: var(--text-color); text-transform: uppercase; letter-spacing: 1px;}
         
-        .settings-item { padding: 18px 24px; border-bottom: 1px solid var(--border-color); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-modern); font-weight: 600; font-size: 1rem; color: var(--text-color); transition: background-color 0.2s; }
+        .settings-item { padding: 20px 24px; border-bottom: 1px solid var(--border-color); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-modern); font-weight: 700; font-size: 1.05rem; color: var(--text-color); transition: background-color 0.2s; }
         .settings-item:last-child { border-bottom: none; }
         .settings-item:hover { background-color: rgba(128,128,128,0.05); }
-        .settings-item svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; opacity: 0.5; }
+        .settings-item svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; opacity: 0.6; }
         
-        /* Consistent wording for upgrade button in settings */
-        .gold-tier { color: #AA8020; background: linear-gradient(90deg, rgba(212,175,55,0.05) 0%, transparent 100%); border-left: 4px solid #D4AF37; font-weight: 700; text-transform: uppercase; font-family: var(--font-gothic); letter-spacing: 1px;}
+        .gold-tier { color: #AA8020; background: linear-gradient(90deg, rgba(212,175,55,0.08) 0%, transparent 100%); border-left: 4px solid #D4AF37; font-weight: 800; text-transform: uppercase; font-family: var(--font-gothic); letter-spacing: 1px;}
         .gold-tier svg { stroke: #D4AF37; opacity: 1; }
-        .logout-tier { color: #D32F2F; font-weight: 700; text-transform: uppercase; font-family: var(--font-gothic); letter-spacing: 1px;}
+        .logout-tier { color: #D32F2F; font-weight: 800; text-transform: uppercase; font-family: var(--font-gothic); letter-spacing: 1px;}
         .logout-tier svg { stroke: #D32F2F; opacity: 1; }
 
         #rename-modal { padding: 24px; box-sizing: border-box; }
-        .rename-header { font-family: var(--font-gothic); font-weight: 700; font-size: 1.2rem; color: var(--text-color); margin-bottom: 18px; text-transform: uppercase; letter-spacing: 1px;}
-        #rename-input-field { width: 100%; padding: 15px; border-radius: 10px; border: 2px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-modern); font-size: 1rem; font-weight: 500; outline: none; box-sizing: border-box; margin-bottom: 24px; transition: border-color 0.3s; }
+        .rename-header { font-family: var(--font-gothic); font-weight: 800; font-size: 1.3rem; color: var(--text-color); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;}
+        #rename-input-field { width: 100%; padding: 16px; border-radius: 12px; border: 2px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-modern); font-size: 1.05rem; font-weight: 600; outline: none; box-sizing: border-box; margin-bottom: 25px; transition: border-color 0.3s; }
         #rename-input-field:focus { border-color: var(--user-msg-bg); }
-        .rename-buttons { display: flex; justify-content: flex-end; gap: 12px; }
-        .rename-btn { padding: 12px 20px; border-radius: 10px; font-family: var(--font-modern); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; border: none; font-size: 0.85rem; }
+        .rename-buttons { display: flex; justify-content: flex-end; gap: 15px; }
+        .rename-btn { padding: 14px 24px; border-radius: 12px; font-family: var(--font-modern); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; border: none; font-size: 0.9rem; }
         .rename-cancel { background-color: transparent; color: var(--text-color); border: 2px solid var(--border-color); }
-        .rename-save { background-color: var(--user-msg-bg); color: white; transition: background-color 0.4s ease; }
+        .rename-save { background-color: var(--user-msg-bg); color: white; transition: background-color 0.4s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
     </style>
 </head>
@@ -311,50 +301,61 @@
             <div class="splash-subtitle">Premier AI Assistant</div>
             
             <button class="gateway-btn-gold" onclick="openPortal('gold')">
-                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                ✦ Chimera Gold ✦
+                <svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>
+                CHIMERA GOLD
+                <svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>
             </button>
             <button class="gateway-btn-economy" onclick="enterEconomyMode()">
                 Chimera Economy
             </button>
-            <div style="margin-top:25px; color:#888; font-size:1rem; font-weight:600; text-transform:uppercase; letter-spacing:1px;">Pinned ID?</div>
-            <button class="text-link-btn" style="color:var(--text-color);" onclick="openPortal('auth')">Return to the Nexus</button>
+            <div class="text-link-title" style="margin-top:30px;">BACK FOR MORE?</div>
+            <button class="text-link-btn" onclick="openPortal('auth')">Been Here Before?</button>
         </div>
 
         <div id="page-auth" class="portal-page">
             <div class="portal-header">
-                <span>Nexus Connection</span>
+                <span>Nexus Network</span>
                 <button class="back-btn" onclick="openPortal('gateway')">✕</button>
             </div>
             <div class="auth-container">
-                <div class="auth-hero-title">Authenticate</div>
+                <div class="auth-hero-title">Nexus Network</div>
                 <div class="auth-hero-subtitle">Verify credentials to access global archives.</div>
                 
                 <button class="google-auth-btn" onclick="signInWithGoogle()">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3000000000000003 4.53 6.16 4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
                     Sync with Google
                 </button>
                 <div class="auth-divider">or</div>
                 
                 <input type="email" id="auth-email" class="auth-input" placeholder="Credential Email">
                 <input type="password" id="auth-password" class="auth-input" placeholder="Encryption Key">
-                <button class="auth-submit-btn" onclick="handleAuth('login')">Verify Connection</button>
+                <button class="auth-submit-btn" onclick="handleAuth('login')">Authenticate</button>
                 <div id="auth-error-display" class="auth-error-msg"></div>
-                <button class="text-link-btn" onclick="openPortal('signup')" style="margin-top:15px; color:#D32F2F;">New Operator? Initialize ID</button>
+                <button class="text-link-btn" onclick="openPortal('signup')" style="margin-top:15px; color:#D32F2F;">New Operator? Initialize Chimera ID</button>
             </div>
         </div>
 
         <div id="page-signup" class="portal-page">
             <div class="portal-header">
-                <span>Initialize ID</span>
+                <span>Nexus Network</span>
                 <button class="back-btn" onclick="openPortal('gateway')">✕</button>
             </div>
             <div class="auth-container">
-                <div class="auth-hero-title">Establish ID</div>
+                <div class="auth-hero-title">Initialize ID</div>
                 <div class="auth-hero-subtitle">Initialize biometric synchronization protocols.</div>
                 
                 <button class="google-auth-btn" onclick="signInWithGoogle()">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
                     Sync with Google
                 </button>
                 <div class="auth-divider">or</div>
@@ -363,7 +364,7 @@
                 <input type="password" id="signup-password" class="auth-input" placeholder="Encryption Key (Min 6 chars)">
                 <button class="auth-submit-btn" onclick="handleAuth('signup')">Initialize ID</button>
                 <div id="signup-error-display" class="auth-error-msg"></div>
-                <button class="text-link-btn" onclick="openPortal('auth')" style="margin-top:15px; color:var(--text-color);">Have an ID? Authenticate</button>
+                <button class="text-link-btn" onclick="openPortal('auth')" style="margin-top:15px; color:var(--text-color);">Have a Chimera ID? Authenticate</button>
             </div>
         </div>
 
@@ -415,12 +416,15 @@
                     <div class="subscription-matrix">$20.00 <span>/ monthly cycle</span></div>
                     
                     <button class="gateway-btn-gold" style="width: 100%; max-width: none;" id="gold-cta-btn" onclick="handleGoldCTA()">
-                        ✦ Authenticate to Upgrade ✦
+                        <svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>
+                        <span id="gold-cta-text">Upgrade to Gold</span>
+                        <svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
     <div id="app-core">
         <header>
             <div class="header-left">
@@ -487,7 +491,7 @@
                 </div>
                 <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
                 
-                <textarea id="user-input" rows="1" placeholder="Transit command..."></textarea>
+                <textarea id="user-input" rows="1" placeholder="Transmit command..."></textarea>
                 
                 <button id="send-btn" class="icon-btn" onclick="sendMessage()">
                     <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
@@ -504,8 +508,8 @@
                 <button class="back-btn" onclick="closeSettings()">✕</button>
             </div>
             <div class="settings-list">
-                <div class="settings-item gold-tier" onclick="handleSettingsGoldClick()">
-                    ✦ Upgrade to Gold ✦ <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <div class="settings-item gold-tier" onclick="openPortal('gold')" id="settings-gold-btn">
+                    ✦ Upgrade to Gold ✦
                 </div>
                 <div class="settings-item">About Us <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
                 <div class="settings-item">Support Frequency <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
@@ -526,7 +530,22 @@
         </div>
 
         <div id="sidebar">
-            <div id="sidebar-watermark"></div>
+            <div id="sidebar-watermark">
+                <svg viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50.4,18.8c-2.3-4.5-7.8-8.2-12.9-9.1C32,8.7,26.4,11.2,23,15.6c-3.1,4-3.6,9.2-2.1,13.8c1.3,4.2,4.4,7.8,8.2,10.2 c-4.6-0.6-9.1-2.4-12.8-5.3c-3.7-2.9-6.3-7.1-7.1-11.8c-0.6-3.8,0.2-7.8,2.2-11.2C13.2,8.2,17,5.5,21.5,4c5.1-1.7,10.7-1.3,15.5,0.9 c4.5,2.1,8.3,5.8,10.6,10.3c2.3-4.5,6.1-8.2,10.6-10.3c4.8-2.2,10.4-2.6,15.5-0.9c4.5,1.5,8.3,4.2,10.1,7.3c2,3.4,2.8,7.4,2.2,11.2 c-0.8,4.7-3.4,8.9-7.1,11.8c-3.7,2.9-8.2,4.7-12.8,5.3c3.8-2.4,6.9-6,8.2-10.2c1.5-4.6,1-9.8-2.1-13.8c-3.4-4.4-9-6.9-14.5-5.9 C58.2,10.6,52.7,14.3,50.4,18.8z"/>
+                    <path d="M50,29.5c-4.4-2.7-9.8-3.9-14.9-3.2c-4.8,0.6-9.2,3.1-12.2,7.1c-2.8,3.7-3.8,8.4-2.6,12.9 c1.2,4.3,3.9,8.1,7.5,10.5c-4-1.3-7.8-3.7-10.6-7c-2.8-3.3-4.5-7.6-4.6-12c-0.1-4,1.2-7.9,3.7-11.1C18.6,24,22.8,21.5,27.3,20 c5.1-1.7,10.7-1.3,15.5,0.9C45,22,48.1,25.4,50,29.5z"/>
+                    <path d="M50,29.5c4.4-2.7,9.8-3.9,14.9-3.2c4.8,0.6,9.2,3.1,12.2,7.1c2.8,3.7,3.8,8.4,2.6,12.9 c-1.2,4.3-3.9,8.1-7.5,10.5c4-1.3,7.8-3.7,10.6-7c2.8-3.3,4.5-7.6,4.6-12c0.1-4-1.2-7.9-3.7-11.1C81.4,24,77.2,21.5,72.7,20 c-5.1-1.7-10.7-1.3-15.5,0.9C55,22,51.9,25.4,50,29.5z"/>
+                    <path d="M50,42.3c-2.5-1.5-5.5-2.2-8.5-1.8c-2.7,0.3-5.2,1.7-6.9,3.9c-1.6,2.1-2.1,4.7-1.5,7.3 c0.7,2.4,2.2,4.5,4.2,5.9c-2.2-0.7-4.4-2.1-6-3.9c-1.6-1.8-2.5-4.2-2.6-6.7c-0.1-2.2,0.7-4.4,2.1-6.2c1.3-1.6,3.4-2.9,5.6-3.7 c2.8-1,5.9-0.7,8.5,0.5C47.2,38.5,48.9,40.2,50,42.3z"/>
+                    <path d="M50,42.3c2.5-1.5,5.5-2.2,8.5-1.8c2.7,0.3,5.2,1.7,6.9,3.9c1.6,2.1,2.1,4.7,1.5,7.3 c-0.7,2.4-2.2,4.5-4.2,5.9c2.2-0.7,4.4-2.1,6-3.9c1.6-1.8,2.5-4.2,2.6-6.7c0.1-2.2-0.7-4.4-2.1-6.2c-1.3-1.6-3.4-2.9-5.6-3.7 c-2.8-1-5.9-0.7-8.5,0.5C52.8,38.5,51.1,40.2,50,42.3z"/>
+                    <path d="M47.2,58.8c-1.1,0.6-2,1.5-2.8,2.6c-0.9,1.2-1.5,2.7-1.6,4.3c-0.1,1.5,0.3,3,1.1,4.3c0.7,1.1,1.7,2.1,2.9,2.8 c1.2,0.6,2.6,1,4,1c1.5,0,2.9-0.4,4-1c1.2-0.6,2.2-1.6,2.9-2.8c0.8-1.3,1.2-2.8,1.1-4.3c-0.1-1.6-0.7-3.1-1.6-4.3 c-0.8-1.1-1.7-2-2.8-2.6c-1.1-0.6-2.4-1-3.6-1C49.6,57.8,48.3,58.2,47.2,58.8z"/>
+                    <path d="M52,75c0,0,5,8,4,15c-1,7-6,10-6,10s4-1,6-5c2-4,2-11-2-18C53,75,52,75,52,75z"/>
+                    <path d="M48,75c0,0-5,8-4,15c1,7,6,10,6,10s-4-1-6-5c-2-4-2-11,2-18C47,75,48,75,48,75z"/>
+                    <path d="M50,75L40,65L38,68L48,80Z"/>
+                    <path d="M50,75L60,65L62,68L52,80Z"/>
+                    <path d="M48,85L35,80L36,83L46,90Z"/>
+                    <path d="M52,85L65,80L64,83L54,90Z"/>
+                </svg>
+            </div>
             
             <div class="sidebar-header">
                 <h2>Chimera Chamber</h2>
@@ -559,8 +578,10 @@
 
         let currentUserId = null;
         let isGuestMode = false;
+        
+        // 7. SENTINEL WAIT PROTOCOL (Wait for UI to paint before dissolving loader)
+        let isEngineReady = false;
 
-        // 5. FIXED GMAIL LOGIN Redirect handling sentinel patch applied
         auth.getRedirectResult().then((result) => {
             if (result.user) console.log("[Chimera Sentinel] Google Auth Redirect Verified.");
         }).catch((error) => {
@@ -568,7 +589,6 @@
             handleAuthError(error, 'auth');
         });
 
-        // 2. THE AIRLOCK V3: Optimized Sentinel Wait Protocol applied
         auth.onAuthStateChanged((user) => {
             const sentinel = document.getElementById('launch-sentinel');
             const portals = document.getElementById('spa-portals');
@@ -583,11 +603,11 @@
                 appCore.style.display = 'flex';
                 portals.style.display = 'none';
                 
-                // Set visible state before removing sentinel to patch faulty opening anomaly shown in video evidence
                 redrawChat(); 
+                updateGoldDimensionUI();
                 
-                setTimeout(() => sentinel.style.opacity = '0', 250); 
-                setTimeout(() => sentinel.style.display = 'none', 750);
+                setTimeout(() => sentinel.style.opacity = '0', 300); 
+                setTimeout(() => sentinel.style.display = 'none', 1100);
                 
                 loadChats(); 
             } else {
@@ -598,25 +618,30 @@
                     appCore.style.display = 'none';
                     portals.style.display = 'flex';
                     openPortal('gateway');
+                    updateGoldDimensionUI();
                     
-                    setTimeout(() => sentinel.style.opacity = '0', 250);
-                    setTimeout(() => sentinel.style.display = 'none', 750);
+                    setTimeout(() => sentinel.style.opacity = '0', 300);
+                    setTimeout(() => sentinel.style.display = 'none', 1100);
                 }
             }
         });
 
-        // Dynamic UI adjustment based on login state applied to Gold Showcase page
+        // 3. DYNAMIC BUTTON TEXT & STARS LOGIC
         function updateGoldDimensionUI() {
-            const goldCtaBtn = document.getElementById('gold-cta-btn');
+            const goldCtaBtnText = document.getElementById('gold-cta-text');
+            const settingsGoldBtn = document.getElementById('settings-gold-btn');
+            
             if (!currentUserId && !isGuestMode) {
-                // Not authenticated at all (Splash screen level)
-                goldCtaBtn.innerText = "✦ Authenticate to Upgrade ✦";
+                // Not authenticated at all
+                goldCtaBtnText.innerText = "AUTHENTICATE TO UPGRADE";
             } else if (isGuestMode) {
                 // Guest/Economy Mode
-                goldCtaBtn.innerText = "✦ Upgrade to Gold ✦";
+                goldCtaBtnText.innerText = "UPGRADE TO GOLD";
+                settingsGoldBtn.innerHTML = `✦ UPGRADE TO GOLD ✦ <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
             } else {
-                // Logged in via Email or Google
-                goldCtaBtn.innerText = "✦ Upgrade to Gold ✦";
+                // Logged in
+                goldCtaBtnText.innerText = "UPGRADE TO GOLD";
+                settingsGoldBtn.innerHTML = `✦ CHIMERA GOLD STATUS ✦ <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
             }
         }
 
@@ -624,22 +649,14 @@
             if (!currentUserId && !isGuestMode) {
                 openPortal('auth');
             } else {
-                AnomalyDetect("Payment Gateway not active. Contact Support Frequency.");
+                AnomalyDetect("Payment Gateway not active. Contact Support.");
             }
-        }
-        
-        // Consistent wording sentinel logic applied to settings menu click anomaly detection
-        function handleSettingsGoldClick() {
-            AnomalyDetect("Global Sync requires Gold Status. Payment Gateway inactive.");
         }
 
         function openPortal(pageId) {
             document.querySelectorAll('.portal-page').forEach(el => el.classList.remove('active'));
             document.getElementById('page-' + pageId).classList.add('active');
-            
-            // Apply dynamic visual updates upon portal loading
             if (pageId === 'gold') updateGoldDimensionUI();
-            
             if(document.getElementById('auth-error-display')) document.getElementById('auth-error-display').innerText = '';
             if(document.getElementById('signup-error-display')) document.getElementById('signup-error-display').innerText = '';
         }
@@ -648,6 +665,7 @@
             isGuestMode = true;
             document.getElementById('spa-portals').style.display = 'none';
             document.getElementById('app-core').style.display = 'flex';
+            updateGoldDimensionUI();
             
             let deviceId = localStorage.getItem('chimera_device_id');
             if (!deviceId) {
@@ -1117,7 +1135,7 @@
                 if (msg.role === 'user' && isLastUserMsg) {
                     const editBtn = document.createElement('button');
                     editBtn.className = 'user-edit-btn';
-                    editBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Edit';
+                    editBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Edit Matrix';
                     editBtn.onclick = function() { editUserMessage(msg.parts[0].text); };
                     msgDiv.appendChild(editBtn);
                 }
