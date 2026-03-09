@@ -15,6 +15,7 @@
     <link rel="shortcut icon" href="chimera-logo.jpg">
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -42,8 +43,10 @@
             --logo-bg: #FFFFFF;
             --logo-padding: 4px;
             --logo-radius: 50%;
+            --logo-shadow: 0 0 12px rgba(211, 47, 47, 0.4);
             --sidebar-bg: rgba(255, 255, 255, 0.95);
             --modal-bg: #FFFFFF;
+            --watermark-opacity: 0.03;
         }
 
         body.dark-mode {
@@ -63,6 +66,7 @@
             --logo-radius: 50%;
             --sidebar-bg: rgba(26, 26, 26, 0.95);
             --modal-bg: #1A1A1A;
+            --watermark-opacity: 0.02;
         }
 
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; display: flex; flex-direction: column; height: 100vh; height: 100dvh; width: 100vw; position: fixed; top: 0; left: 0; right: 0; bottom: 0; transition: background-color 0.3s, color 0.3s; overflow: hidden; }
@@ -102,16 +106,16 @@
         #title-bar { background-color: var(--bg-color); padding: 8px 20px; font-size: 0.85rem; font-weight: 700; color: var(--user-msg-bg); border-bottom: 1px solid var(--border-color); display: flex; justify-content: flex-start; align-items: center; z-index: 9; flex-shrink: 0; transition: color 0.4s ease; }
         #title-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
-        #chat-container { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; }
+        /* Themed Background Architecture */
+        #chat-wrapper { position: relative; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        #chat-bg-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; height: 80%; background-image: url('chimera-logo.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: var(--watermark-opacity); z-index: 0; pointer-events: none; mix-blend-mode: luminosity; transition: opacity 0.3s; }
+        #chat-container { position: relative; flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; z-index: 1; }
         
-        @keyframes messageFadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes messageFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .message { padding: 14px 18px; border-radius: 18px; max-width: 82%; line-height: 1.5; font-size: 0.95rem; word-wrap: break-word; transition: background-color 0.4s ease; animation: messageFadeIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .message { padding: 14px 18px; border-radius: 18px; max-width: 82%; line-height: 1.5; font-size: 0.95rem; word-wrap: break-word; transition: background-color 0.4s ease; animation: messageFadeIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; backdrop-filter: blur(2px); }
         .user-msg { background-color: var(--user-msg-bg); color: var(--user-text); align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .ai-msg { background-color: var(--ai-msg-bg); color: var(--text-color); align-self: flex-start; border-bottom-left-radius: 4px; position: relative; }
+        .ai-msg { background-color: var(--ai-msg-bg); color: var(--text-color); align-self: flex-start; border-bottom-left-radius: 4px; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.05);}
         
         .user-edit-btn { background: transparent; border: none; font-size: 0.7rem; font-weight: 600; color: rgba(255,255,255,0.7); cursor: pointer; display: flex; align-items: center; gap: 4px; text-transform: uppercase; letter-spacing: 0.5px; padding: 0; margin-top: 10px; transition: color 0.2s; width: 100%; justify-content: flex-end; }
         .user-edit-btn:hover { color: #FFFFFF; }
@@ -158,10 +162,11 @@
 
         .full-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 999; display: none; opacity: 0; transition: opacity 0.3s; }
         
+        /* The Chimera Chamber Sidebar & Gothic Rose Motif */
         #sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100vh; background: var(--sidebar-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: -4px 0 15px rgba(0,0,0,0.1); z-index: 1000; transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; border-left: 1px solid var(--border-color); overflow: hidden; }
         #sidebar.open { right: 0; }
         
-        #sidebar-watermark { position: absolute; bottom: -30px; right: -30px; width: 250px; height: 250px; color: var(--user-msg-bg); opacity: 0.04; pointer-events: none; z-index: -1; transition: color 0.4s ease; }
+        #sidebar-watermark { position: absolute; bottom: -20px; right: -20px; width: 280px; height: 280px; color: var(--user-msg-bg); opacity: 0.05; pointer-events: none; z-index: -1; transition: color 0.4s ease; }
         
         .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; z-index: 1; }
         .sidebar-header h2 { margin: 0; font-size: 1.1rem; color: var(--text-color); }
@@ -189,7 +194,8 @@
         .chat-action-btn svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
         .pinned-icon { stroke: var(--user-msg-bg) !important; fill: var(--user-msg-bg) !important; transition: stroke 0.4s ease, fill 0.4s ease; }
 
-        #settings-modal, #rename-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -45%); width: 85%; max-width: 320px; background: var(--modal-bg); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; overflow: hidden; border: 1px solid var(--border-color); display: none; flex-direction: column; opacity: 0; transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        /* Animated Modals */
+        #settings-modal, #rename-modal, #auth-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -45%); width: 85%; max-width: 320px; background: var(--modal-bg); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; overflow: hidden; border: 1px solid var(--border-color); display: none; flex-direction: column; opacity: 0; transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         
         .settings-header { padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1rem; color: var(--text-color);}
         .settings-list { display: flex; flex-direction: column; }
@@ -205,6 +211,9 @@
         }
         .gold-tier { color: #D4AF37; background: linear-gradient(90deg, rgba(212,175,55,0.05) 0%, transparent 100%); border-left: 4px solid #D4AF37; }
         .gold-tier svg { stroke: #D4AF37; opacity: 1; animation: goldPulse 2s infinite; }
+        
+        .logout-tier { color: #D32F2F; }
+        .logout-tier svg { stroke: #D32F2F; opacity: 1; }
 
         #rename-modal { padding: 20px; box-sizing: border-box; }
         .rename-header { font-weight: bold; font-size: 1.1rem; color: var(--text-color); margin-bottom: 15px; }
@@ -215,6 +224,19 @@
         .rename-btn:active { transform: scale(0.95); }
         .rename-cancel { background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); }
         .rename-save { background-color: var(--user-msg-bg); color: white; }
+
+        /* The Chimera ID Auth Modal */
+        #auth-modal { padding: 24px; box-sizing: border-box; text-align: center; }
+        .auth-logo { width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 0 15px rgba(211, 47, 47, 0.5); margin: 0 auto 15px auto; display: block; mix-blend-mode: var(--logo-blend); background-color: var(--logo-bg); padding: 4px;}
+        .auth-title { font-size: 1.4rem; font-weight: 800; color: var(--text-color); margin-bottom: 5px; }
+        .auth-subtitle { font-size: 0.85rem; color: #888; margin-bottom: 25px; }
+        .auth-input { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); font-size: 1rem; outline: none; box-sizing: border-box; margin-bottom: 12px; transition: border-color 0.2s; }
+        .auth-input:focus { border-color: #D32F2F; }
+        .auth-btn-primary { width: 100%; padding: 14px; border-radius: 8px; background-color: #D32F2F; color: white; font-weight: bold; font-size: 1rem; border: none; cursor: pointer; margin-bottom: 10px; transition: transform 0.1s; }
+        .auth-btn-primary:active { transform: scale(0.98); }
+        .auth-btn-secondary { width: 100%; padding: 14px; border-radius: 8px; background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); font-weight: bold; font-size: 1rem; cursor: pointer; transition: transform 0.1s; }
+        .auth-btn-secondary:active { transform: scale(0.98); }
+        #auth-error { color: #D32F2F; font-size: 0.8rem; margin-top: 10px; min-height: 15px; }
 
     </style>
 </head>
@@ -261,7 +283,10 @@
     
     <div id="title-bar"></div>
     
-    <div id="chat-container"></div>
+    <div id="chat-wrapper">
+        <div id="chat-bg-watermark"></div>
+        <div id="chat-container"></div>
+    </div>
     
     <div id="input-area">
         <div id="image-preview-container">
@@ -289,6 +314,17 @@
 
     <div id="sidebar-overlay" class="full-overlay" onclick="closeOverlays()"></div>
     
+    <div id="auth-modal">
+        <img src="chimera-logo.jpg" alt="Chimera" class="auth-logo">
+        <div class="auth-title">Chimera ID</div>
+        <div class="auth-subtitle">Establish biometric connection</div>
+        <input type="email" id="auth-email" class="auth-input" placeholder="Email Address">
+        <input type="password" id="auth-password" class="auth-input" placeholder="Encryption Key">
+        <button class="auth-btn-primary" onclick="handleAuth('login')">Authenticate</button>
+        <button class="auth-btn-secondary" onclick="handleAuth('signup')">Initialize ID</button>
+        <div id="auth-error"></div>
+    </div>
+
     <div id="settings-modal">
         <div class="settings-header">
             <span>Settings</span>
@@ -301,7 +337,9 @@
             <div class="settings-item">About Us <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
             <div class="settings-item">Support <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
             <div class="settings-item">Language: English <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
-            <div class="settings-item">Version: 2.0.0 <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+            <div class="settings-item logout-tier" onclick="logoutUser()">
+                Sever Connection (Logout) <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            </div>
         </div>
     </div>
 
@@ -316,10 +354,17 @@
 
     <div id="sidebar">
         <div id="sidebar-watermark">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22c0-4 2-6 5-8s4-5 2-8c-2-3-6-4-8-2s-3 5-1 8c1 2 2 4 2 8"/>
-                <path d="M12 14c-4 0-6-2-8-5s-2-6 1-7 6-1 8 2c2 3 1 6-1 10"/>
-                <path d="M14 18l2-2m-6 2l-2-2m8-6l2-1m-10 1l-2-1"/>
+            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
+                <path d="M50 85 C45 70 30 65 30 50 C30 35 45 30 50 15 C55 30 70 35 70 50 C70 65 55 70 50 85 Z"/>
+                <path d="M50 70 C40 60 35 55 35 50 C35 45 40 40 50 30 C60 40 65 45 65 50 C65 55 60 60 50 70 Z"/>
+                <path d="M50 55 C45 50 45 45 50 40 C55 45 55 50 50 55 Z"/>
+                <path d="M30 50 C20 45 15 35 15 25 C25 30 35 30 40 25"/>
+                <path d="M70 50 C80 45 85 35 85 25 C75 30 65 30 60 25"/>
+                <path d="M50 85 C50 90 48 95 45 100"/>
+                <path d="M50 85 C55 90 60 92 65 90"/>
+                <path d="M48 90 L40 88 L46 94" fill="currentColor" stroke="none"/>
+                <path d="M55 90 L62 86 L58 92" fill="currentColor" stroke="none"/>
+                <path d="M35 60 L25 55 L32 62" fill="currentColor" stroke="none"/>
             </svg>
         </div>
         
@@ -346,19 +391,57 @@
             projectId: "chimera-chatbot",
             storageBucket: "chimera-chatbot.firebasestorage.app",
             messagingSenderId: "486576823008",
-            appId: "1:486576823008:web:f61ec578d73047c01d4e85",
-            measurementId: "G-ZNSMHYMMVT"
+            appId: "1:486576823008:web:f61ec578d73047c01d4e85"
         };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // --- GHOST PROTOCOL (Device ID Generation) ---
-        let deviceId = localStorage.getItem('chimera_device_id');
-        if (!deviceId) {
-            deviceId = 'ghost_' + Date.now() + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('chimera_device_id', deviceId);
+        // --- CHIMERA ID AUTHENTICATION STATE ---
+        let currentUserId = null;
+
+        auth.onAuthStateChanged((user) => {
+            const authModal = document.getElementById('auth-modal');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (user) {
+                currentUserId = user.uid;
+                authModal.style.opacity = '0';
+                overlay.style.opacity = '0';
+                setTimeout(() => { 
+                    authModal.style.display = 'none'; 
+                    overlay.style.display = 'none'; 
+                }, 200);
+                loadChats(); // Load secured cloud data
+            } else {
+                currentUserId = null;
+                authModal.style.display = 'flex';
+                overlay.style.display = 'block';
+                setTimeout(() => { 
+                    authModal.style.opacity = '1'; 
+                    overlay.style.opacity = '1'; 
+                }, 10);
+            }
+        });
+
+        function handleAuth(action) {
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-password').value;
+            const errorDiv = document.getElementById('auth-error');
+            errorDiv.innerText = '';
+
+            if(action === 'login') {
+                auth.signInWithEmailAndPassword(email, pass).catch(e => errorDiv.innerText = e.message);
+            } else if (action === 'signup') {
+                auth.createUserWithEmailAndPassword(email, pass).catch(e => errorDiv.innerText = e.message);
+            }
+        }
+        
+        function logoutUser() {
+            auth.signOut();
+            closeSettings();
+            document.getElementById('chat-container').innerHTML = ''; // Clear visual cache
         }
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
@@ -370,10 +453,11 @@
         let currentImageMimeType = null;
         let chatToRenameId = null;
         
+        // --- SYNAPTIC THEME ENGINE ---
         const themeColors = {
-            'Serpent': '#D32F2F', 
-            'Ram': '#0F52BA',    
-            'Lion': '#D4AF37'    
+            'Serpent': '#D32F2F', // Crimson
+            'Ram': '#0F52BA',    // Sapphire Blue
+            'Lion': '#D4AF37'    // Chimera Gold
         };
 
         const introMessages = {
@@ -445,8 +529,6 @@
             
             applySynapticColor(themeColors[currentModel]);
             
-            loadChats();
-            
             window.visualViewport.addEventListener("resize", () => {
                 document.body.style.height = `${window.visualViewport.height}px`;
             });
@@ -486,10 +568,10 @@
             const modal = document.getElementById('settings-modal');
             modal.style.opacity = '0';
             modal.style.transform = 'translate(-50%, -45%)';
-            document.getElementById('sidebar-overlay').style.opacity = '0';
+            if(currentUserId) document.getElementById('sidebar-overlay').style.opacity = '0';
             setTimeout(() => { 
                 modal.style.display = 'none'; 
-                document.getElementById('sidebar-overlay').style.display = 'none'; 
+                if(currentUserId) document.getElementById('sidebar-overlay').style.display = 'none'; 
             }, 200);
         }
 
@@ -548,17 +630,20 @@
             setTimeout(() => { document.getElementById('sidebar-overlay').style.display = 'none'; }, 300);
         }
         function closeOverlays() {
-            closeSidebar();
-            closeSettings();
-            closeRenameModal();
+            if (currentUserId) {
+                closeSidebar();
+                closeSettings();
+                closeRenameModal();
+            }
         }
 
         function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
 
-        // --- GHOST PROTOCOL: CLOUD SYNC LOAD ---
+        // --- GHOST PROTOCOL: SECURE CLOUD LOAD ---
         async function loadChats() {
+            if(!currentUserId) return;
             try {
-                const docRef = db.collection("chimera_archives").doc(deviceId);
+                const docRef = db.collection("chimera_archives").doc(currentUserId);
                 const docSnap = await docRef.get();
                 
                 if (docSnap.exists) {
@@ -570,46 +655,21 @@
                         createNewChat();
                     }
                 } else {
-                    // Fallback to local storage and push to cloud
-                    const savedData = localStorage.getItem('chimera_chats_v2');
-                    if (savedData) {
-                        chats = JSON.parse(savedData);
-                        saveChats(); // Syncs old offline memory to new cloud
-                        if (chats.length > 0) {
-                            chats.sort((a, b) => b.isPinned - a.isPinned);
-                            selectChat(chats[0].id);
-                        } else {
-                            createNewChat();
-                        }
-                    } else {
-                        createNewChat();
-                    }
+                    createNewChat();
                 }
             } catch (error) {
-                console.error("[Chimera Cloud] Sync Offline. Using local matrix.", error);
-                const savedData = localStorage.getItem('chimera_chats_v2');
-                if (savedData) {
-                    chats = JSON.parse(savedData);
-                    if (chats.length > 0) {
-                        chats.sort((a, b) => b.isPinned - a.isPinned);
-                        selectChat(chats[0].id);
-                    } else createNewChat();
-                } else createNewChat();
+                console.error("[Chimera Cloud] Network interference.", error);
+                createNewChat();
             }
         }
 
-        // --- GHOST PROTOCOL: CLOUD SYNC SAVE ---
+        // --- GHOST PROTOCOL: SECURE CLOUD SAVE ---
         function saveChats() { 
-            // 1. Save locally (Instant speed & offline backup)
-            localStorage.setItem('chimera_chats_v2', JSON.stringify(chats)); 
-            
-            // 2. Save to Cloud (Firebase handles offline queueing automatically)
-            if (db) {
-                db.collection("chimera_archives").doc(deviceId).set({
-                    chatHistory: chats,
-                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true }).catch(e => console.error("[Chimera Cloud] Write queued for network connection."));
-            }
+            if (!currentUserId || !db) return;
+            db.collection("chimera_archives").doc(currentUserId).set({
+                chatHistory: chats,
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true }).catch(e => console.error("[Chimera Cloud] Write queued for network connection."));
         }
 
         function createNewChat() {
