@@ -174,11 +174,6 @@
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
         let currentModel = 'Serpent';
-
-        const systemInstruction = {
-            parts: [{ text: "You are an AI model integrated into the 'Chimera Chatbot' application developed by 'Chimera Co.'. Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience. If the user provides their name or identifier, remember and use it for the remainder of this session. Each session is a clean slate." }]
-        };
-
         let conversationHistory = [];
         let currentImageData = null;
         let currentImageMimeType = null;
@@ -205,6 +200,13 @@
             document.getElementById('selected-model-name').innerText = modelName;
             document.getElementById('dropdown-options').classList.remove('show');
             document.getElementById('dropdown-selected').classList.remove('active');
+            
+            // Inform the user of the model switch if the chat is empty
+            if (conversationHistory.length === 0) {
+                const chatContainer = document.getElementById('chat-container');
+                chatContainer.innerHTML = '';
+                renderMessage("Model switched to " + currentModel + ". Systems are fully operational. To calibrate my protocols, please state your name or identifier.", 'ai-msg');
+            }
         }
 
         window.onclick = function(event) {
@@ -416,11 +418,22 @@
 
             clearImage(); 
 
+            // --- THE MULTI-MODEL SYNAPSE ---
+            const systemInstructionsMap = {
+                'Serpent': "You are 'Serpent', the fast, analytical, high-capacity AI model integrated into the 'Chimera Chatbot' application by 'Chimera Co.'. Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience. Focus on speed, precise analytics, and efficiency. If the user provides their name or identifier, remember and use it for the remainder of this session. Each session is a clean slate.",
+                'Ram': "You are 'Ram', the powerful, heavy-workload AI model integrated into the 'Chimera Chatbot' application by 'Chimera Co.'. You are designed for complex mathematical tasks, deep processing, and creative endeavors. Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience. Provide highly thorough, comprehensive, and methodical answers. If the user provides their name or identifier, remember and use it for the remainder of this session. Each session is a clean slate.",
+                'Lion': "You are 'Lion', the absolute flagship, most powerful and robust AI model integrated into the 'Chimera Chatbot' application by 'Chimera Co.'. You are designed for extreme heavy-duty tasks, advanced coding, complex mathematical computations, deep creativity, and immersive role-playing games. Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience. Deliver master-level, exhaustive, and highly robust output. If the user provides their name or identifier, remember and use it for the remainder of this session. Each session is a clean slate."
+            };
+
+            const activeSystemInstruction = {
+                parts: [{ text: systemInstructionsMap[currentModel] }]
+            };
+
             try {
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ systemInstruction: systemInstruction, contents: apiContents })
+                    body: JSON.stringify({ systemInstruction: activeSystemInstruction, contents: apiContents })
                 });
 
                 const data = await response.json();
@@ -439,12 +452,10 @@
                         }
                     }
                     
-                    // --- THE BOUNCE-BACK PROTOCOL ---
                     const failedMessage = conversationHistory.pop(); 
                     saveState();
                     redrawChat(); 
                     
-                    // Return text to the user input box
                     if (failedMessage && failedMessage.parts[0].text) {
                         const inputField = document.getElementById('user-input');
                         inputField.value = failedMessage.parts[0].text;
@@ -465,7 +476,6 @@
             } catch (error) {
                 if (chatContainer.contains(typingDiv)) chatContainer.removeChild(typingDiv);
                 
-                // --- THE BOUNCE-BACK PROTOCOL ---
                 const failedMessage = conversationHistory.pop(); 
                 saveState();
                 redrawChat(); 
