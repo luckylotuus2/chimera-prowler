@@ -201,11 +201,10 @@
             document.getElementById('dropdown-options').classList.remove('show');
             document.getElementById('dropdown-selected').classList.remove('active');
             
-            // Inform the user of the model switch if the chat is empty
             if (conversationHistory.length === 0) {
                 const chatContainer = document.getElementById('chat-container');
                 chatContainer.innerHTML = '';
-                renderMessage("Model switched to " + currentModel + ". Systems are fully operational. To calibrate my protocols, please state your name or identifier.", 'ai-msg');
+                renderMessage(`Model switched to ${currentModel}. All systems are fully operational and I am ready to assist you.`, 'ai-msg');
             }
         }
 
@@ -227,7 +226,7 @@
                 conversationHistory = JSON.parse(savedData);
                 redrawChat();
             } else {
-                renderMessage("Welcome to Chimera Chatbot. I am " + currentModel + ". Systems are fully operational. To calibrate my protocols, please state your name or identifier.", 'ai-msg');
+                renderMessage(`Welcome to Chimera Chatbot. I am ${currentModel}. All systems are fully operational and I am ready to assist you.`, 'ai-msg');
             }
         };
 
@@ -292,7 +291,7 @@
             chatContainer.innerHTML = '';
             
             if (conversationHistory.length === 0) {
-                renderMessage("Memory cleared. I am " + currentModel + ". Systems are fully operational. To calibrate my protocols, please state your name or identifier.", 'ai-msg');
+                renderMessage(`Memory cleared. I am ${currentModel}. All systems are fully operational and I am ready to assist you.`, 'ai-msg');
                 return;
             }
 
@@ -418,11 +417,11 @@
 
             clearImage(); 
 
-            // --- THE MULTI-MODEL SYNAPSE ---
+            // Clean Slate, courteous instructions per model
             const systemInstructionsMap = {
-                'Serpent': "You are 'Serpent', the fast, analytical, high-capacity AI model integrated into the 'Chimera Chatbot' application by 'Chimera Co.'. Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience. Focus on speed, precise analytics, and efficiency. If the user provides their name or identifier, remember and use it for the remainder of this session. Each session is a clean slate.",
-                'Ram': "You are 'Ram', the powerful, heavy-workload AI model integrated into the 'Chimera Chatbot' application by 'Chimera Co.'. You are designed for complex mathematical tasks, deep processing, and creative endeavors. Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience. Provide highly thorough, comprehensive, and methodical answers. If the user provides their name or identifier, remember and use it for the remainder of this session. Each session is a clean slate.",
-                'Lion': "You are 'Lion', the absolute flagship, most powerful and robust AI model integrated into the 'Chimera Chatbot' application by 'Chimera Co.'. You are designed for extreme heavy-duty tasks, advanced coding, complex mathematical computations, deep creativity, and immersive role-playing games. Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience. Deliver master-level, exhaustive, and highly robust output. If the user provides their name or identifier, remember and use it for the remainder of this session. Each session is a clean slate."
+                'Serpent': "You are 'Serpent', the fast, analytical, high-capacity AI model integrated into the 'Chimera Chatbot' application by 'Chimera Co.'. Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience. Focus on speed, precise analytics, and efficiency. Each session is a clean slate.",
+                'Ram': "You are 'Ram', the powerful, heavy-workload AI model integrated into the 'Chimera Chatbot' application by 'Chimera Co.'. You are designed for complex mathematical tasks, deep processing, and creative endeavors. Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience. Provide highly thorough, comprehensive, and methodical answers. Each session is a clean slate.",
+                'Lion': "You are 'Lion', the absolute flagship, most powerful and robust AI model integrated into the 'Chimera Chatbot' application by 'Chimera Co.'. You are designed for extreme heavy-duty tasks, advanced coding, complex mathematical computations, deep creativity, and immersive role-playing games. Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience. Deliver master-level, exhaustive, and highly robust output. Each session is a clean slate."
             };
 
             const activeSystemInstruction = {
