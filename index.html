@@ -31,6 +31,7 @@
             --logo-radius: 50%;
             --logo-shadow: 0 0 12px rgba(211, 47, 47, 0.4);
             --sidebar-bg: rgba(255, 255, 255, 0.95);
+            --modal-bg: #FFFFFF;
         }
 
         body.dark-mode {
@@ -51,6 +52,7 @@
             --logo-radius: 50%;
             --logo-shadow: 0 0 12px rgba(211, 47, 47, 0.4);
             --sidebar-bg: rgba(26, 26, 26, 0.95);
+            --modal-bg: #1A1A1A;
         }
 
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; display: flex; flex-direction: column; height: 100vh; height: 100dvh; width: 100vw; position: fixed; top: 0; left: 0; right: 0; bottom: 0; transition: background-color 0.3s, color 0.3s; overflow: hidden; }
@@ -112,7 +114,6 @@
         #image-preview-container { display: none; padding-bottom: 10px; }
         #preview-img { max-height: 60px; border-radius: 8px; border: 2px solid var(--user-msg-bg); }
         
-        /* Updated Input Area Layout */
         #controls-row { display: flex; align-items: flex-end; gap: 8px; width: 100%; box-sizing: border-box; }
         .left-buttons { display: flex; gap: 2px; align-items: center; }
         .left-buttons .icon-btn { width: 44px; height: 44px; padding: 0; min-width: 44px; display: flex; justify-content: center; align-items: center; }
@@ -124,8 +125,10 @@
         #send-btn:active { transform: scale(0.95); }
         #send-btn svg { width: 20px; height: 20px; stroke: white; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; margin-left: -2px; }
 
+        /* Sidebar Overlay */
+        .full-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 999; display: none; opacity: 0; transition: opacity 0.3s; }
+        
         /* The Chimera Chamber Sidebar */
-        #sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 999; display: none; opacity: 0; transition: opacity 0.3s; }
         #sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100vh; background: var(--sidebar-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: -4px 0 15px rgba(0,0,0,0.1); z-index: 1000; transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; border-left: 1px solid var(--border-color); }
         #sidebar.open { right: 0; }
         
@@ -149,10 +152,9 @@
         .chat-action-btn { background: transparent; border: none; padding: 0; cursor: pointer; color: var(--text-color); transition: color 0.2s; display: flex; align-items: center; justify-content: center; }
         .chat-action-btn:hover { color: var(--user-msg-bg); }
         .chat-action-btn svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-        .pinned-icon { stroke: var(--user-msg-bg) !important; fill: var(--user-msg-bg) !important; }
 
-        /* The Settings Modal */
-        #settings-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 320px; background: var(--header-bg); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; overflow: hidden; border: 1px solid var(--border-color); display: none; flex-direction: column; opacity: 0; transition: opacity 0.2s; }
+        /* Settings Modal */
+        #settings-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 320px; background: var(--modal-bg); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; overflow: hidden; border: 1px solid var(--border-color); display: none; flex-direction: column; opacity: 0; transition: opacity 0.2s; }
         .settings-header { padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1rem; color: var(--text-color);}
         .settings-list { display: flex; flex-direction: column; }
         .settings-item { padding: 16px 20px; border-bottom: 1px solid var(--border-color); cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: var(--text-color); font-weight: 600; font-size: 0.95rem; transition: background-color 0.2s; }
@@ -162,6 +164,16 @@
         
         .gold-tier { color: #D4AF37; background: linear-gradient(90deg, rgba(212,175,55,0.05) 0%, transparent 100%); border-left: 4px solid #D4AF37; }
         .gold-tier svg { stroke: #D4AF37; opacity: 1; }
+
+        /* Rename Modal */
+        #rename-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 320px; background: var(--modal-bg); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; overflow: hidden; border: 1px solid var(--border-color); display: none; flex-direction: column; opacity: 0; transition: opacity 0.2s; padding: 20px; box-sizing: border-box; }
+        .rename-header { font-weight: bold; font-size: 1.1rem; color: var(--text-color); margin-bottom: 15px; }
+        #rename-input-field { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); font-size: 1rem; outline: none; box-sizing: border-box; margin-bottom: 20px; transition: border-color 0.2s; }
+        #rename-input-field:focus { border-color: var(--user-msg-bg); }
+        .rename-buttons { display: flex; justify-content: flex-end; gap: 10px; }
+        .rename-btn { padding: 10px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 0.9rem; }
+        .rename-cancel { background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); }
+        .rename-save { background-color: var(--user-msg-bg); color: white; }
 
     </style>
 </head>
@@ -191,9 +203,7 @@
         </div>
     </header>
     
-    <div id="title-bar">
-        <span id="title-name">New Calibration</span>
-    </div>
+    <div id="title-bar"></div>
     
     <div id="chat-container"></div>
     
@@ -219,6 +229,8 @@
         </div>
     </div>
 
+    <div id="sidebar-overlay" class="full-overlay" onclick="closeOverlays()"></div>
+    
     <div id="settings-modal">
         <div class="settings-header">
             <span>Settings</span>
@@ -235,7 +247,15 @@
         </div>
     </div>
 
-    <div id="sidebar-overlay" onclick="closeOverlays()"></div>
+    <div id="rename-modal">
+        <div class="rename-header">Enter New Archive ID:</div>
+        <input type="text" id="rename-input-field" placeholder="Enter ID...">
+        <div class="rename-buttons">
+            <button class="rename-btn rename-cancel" onclick="closeRenameModal()">Cancel</button>
+            <button class="rename-btn rename-save" onclick="saveRenamedChat()">Save</button>
+        </div>
+    </div>
+
     <div id="sidebar">
         <div class="sidebar-header">
             <h2>Chimera Chamber</h2>
@@ -244,8 +264,7 @@
         <button class="new-chat-btn" onclick="createNewChat()">
             <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> New Transmission
         </button>
-        <div class="chat-list" id="chat-list-container">
-            </div>
+        <div class="chat-list" id="chat-list-container"></div>
     </div>
 
     <script>
@@ -260,7 +279,12 @@
         let currentChatId = null;
         let currentImageData = null;
         let currentImageMimeType = null;
+        let chatToRenameId = null;
         
+        // --- CHUNKING AUDIO ENGINE ---
+        let ttsQueue = [];
+        let ttsIndex = 0;
+        let isTTSPaused = false;
         let currentUtterance = null;
         let activeAudioBtn = null;
 
@@ -324,7 +348,6 @@
             }
         }
 
-        // --- SETTINGS OVERLAY ---
         function openSettings() {
             document.getElementById('settings-modal').style.display = 'flex';
             document.getElementById('sidebar-overlay').style.display = 'block';
@@ -342,7 +365,43 @@
             }, 200);
         }
 
-        // --- SIDEBAR & CHAT MANAGEMENT ---
+        // --- CUSTOM RENAME MODAL ---
+        function openRenameModal(id, currentName) {
+            chatToRenameId = id;
+            document.getElementById('rename-input-field').value = currentName;
+            document.getElementById('rename-modal').style.display = 'flex';
+            document.getElementById('sidebar-overlay').style.display = 'block';
+            setTimeout(() => { 
+                document.getElementById('rename-modal').style.opacity = '1'; 
+                document.getElementById('sidebar-overlay').style.opacity = '1'; 
+                document.getElementById('rename-input-field').focus();
+            }, 10);
+        }
+        function closeRenameModal() {
+            document.getElementById('rename-modal').style.opacity = '0';
+            setTimeout(() => { 
+                document.getElementById('rename-modal').style.display = 'none'; 
+                if(!document.getElementById('sidebar').classList.contains('open')) {
+                    document.getElementById('sidebar-overlay').style.display = 'none'; 
+                    document.getElementById('sidebar-overlay').style.opacity = '0';
+                }
+            }, 200);
+        }
+        function saveRenamedChat() {
+            const newName = document.getElementById('rename-input-field').value.trim();
+            if (newName !== "" && chatToRenameId) {
+                const chat = chats.find(c => c.id === chatToRenameId);
+                if (chat) {
+                    chat.title = newName;
+                    chat.customTitle = true; // Lock the title from AI updates
+                    saveChats();
+                    renderChatList();
+                    updateTitleBar();
+                }
+            }
+            closeRenameModal();
+        }
+
         function openSidebar() {
             document.getElementById('sidebar').classList.add('open');
             document.getElementById('sidebar-overlay').style.display = 'block';
@@ -357,6 +416,7 @@
         function closeOverlays() {
             closeSidebar();
             closeSettings();
+            closeRenameModal();
         }
 
         function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
@@ -379,7 +439,7 @@
         function saveChats() { localStorage.setItem('chimera_chats_v2', JSON.stringify(chats)); }
 
         function createNewChat() {
-            const newChat = { id: generateId(), title: "New Calibration", isPinned: false, messages: [] };
+            const newChat = { id: generateId(), title: "New Calibration", customTitle: false, isPinned: false, messages: [] };
             chats.unshift(newChat);
             selectChat(newChat.id);
             saveChats();
@@ -391,9 +451,16 @@
 
         function selectChat(id) {
             currentChatId = id;
-            const chat = chats.find(c => c.id === id);
-            document.getElementById('title-name').innerText = chat.title;
+            updateTitleBar();
             redrawChat();
+        }
+        
+        function updateTitleBar() {
+            const chat = chats.find(c => c.id === currentChatId);
+            if(chat) {
+                let pinHtml = chat.isPinned ? `<svg class="pinned-indicator" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;margin-right:6px;"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 11.2V6a3 3 0 0 0-6 0v5.2a2 2 0 0 1-1.11 1.35l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>` : '';
+                document.getElementById('title-bar').innerHTML = pinHtml + `<span id="title-name">${chat.title}</span>`;
+            }
         }
 
         function renderChatList() {
@@ -414,7 +481,6 @@
                 const titleWrapper = document.createElement('div');
                 titleWrapper.className = 'chat-title-wrapper';
                 
-                // Add the Thumbtack Pin icon directly next to title if pinned
                 if (chat.isPinned) {
                     titleWrapper.innerHTML = `<svg class="pinned-indicator" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 11.2V6a3 3 0 0 0-6 0v5.2a2 2 0 0 1-1.11 1.35l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>`;
                 }
@@ -427,26 +493,17 @@
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'chat-actions';
 
-                // Thumbtack Button
                 const pinBtn = document.createElement('button');
                 pinBtn.className = 'chat-action-btn';
                 pinBtn.innerHTML = chat.isPinned 
                     ? '<svg class="pinned-icon" viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 11.2V6a3 3 0 0 0-6 0v5.2a2 2 0 0 1-1.11 1.35l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>' 
                     : '<svg viewBox="0 0 24 24"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 11.2V6a3 3 0 0 0-6 0v5.2a2 2 0 0 1-1.11 1.35l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>';
-                pinBtn.onclick = () => { chat.isPinned = !chat.isPinned; saveChats(); renderChatList(); };
+                pinBtn.onclick = () => { chat.isPinned = !chat.isPinned; saveChats(); renderChatList(); updateTitleBar(); };
 
                 const renameBtn = document.createElement('button');
                 renameBtn.className = 'chat-action-btn';
                 renameBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>';
-                renameBtn.onclick = () => {
-                    const newName = prompt("Enter new Archive Name:", chat.title);
-                    if(newName && newName.trim() !== "") {
-                        chat.title = newName.trim();
-                        saveChats();
-                        renderChatList();
-                        if(chat.id === currentChatId) document.getElementById('title-name').innerText = chat.title;
-                    }
-                };
+                renameBtn.onclick = () => openRenameModal(chat.id, chat.title);
 
                 const delBtn = document.createElement('button');
                 delBtn.className = 'chat-action-btn';
@@ -471,58 +528,90 @@
             });
         }
 
-        function updateChatTitleIfNeeded(text) {
-            const chat = chats.find(c => c.id === currentChatId);
-            if (chat.title === "New Calibration" && chat.messages.length <= 2) {
-                let newTitle = text.length > 20 ? text.substring(0,20) + '...' : text;
-                chat.title = newTitle;
-                document.getElementById('title-name').innerText = newTitle;
-                saveChats();
-            }
+        // --- AI AUTO-TITLING ENGINE ---
+        async function generateChatTitle(userText, chatObj) {
+            const titleSystemInstruction = {
+                parts: [{ text: "You are a title generator. Summarize the user's prompt into a concise, professional title (2-4 words). Respond ONLY with the title. No quotes, no punctuation." }]
+            };
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        systemInstruction: titleSystemInstruction,
+                        contents: [{ role: "user", parts: [{ text: userText }] }]
+                    })
+                });
+                const data = await response.json();
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    let aiTitle = data.candidates[0].content.parts[0].text.trim().replace(/^["']|["']$/g, '');
+                    if(!chatObj.customTitle) {
+                        chatObj.title = aiTitle;
+                        saveChats();
+                        if (document.getElementById('sidebar').classList.contains('open')) renderChatList();
+                        if (currentChatId === chatObj.id) updateTitleBar();
+                    }
+                }
+            } catch (e) { console.log("AI Title Gen skipped due to network load."); }
         }
 
-        // --- STABILIZED AUDIO ENGINE ---
+        // --- STABILIZED CHUNKING AUDIO ENGINE ---
+        function resetAudioBtn(btn) {
+            btn.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Play';
+        }
+
+        function playNextTTSChunk() {
+            if (isTTSPaused || ttsIndex >= ttsQueue.length) {
+                if (ttsIndex >= ttsQueue.length && activeAudioBtn) {
+                    resetAudioBtn(activeAudioBtn);
+                    activeAudioBtn = null;
+                }
+                return;
+            }
+            
+            currentUtterance = new SpeechSynthesisUtterance(ttsQueue[ttsIndex].trim());
+            currentUtterance.onend = () => {
+                if (!isTTSPaused) {
+                    ttsIndex++;
+                    playNextTTSChunk();
+                }
+            };
+            currentUtterance.onerror = (e) => {
+                if (e.error !== 'canceled' && !isTTSPaused) {
+                    ttsIndex++;
+                    playNextTTSChunk();
+                }
+            };
+            window.speechSynthesis.speak(currentUtterance);
+        }
+
         function toggleAudio(btnElement, text) {
             if (activeAudioBtn === btnElement) {
-                if (window.speechSynthesis.paused) {
-                    window.speechSynthesis.resume();
+                if (isTTSPaused) {
+                    isTTSPaused = false;
                     btnElement.innerHTML = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg> Pause';
-                } else if (window.speechSynthesis.speaking) {
-                    window.speechSynthesis.pause();
+                    playNextTTSChunk(); // Resume from exact saved chunk
+                } else {
+                    isTTSPaused = true;
+                    window.speechSynthesis.cancel(); // Kills current chunk safely
                     btnElement.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Resume';
                 }
                 return;
             }
 
-            // A hard reset is required for Android WebView stability
             window.speechSynthesis.cancel(); 
-            
-            if (activeAudioBtn && activeAudioBtn !== btnElement) {
-                activeAudioBtn.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Play';
-            }
+            if (activeAudioBtn) resetAudioBtn(activeAudioBtn);
 
             activeAudioBtn = btnElement;
+            isTTSPaused = false;
             
-            setTimeout(() => {
-                const cleanText = text.replace(/[*_#`~]/g, '').replace(/<[^>]*>?/gm, '');
-                currentUtterance = new SpeechSynthesisUtterance(cleanText);
-                
-                currentUtterance.onend = () => {
-                    if (activeAudioBtn === btnElement) {
-                        btnElement.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Play';
-                        activeAudioBtn = null;
-                    }
-                };
-                currentUtterance.onerror = () => {
-                    if (activeAudioBtn === btnElement) {
-                        btnElement.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Play';
-                        activeAudioBtn = null;
-                    }
-                };
-                
-                btnElement.innerHTML = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg> Pause';
-                window.speechSynthesis.speak(currentUtterance);
-            }, 50); // This 50ms delay stops the Android bug
+            // Clean text and split into manageable sentence chunks
+            const cleanText = text.replace(/[*_#`~]/g, '').replace(/<[^>]*>?/gm, '');
+            ttsQueue = cleanText.match(/[^.!?\n]+[.!?\n]*/g) || [cleanText];
+            ttsIndex = 0;
+            
+            btnElement.innerHTML = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg> Pause';
+            playNextTTSChunk();
         }
 
         function copyToClipboard(btnElement, text) {
@@ -683,7 +772,11 @@
             const chat = chats.find(c => c.id === currentChatId);
             chat.messages.push({ role: "user", parts: [{ text: messageText || "Analyze this image." }] });
             
-            updateChatTitleIfNeeded(messageText || "Image Analysis");
+            // Trigger AI Auto-Titling in the background if it's the first message
+            if (chat.title === "New Calibration" && chat.messages.length === 1 && !chat.customTitle) {
+                generateChatTitle(messageText || "Image Analysis", chat);
+            }
+            
             saveChats();
             redrawChat();
 
