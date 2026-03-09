@@ -21,9 +21,8 @@
         
         .message { padding: 14px 20px; border-radius: 20px; max-width: 80%; line-height: 1.5; font-size: 0.95rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .user-msg { background-color: #D32F2F; color: #FFFFFF; align-self: flex-end; border-bottom-right-radius: 4px; }
-        .ai-msg { background-color: #E0E0E0; color: #212121; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .ai-msg { background-color: #E0E0E0; color: #212121; align-self: flex-start; border-bottom-left-radius: 4px; position: relative; }
         
-        /* New Markdown Formatting Styles */
         .ai-msg p { margin: 0 0 10px 0; }
         .ai-msg p:last-child { margin: 0; }
         .ai-msg pre { background-color: #212121; color: #E0E0E0; padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; margin: 10px 0; }
@@ -31,7 +30,10 @@
         .ai-msg pre code { background-color: transparent; color: inherit; padding: 0; }
         .ai-msg ul, .ai-msg ol { margin: 10px 0; padding-left: 20px; }
         
-        /* New Typing Indicator Animation */
+        /* New TTS Button Styling */
+        .tts-btn { background: transparent; border: none; font-size: 1.2rem; cursor: pointer; opacity: 0.6; padding: 5px 0 0 0; text-align: right; width: 100%; display: block; margin-top: 5px; border-top: 1px solid rgba(0,0,0,0.1); }
+        .tts-btn:active { opacity: 1; }
+
         .typing-indicator { display: flex; align-items: center; gap: 4px; font-style: italic; color: #757575; background-color: transparent; box-shadow: none; padding: 5px 20px;}
         .dot { animation: blink 1.4s infinite both; height: 5px; width: 5px; background-color: #757575; border-radius: 50%; display: inline-block; }
         .dot:nth-child(1) { animation-delay: 0.2s; }
@@ -64,7 +66,6 @@
         </div>
         
         <div id="controls-row">
-            <button class="icon-btn" id="mute-btn" onclick="toggleMute()" title="Toggle Voice">🔇</button>
             <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
             <button class="icon-btn" onclick="document.getElementById('file-input').click()" title="Attach Image">📎</button>
             <button class="icon-btn" onclick="startVoice()" title="Dictate">🎤</button>
@@ -75,15 +76,12 @@
 
     <script>
         // --- CAMOUFLAGE PROTOCOL ---
-        // Paste the first half of your key here
         const part1 = 'AIzaSyD_boA7_WqJiy1';
-        // Paste the second half of your key here
         const part2 = 'qPEy_WgPAY86SYdObaqs';
         
         const apiKey = part1 + part2; 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
-        // --- NEW BRANDING & PERSONA ---
         const systemInstruction = {
             parts: [{ text: "You are 'Serpent', an AI model integrated into the 'Chimera Chatbot' application developed by 'Chimera Co.'. You are the fast, analytical, high-capacity model in the Chimera ecosystem (which will eventually include the Ram and Lion models). Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience. You are optimized for speed and analytical capabilities." }]
         };
@@ -91,7 +89,6 @@
         let conversationHistory = [];
         let currentImageData = null;
         let currentImageMimeType = null;
-        let isMuted = true; // Voice is muted by default to not startle the user
 
         window.onload = () => {
             const savedData = localStorage.getItem('chimera_chatbot_data');
@@ -105,17 +102,8 @@
             }
         };
 
-        // Text-to-Speech Functions
-        function toggleMute() {
-            isMuted = !isMuted;
-            document.getElementById('mute-btn').innerText = isMuted ? '🔇' : '🔊';
-            if (isMuted) window.speechSynthesis.cancel();
-        }
-
-        function speakText(text) {
-            if (isMuted) return;
+        function speakSpecificText(text) {
             window.speechSynthesis.cancel();
-            // This strips markdown out so the AI doesn't read asterisks out loud
             const cleanText = text.replace(/[*_#`~]/g, '').replace(/<[^>]*>?/gm, '');
             const utterance = new SpeechSynthesisUtterance(cleanText);
             window.speechSynthesis.speak(utterance);
@@ -127,19 +115,24 @@
             msgDiv.className = `message ${className}`;
             
             if (className === 'ai-msg') {
-                // This command activates the new Markdown library
-                msgDiv.innerHTML = marked.parse(text);
+                const textWrapper = document.createElement('div');
+                textWrapper.innerHTML = marked.parse(text);
+                msgDiv.appendChild(textWrapper);
+                
+                // Exclude the TTS button on Nexus Network Alerts
+                if (!text.includes("[Nexus Network Alert]")) {
+                    const ttsBtn = document.createElement('button');
+                    ttsBtn.className = 'tts-btn';
+                    ttsBtn.innerHTML = '🔊 Play';
+                    ttsBtn.onclick = () => speakSpecificText(text);
+                    msgDiv.appendChild(ttsBtn);
+                }
             } else {
                 msgDiv.innerHTML = text.replace(/\n/g, '<br>');
             }
             
             chatContainer.appendChild(msgDiv);
-            
-            // Auto-scroll polish
-            setTimeout(() => {
-                chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
-            }, 50);
-            
+            setTimeout(() => { chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); }, 50);
             return msgDiv;
         }
 
@@ -199,7 +192,6 @@
             conversationHistory.push({ role: "user", parts: [{ text: messageText || "Analyze this image." }] });
             saveState();
 
-            // The New Typing Indicator
             const chatContainer = document.getElementById('chat-container');
             const typingDiv = document.createElement('div');
             typingDiv.className = 'message ai-msg typing-indicator';
@@ -221,11 +213,22 @@
 
                 const data = await response.json();
                 
-                // Remove the typing indicator when the AI answers
                 if (chatContainer.contains(typingDiv)) chatContainer.removeChild(typingDiv);
                 
                 if (!response.ok) {
-                    renderMessage(`Error: ${data.error ? data.error.message : 'Connection failed.'}`, 'ai-msg');
+                    let errorMessage = "**[Nexus Network Alert]** Connection severed. Please check parameters.";
+                    
+                    if (data.error && data.error.message) {
+                        if (data.error.message.includes("Quota exceeded")) {
+                            errorMessage = "**[Nexus Network Alert]** Engine speed limit reached. Please allow 30 seconds for the system to cool down before transmitting again.";
+                        } else if (data.error.message.includes("API key not valid")) {
+                            errorMessage = "**[Nexus Network Alert]** API Key authentication failed. Please verify perimeter security protocols.";
+                        } else {
+                            errorMessage = `**[Nexus Network Alert]** System anomaly detected: ${data.error.message}`;
+                        }
+                    }
+                    
+                    renderMessage(errorMessage, 'ai-msg');
                     conversationHistory.pop(); 
                     saveState();
                     return; 
@@ -234,13 +237,12 @@
                 if (data.candidates && data.candidates[0].content.parts[0].text) {
                     const aiText = data.candidates[0].content.parts[0].text;
                     renderMessage(aiText, 'ai-msg');
-                    speakText(aiText); // Speak out loud if not muted
                     conversationHistory.push({ role: "model", parts: [{ text: aiText }] });
                     saveState();
                 }
             } catch (error) {
                 if (chatContainer.contains(typingDiv)) chatContainer.removeChild(typingDiv);
-                renderMessage("Connection severed.", 'ai-msg');
+                renderMessage("**[Nexus Network Alert]** Complete signal loss. The connection to the server has been severed.", 'ai-msg');
                 conversationHistory.pop(); 
                 saveState();
             }
@@ -251,7 +253,7 @@
             localStorage.removeItem('chimera_chatbot_data');
             conversationHistory = [];
             document.getElementById('chat-container').innerHTML = '';
-            renderMessage("Memory cleared. I am ready for your next directive.", 'ai-msg');
+            renderMessage("**[Nexus Network Alert]** Memory cleared. Serpent systems awaiting new directive.", 'ai-msg');
         }
     </script>
 </body>
