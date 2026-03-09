@@ -13,48 +13,154 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
     <style>
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #FFFFFF; color: #212121; margin: 0; display: flex; flex-direction: column; height: 100vh; }
-        header { background-color: #F8F9FA; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EEEEEE; min-height: 70px; }
-        #header-logo { max-height: 60px; width: auto; display: block; }
-        #reset-btn { background-color: transparent; color: #757575; border: 1px solid #CCCCCC; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
-        #chat-container { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
+        /* Neo-Modern CSS Variables */
+        :root {
+            --bg-color: #FFFFFF; /* Absolute crisp white */
+            --text-color: #1A1A1A;
+            --header-bg: #FFFFFF;
+            --border-color: #E5E5E5;
+            --ai-msg-bg: #F4F4F5;
+            --user-msg-bg: #D32F2F; /* Chimera Crimson */
+            --user-text: #FFFFFF;
+            --input-bg: #FFFFFF;
+            --code-bg: #1A1A1A;
+            --code-text: #E0E0E0;
+            --icon-color: #1A1A1A;
+            --logo-blend: multiply;
+            --logo-bg: transparent;
+            --logo-padding: 0;
+            --logo-radius: 0;
+            --logo-shadow: none;
+        }
+
+        /* Obsidian Protocol (Dark Mode) */
+        body.dark-mode {
+            --bg-color: #121212; /* Absolute obsidian */
+            --text-color: #EAEAEA;
+            --header-bg: #1A1A1A;
+            --border-color: #2A2A2A;
+            --ai-msg-bg: #242424;
+            --user-msg-bg: #D32F2F; 
+            --user-text: #FFFFFF;
+            --input-bg: #1A1A1A;
+            --code-bg: #000000;
+            --code-text: #D32F2F;
+            --icon-color: #EAEAEA;
+            --logo-blend: normal;
+            --logo-bg: #FFFFFF; /* Creates the Enamel Pin effect for JPGs */
+            --logo-padding: 4px;
+            --logo-radius: 50%;
+            --logo-shadow: 0 0 12px rgba(211, 47, 47, 0.4);
+        }
+
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; display: flex; flex-direction: column; height: 100vh; transition: background-color 0.3s, color 0.3s; }
         
-        .message { padding: 14px 20px; border-radius: 20px; max-width: 80%; line-height: 1.5; font-size: 0.95rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .user-msg { background-color: #D32F2F; color: #FFFFFF; align-self: flex-end; border-bottom-right-radius: 4px; }
-        .ai-msg { background-color: #E0E0E0; color: #212121; align-self: flex-start; border-bottom-left-radius: 4px; position: relative; }
+        header { background-color: var(--header-bg); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); min-height: 60px; transition: background-color 0.3s; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        
+        /* The JPG Logo Enamel Pin Hack */
+        #header-logo { 
+            height: 45px; 
+            width: 45px; 
+            object-fit: contain;
+            display: block; 
+            mix-blend-mode: var(--logo-blend);
+            background-color: var(--logo-bg);
+            padding: var(--logo-padding);
+            border-radius: var(--logo-radius);
+            box-shadow: var(--logo-shadow);
+            transition: all 0.3s ease;
+        }
+        
+        /* Premium Custom Dropdown */
+        .custom-select-wrapper { position: relative; display: inline-block; }
+        #model-selector { 
+            appearance: none; -webkit-appearance: none; 
+            background-color: transparent; 
+            color: var(--text-color); 
+            border: 1px solid var(--border-color); 
+            padding: 8px 36px 8px 16px; 
+            border-radius: 20px; 
+            font-weight: 600; 
+            font-size: 0.9rem; 
+            cursor: pointer; 
+            outline: none; 
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%23D32F2F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>'); 
+            background-repeat: no-repeat; 
+            background-position: right 12px center; 
+            transition: border-color 0.2s;
+        }
+        #model-selector:focus { border-color: var(--user-msg-bg); }
+        
+        .header-controls { display: flex; gap: 12px; align-items: center; }
+        
+        /* Sleek Neo-Modern Buttons */
+        .icon-btn { background: transparent; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; padding: 8px; border-radius: 50%; color: var(--icon-color); transition: background-color 0.2s; }
+        .icon-btn:hover { background-color: rgba(128,128,128,0.1); }
+        .icon-btn svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+        
+        /* Reset Text Button */
+        #reset-btn { background: transparent; color: var(--text-color); border: none; font-size: 0.75rem; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; transition: opacity 0.2s; }
+        #reset-btn:hover { opacity: 1; }
+        
+        #chat-container { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; }
+        
+        .message { padding: 14px 18px; border-radius: 18px; max-width: 82%; line-height: 1.5; font-size: 0.95rem; word-wrap: break-word; }
+        .user-msg { background-color: var(--user-msg-bg); color: var(--user-text); align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 2px 8px rgba(211,47,47,0.2); }
+        .ai-msg { background-color: var(--ai-msg-bg); color: var(--text-color); align-self: flex-start; border-bottom-left-radius: 4px; position: relative; }
         
         .ai-msg p { margin: 0 0 10px 0; }
         .ai-msg p:last-child { margin: 0; }
-        .ai-msg pre { background-color: #212121; color: #E0E0E0; padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; margin: 10px 0; }
-        .ai-msg code { background-color: #CCCCCC; padding: 2px 4px; border-radius: 4px; font-family: monospace; font-size: 0.9rem; color: #D32F2F; }
-        .ai-msg pre code { background-color: transparent; color: inherit; padding: 0; }
-        .ai-msg ul, .ai-msg ol { margin: 10px 0; padding-left: 20px; }
+        .ai-msg pre { background-color: var(--code-bg); color: var(--code-text); padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; margin: 10px 0; border: 1px solid var(--border-color); }
+        .ai-msg code { background-color: rgba(128,128,128,0.15); padding: 2px 4px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.85rem; color: var(--user-msg-bg); }
+        .ai-msg pre code { background-color: transparent; padding: 0; color: var(--code-text); }
         
-        /* New TTS Button Styling */
-        .tts-btn { background: transparent; border: none; font-size: 1.2rem; cursor: pointer; opacity: 0.6; padding: 5px 0 0 0; text-align: right; width: 100%; display: block; margin-top: 5px; border-top: 1px solid rgba(0,0,0,0.1); }
-        .tts-btn:active { opacity: 1; }
+        /* Minimalist Action Deck */
+        .message-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 12px; padding-top: 8px; }
+        .action-btn { background: transparent; border: none; font-size: 0.7rem; font-weight: 600; color: var(--text-color); cursor: pointer; opacity: 0.4; display: flex; align-items: center; gap: 4px; text-transform: uppercase; letter-spacing: 0.5px; padding: 0; transition: opacity 0.2s; }
+        .action-btn:hover { opacity: 1; }
+        .action-btn svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 
-        .typing-indicator { display: flex; align-items: center; gap: 4px; font-style: italic; color: #757575; background-color: transparent; box-shadow: none; padding: 5px 20px;}
-        .dot { animation: blink 1.4s infinite both; height: 5px; width: 5px; background-color: #757575; border-radius: 50%; display: inline-block; }
+        .typing-indicator { display: flex; align-items: center; gap: 4px; font-style: italic; color: #888; background-color: transparent; box-shadow: none; padding: 5px 20px;}
+        .dot { animation: blink 1.4s infinite both; height: 4px; width: 4px; background-color: #888; border-radius: 50%; display: inline-block; }
         .dot:nth-child(1) { animation-delay: 0.2s; }
         .dot:nth-child(2) { animation-delay: 0.4s; }
         .dot:nth-child(3) { animation-delay: 0.6s; }
         @keyframes blink { 0% { opacity: .2; } 20% { opacity: 1; } 100% { opacity: .2; } }
 
-        #input-area { display: flex; flex-direction: column; background-color: #F8F9FA; border-top: 1px solid #EEEEEE; }
-        #image-preview-container { display: none; padding: 10px; text-align: center; background-color: #EEEEEE; }
-        #preview-img { max-height: 80px; border-radius: 8px; border: 2px solid #D32F2F; }
-        #controls-row { display: flex; padding: 10px; align-items: center; gap: 8px; width: 100%; box-sizing: border-box;}
+        #input-area { display: flex; flex-direction: column; background-color: var(--input-bg); padding: 12px 16px; border-top: 1px solid var(--border-color); transition: background-color 0.3s; }
+        #image-preview-container { display: none; padding-bottom: 10px; }
+        #preview-img { max-height: 60px; border-radius: 8px; border: 2px solid var(--user-msg-bg); }
         
-        .icon-btn { background-color: #E0E0E0; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; display: flex; justify-content: center; align-items: center; }
-        #user-input { flex-grow: 1; padding: 12px 15px; border-radius: 30px; border: 1px solid #CCCCCC; outline: none; font-size: 1rem; }
-        #send-btn { background-color: #D32F2F; color: white; border: none; padding: 12px 20px; border-radius: 30px; font-weight: bold; cursor: pointer; }
+        #controls-row { display: flex; align-items: flex-end; gap: 10px; width: 100%; box-sizing: border-box;}
+        
+        #user-input { flex-grow: 1; padding: 12px 16px; border-radius: 24px; border: 1px solid var(--border-color); background-color: var(--ai-msg-bg); color: var(--text-color); outline: none; font-size: 1rem; font-family: inherit; resize: none; overflow: hidden; min-height: 20px; max-height: 120px; line-height: 1.4; box-sizing: border-box; transition: border-color 0.2s; }
+        #user-input:focus { border-color: var(--user-msg-bg); }
+        
+        /* Modern Solid Send Button */
+        #send-btn { background-color: var(--user-msg-bg); color: white; border: none; width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.2s; padding: 0; }
+        #send-btn:active { transform: scale(0.95); }
+        #send-btn svg { width: 20px; height: 20px; stroke: white; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; margin-left: -2px; }
     </style>
 </head>
 <body>
     <header>
-        <img src="chimera-logo.jpg" alt="Chimera Co. Logo" id="header-logo">
-        <button id="reset-btn" onclick="clearMemory()">Reset</button>
+        <div class="header-left">
+            <img src="chimera-logo.jpg" alt="Chimera Co." id="header-logo" onerror="this.style.display='none'">
+            <div class="custom-select-wrapper">
+                <select id="model-selector">
+                    <option value="serpent">Serpent</option>
+                    <option value="ram">Ram</option>
+                    <option value="lion">Lion</option>
+                </select>
+            </div>
+        </div>
+        <div class="header-controls">
+            <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" title="Obsidian Protocol">
+                <svg id="theme-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
+            <button id="reset-btn" onclick="clearMemory()">Reset</button>
+        </div>
     </header>
     
     <div id="chat-container"></div>
@@ -62,35 +168,58 @@
     <div id="input-area">
         <div id="image-preview-container">
             <img id="preview-img" src="" alt="Preview">
-            <button onclick="clearImage()" style="margin-left:10px; padding:5px; border:none; background: #D32F2F; color:white; border-radius:4px;">Remove</button>
+            <button onclick="clearImage()" style="margin-left:10px; padding:4px 8px; border:none; background: transparent; color: var(--user-msg-bg); font-weight: bold; cursor: pointer;">✕</button>
         </div>
         
         <div id="controls-row">
             <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
-            <button class="icon-btn" onclick="document.getElementById('file-input').click()" title="Attach Image">📎</button>
-            <button class="icon-btn" onclick="startVoice()" title="Dictate">🎤</button>
-            <input type="text" id="user-input" placeholder="Transmit command...">
-            <button id="send-btn" onclick="sendMessage()">Send</button>
+            <button class="icon-btn" onclick="document.getElementById('file-input').click()" title="Attach">
+                <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+            </button>
+            <button class="icon-btn" onclick="startVoice()" title="Dictate">
+                <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+            </button>
+            <textarea id="user-input" rows="1" placeholder="Transmit command..."></textarea>
+            <button id="send-btn" onclick="sendMessage()">
+                <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
         </div>
     </div>
 
     <script>
         // --- CAMOUFLAGE PROTOCOL ---
-        const part1 = 'AIzaSyD_boA7_WqJiy1';
-        const part2 = 'qPEy_WgPAY86SYdObaqs';
+        const part1 = 'PASTE_THE_FIRST_HALF_OF_YOUR_KEY_HERE';
+        const part2 = 'PASTE_THE_SECOND_HALF_OF_YOUR_KEY_HERE';
         
         const apiKey = part1 + part2; 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
         const systemInstruction = {
-            parts: [{ text: "You are 'Serpent', an AI model integrated into the 'Chimera Chatbot' application developed by 'Chimera Co.'. You are the fast, analytical, high-capacity model in the Chimera ecosystem (which will eventually include the Ram and Lion models). Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience. You are optimized for speed and analytical capabilities." }]
+            parts: [{ text: "You are an AI model integrated into the 'Chimera Chatbot' application developed by 'Chimera Co.'. The user may select the Serpent, Ram, or Lion model. Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience." }]
         };
 
         let conversationHistory = [];
         let currentImageData = null;
         let currentImageMimeType = null;
 
+        const textarea = document.getElementById('user-input');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+        textarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
         window.onload = () => {
+            if (localStorage.getItem('chimera_theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('theme-icon').innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+            }
+            
             const savedData = localStorage.getItem('chimera_chatbot_data');
             if (savedData) {
                 conversationHistory = JSON.parse(savedData);
@@ -98,15 +227,43 @@
                     renderMessage(msg.parts[0].text, msg.role === 'user' ? 'user-msg' : 'ai-msg');
                 });
             } else {
-                renderMessage("Welcome to Chimera Chatbot. I am Serpent. My systems are fully operational and ready to assist you.", 'ai-msg');
+                renderMessage("Welcome to Chimera Chatbot. Systems are fully operational and ready to assist you.", 'ai-msg');
             }
         };
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('chimera_theme', isDark ? 'dark' : 'light');
+            
+            const themeIcon = document.getElementById('theme-icon');
+            if(isDark) {
+                themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+            } else {
+                themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+            }
+        }
 
         function speakSpecificText(text) {
             window.speechSynthesis.cancel();
             const cleanText = text.replace(/[*_#`~]/g, '').replace(/<[^>]*>?/gm, '');
             const utterance = new SpeechSynthesisUtterance(cleanText);
             window.speechSynthesis.speak(utterance);
+        }
+
+        function copyToClipboard(btnElement, text) {
+            const cleanText = text.replace(/<[^>]*>?/gm, ''); 
+            navigator.clipboard.writeText(cleanText).then(() => {
+                const originalHtml = btnElement.innerHTML;
+                btnElement.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied';
+                btnElement.style.color = '#4CAF50';
+                btnElement.style.opacity = '1';
+                setTimeout(() => { 
+                    btnElement.innerHTML = originalHtml; 
+                    btnElement.style.color = '';
+                    btnElement.style.opacity = '';
+                }, 2000);
+            });
         }
 
         function renderMessage(text, className) {
@@ -119,13 +276,23 @@
                 textWrapper.innerHTML = marked.parse(text);
                 msgDiv.appendChild(textWrapper);
                 
-                // Exclude the TTS button on Nexus Network Alerts
                 if (!text.includes("[Nexus Network Alert]")) {
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'message-actions';
+
+                    const copyBtn = document.createElement('button');
+                    copyBtn.className = 'action-btn';
+                    copyBtn.innerHTML = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy';
+                    copyBtn.onclick = function() { copyToClipboard(this, text); };
+
                     const ttsBtn = document.createElement('button');
-                    ttsBtn.className = 'tts-btn';
-                    ttsBtn.innerHTML = '🔊 Play';
+                    ttsBtn.className = 'action-btn';
+                    ttsBtn.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Play';
                     ttsBtn.onclick = () => speakSpecificText(text);
-                    msgDiv.appendChild(ttsBtn);
+
+                    actionsDiv.appendChild(copyBtn);
+                    actionsDiv.appendChild(ttsBtn);
+                    msgDiv.appendChild(actionsDiv);
                 }
             } else {
                 msgDiv.innerHTML = text.replace(/\n/g, '<br>');
@@ -166,6 +333,7 @@
             recognition.onstart = function() { document.getElementById('user-input').placeholder = "Listening..."; };
             recognition.onresult = function(event) {
                 document.getElementById('user-input').value = event.results[0][0].transcript;
+                textarea.style.height = 'auto';
                 document.getElementById('user-input').placeholder = "Transmit command...";
             };
             recognition.onerror = function() { document.getElementById('user-input').placeholder = "Error capturing voice."; }
@@ -178,6 +346,7 @@
             
             if (messageText.trim() === '' && !currentImageData) return;
             inputField.value = '';
+            inputField.style.height = 'auto';
 
             let displayMsg = messageText;
             if (currentImageData) displayMsg = "[Image Attached]<br>" + messageText;
@@ -195,7 +364,7 @@
             const chatContainer = document.getElementById('chat-container');
             const typingDiv = document.createElement('div');
             typingDiv.className = 'message ai-msg typing-indicator';
-            typingDiv.innerHTML = 'Serpent is thinking<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>';
+            typingDiv.innerHTML = 'Processing<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>';
             chatContainer.appendChild(typingDiv);
             chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
             
@@ -220,7 +389,7 @@
                     
                     if (data.error && data.error.message) {
                         if (data.error.message.includes("Quota exceeded")) {
-                            errorMessage = "**[Nexus Network Alert]** Engine speed limit reached. Please allow 30 seconds for the system to cool down before transmitting again.";
+                            errorMessage = "**[Nexus Network Alert]** Engine speed limit reached. Please allow time for the system to cool down before transmitting again.";
                         } else if (data.error.message.includes("API key not valid")) {
                             errorMessage = "**[Nexus Network Alert]** API Key authentication failed. Please verify perimeter security protocols.";
                         } else {
@@ -253,7 +422,7 @@
             localStorage.removeItem('chimera_chatbot_data');
             conversationHistory = [];
             document.getElementById('chat-container').innerHTML = '';
-            renderMessage("**[Nexus Network Alert]** Memory cleared. Serpent systems awaiting new directive.", 'ai-msg');
+            renderMessage("**[Nexus Network Alert]** Memory cleared. Systems awaiting new directive.", 'ai-msg');
         }
     </script>
 </body>
