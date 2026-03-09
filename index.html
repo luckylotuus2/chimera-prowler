@@ -58,7 +58,6 @@
         
         #header-logo { height: 45px; width: 45px; object-fit: contain; display: block; mix-blend-mode: var(--logo-blend); background-color: var(--logo-bg); padding: var(--logo-padding); border-radius: var(--logo-radius); box-shadow: var(--logo-shadow); transition: all 0.3s ease; }
         
-        /* New Custom Dropdown Architecture */
         .custom-dropdown { position: relative; user-select: none; }
         .dropdown-selected { background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: border-color 0.2s; }
         .dropdown-selected:hover { border-color: var(--user-msg-bg); }
@@ -84,7 +83,6 @@
         .user-msg { background-color: var(--user-msg-bg); color: var(--user-text); align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 2px 8px rgba(211,47,47,0.2); }
         .ai-msg { background-color: var(--ai-msg-bg); color: var(--text-color); align-self: flex-start; border-bottom-left-radius: 4px; position: relative; }
         
-        /* Dynamic Edit Button */
         .user-edit-btn { background: transparent; border: none; font-size: 0.7rem; font-weight: 600; color: rgba(255,255,255,0.7); cursor: pointer; display: flex; align-items: center; gap: 4px; text-transform: uppercase; letter-spacing: 0.5px; padding: 0; margin-top: 10px; transition: color 0.2s; width: 100%; justify-content: flex-end; }
         .user-edit-btn:hover { color: #FFFFFF; }
         .user-edit-btn svg { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
@@ -125,7 +123,6 @@
     <header>
         <div class="header-left">
             <img src="chimera-logo.jpg" alt="Chimera Co." id="header-logo" onerror="this.style.display='none'">
-            
             <div class="custom-dropdown" id="model-dropdown">
                 <div class="dropdown-selected" id="dropdown-selected" onclick="toggleDropdown()">
                     <span id="selected-model-name">Serpent</span>
@@ -137,7 +134,6 @@
                     <div class="dropdown-option" onclick="selectModel('Lion')">Lion</div>
                 </div>
             </div>
-
         </div>
         <div class="header-controls">
             <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" title="Obsidian Protocol">
@@ -179,7 +175,6 @@
 
         let currentModel = 'Serpent';
 
-        // Clean Slate Protocol: No hardcoded name.
         const systemInstruction = {
             parts: [{ text: "You are an AI model integrated into the 'Chimera Chatbot' application developed by 'Chimera Co.'. Your persona must ALWAYS be highly professional, exceptionally kind, polite, and represent a premium luxury brand experience. If the user provides their name or identifier, remember and use it for the remainder of this session. Each session is a clean slate." }]
         };
@@ -200,7 +195,6 @@
             }
         });
 
-        // Dropdown Logic
         function toggleDropdown() {
             document.getElementById('dropdown-options').classList.toggle('show');
             document.getElementById('dropdown-selected').classList.toggle('active');
@@ -270,7 +264,6 @@
             });
         }
 
-        // Time Travel Logic (Rewinds the database)
         function editUserMessage(originalText) {
             const inputField = document.getElementById('user-input');
             inputField.value = originalText;
@@ -292,7 +285,6 @@
             redrawChat();
         }
 
-        // Deep-State Sync (Redraws the entire chat perfectly)
         function redrawChat() {
             const chatContainer = document.getElementById('chat-container');
             chatContainer.innerHTML = '';
@@ -305,7 +297,6 @@
             conversationHistory.forEach((msg, index) => {
                 const msgDiv = renderMessage(msg.parts[0].text, msg.role === 'user' ? 'user-msg' : 'ai-msg', true);
                 
-                // Only attach the Edit button to the absolute LAST user message
                 let isLastUserMsg = true;
                 for (let i = index + 1; i < conversationHistory.length; i++) {
                     if (conversationHistory[i].role === 'user') isLastUserMsg = false;
@@ -321,7 +312,6 @@
             });
         }
 
-        // Modified to not auto-append edit buttons, it is handled by redrawChat
         function renderMessage(text, className, isRedraw = false) {
             const chatContainer = document.getElementById('chat-container');
             const msgDiv = document.createElement('div');
@@ -412,8 +402,6 @@
 
             conversationHistory.push({ role: "user", parts: [{ text: messageText || "Analyze this image." }] });
             saveState();
-            
-            // Calling redrawChat ensures the edit button is properly moved to this absolute newest message
             redrawChat();
 
             const chatContainer = document.getElementById('chat-container');
@@ -450,10 +438,21 @@
                             errorMessage = `**[Nexus Network Alert]** System anomaly detected: ${data.error.message}`;
                         }
                     }
-                    renderMessage(errorMessage, 'ai-msg');
-                    conversationHistory.pop(); 
+                    
+                    // --- THE BOUNCE-BACK PROTOCOL ---
+                    const failedMessage = conversationHistory.pop(); 
                     saveState();
-                    redrawChat(); // Re-sync the edit button state
+                    redrawChat(); 
+                    
+                    // Return text to the user input box
+                    if (failedMessage && failedMessage.parts[0].text) {
+                        const inputField = document.getElementById('user-input');
+                        inputField.value = failedMessage.parts[0].text;
+                        inputField.style.height = 'auto';
+                        inputField.style.height = (inputField.scrollHeight) + 'px';
+                    }
+                    
+                    renderMessage(errorMessage + " Your transmission has been safely returned to the command console.", 'ai-msg');
                     return; 
                 }
                 
@@ -461,14 +460,24 @@
                     const aiText = data.candidates[0].content.parts[0].text;
                     conversationHistory.push({ role: "model", parts: [{ text: aiText }] });
                     saveState();
-                    redrawChat(); // Syncs the final view with the AI response
+                    redrawChat(); 
                 }
             } catch (error) {
                 if (chatContainer.contains(typingDiv)) chatContainer.removeChild(typingDiv);
-                renderMessage("**[Nexus Network Alert]** Complete signal loss. The connection to the server has been severed.", 'ai-msg');
-                conversationHistory.pop(); 
+                
+                // --- THE BOUNCE-BACK PROTOCOL ---
+                const failedMessage = conversationHistory.pop(); 
                 saveState();
-                redrawChat(); // Re-sync the edit button state
+                redrawChat(); 
+                
+                if (failedMessage && failedMessage.parts[0].text) {
+                    const inputField = document.getElementById('user-input');
+                    inputField.value = failedMessage.parts[0].text;
+                    inputField.style.height = 'auto';
+                    inputField.style.height = (inputField.scrollHeight) + 'px';
+                }
+                
+                renderMessage("**[Nexus Network Alert]** Complete signal loss. The connection to the server has been severed. Your transmission has been safely returned to the command console.", 'ai-msg');
             }
         }
 
