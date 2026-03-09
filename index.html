@@ -71,6 +71,19 @@
 
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; display: flex; flex-direction: column; height: 100vh; height: 100dvh; width: 100vw; position: fixed; top: 0; left: 0; right: 0; bottom: 0; transition: background-color 0.3s, color 0.3s; overflow: hidden; }
         
+        /* THE CHIMERA GATEWAY (SPLASH SCREEN) */
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; background-color: var(--bg-color); z-index: 4000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease, transform 0.5s ease; }
+        .splash-logo { width: 100px; height: 100px; border-radius: 50%; box-shadow: 0 0 25px rgba(211, 47, 47, 0.6); mix-blend-mode: var(--logo-blend); background-color: var(--logo-bg); padding: 8px; margin-bottom: 20px; animation: goldPulse 3s infinite; }
+        .splash-title { font-size: 2rem; font-weight: 800; color: var(--text-color); letter-spacing: 1px; margin-bottom: 5px; }
+        .splash-subtitle { font-size: 1rem; color: #888; margin-bottom: 50px; font-weight: 500; }
+        
+        .splash-btn-gold { width: 80%; max-width: 320px; padding: 16px; border-radius: 12px; background: linear-gradient(135deg, #D4AF37 0%, #AA8020 100%); color: #FFF; font-weight: bold; font-size: 1.1rem; border: none; cursor: pointer; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); transition: transform 0.1s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .splash-btn-gold:active { transform: scale(0.96); }
+        .splash-btn-gold svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+        
+        .splash-btn-economy { width: 80%; max-width: 320px; padding: 16px; border-radius: 12px; background-color: transparent; color: var(--text-color); border: 2px solid var(--border-color); font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: transform 0.1s, background-color 0.2s; }
+        .splash-btn-economy:active { transform: scale(0.96); background-color: rgba(128,128,128,0.1); }
+
         header { background-color: var(--header-bg); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); min-height: 60px; transition: background-color 0.3s; z-index: 10; flex-shrink: 0; }
         .header-left { display: flex; align-items: center; gap: 15px; }
         
@@ -106,7 +119,6 @@
         #title-bar { background-color: var(--bg-color); padding: 8px 20px; font-size: 0.85rem; font-weight: 700; color: var(--user-msg-bg); border-bottom: 1px solid var(--border-color); display: flex; justify-content: flex-start; align-items: center; z-index: 9; flex-shrink: 0; transition: color 0.4s ease; }
         #title-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
-        /* Themed Background Architecture */
         #chat-wrapper { position: relative; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
         #chat-bg-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; height: 80%; background-image: url('chimera-logo.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: var(--watermark-opacity); z-index: 0; pointer-events: none; mix-blend-mode: luminosity; transition: opacity 0.3s; }
         #chat-container { position: relative; flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; z-index: 1; }
@@ -162,7 +174,6 @@
 
         .full-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 999; display: none; opacity: 0; transition: opacity 0.3s; }
         
-        /* The Chimera Chamber Sidebar & Gothic Rose Motif */
         #sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100vh; background: var(--sidebar-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: -4px 0 15px rgba(0,0,0,0.1); z-index: 1000; transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; border-left: 1px solid var(--border-color); overflow: hidden; }
         #sidebar.open { right: 0; }
         
@@ -225,22 +236,49 @@
         .rename-cancel { background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); }
         .rename-save { background-color: var(--user-msg-bg); color: white; }
 
-        /* The Chimera ID Auth Modal */
+        /* The Intuitive Auth Modal */
         #auth-modal { padding: 24px; box-sizing: border-box; text-align: center; }
-        .auth-logo { width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 0 15px rgba(211, 47, 47, 0.5); margin: 0 auto 15px auto; display: block; mix-blend-mode: var(--logo-blend); background-color: var(--logo-bg); padding: 4px;}
+        .auth-logo { width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 0 15px rgba(212, 175, 55, 0.5); margin: 0 auto 15px auto; display: block; mix-blend-mode: var(--logo-blend); background-color: var(--logo-bg); padding: 4px; border: 1px solid #D4AF37;}
         .auth-title { font-size: 1.4rem; font-weight: 800; color: var(--text-color); margin-bottom: 5px; }
-        .auth-subtitle { font-size: 0.85rem; color: #888; margin-bottom: 25px; }
+        .auth-subtitle { font-size: 0.85rem; color: #888; margin-bottom: 20px; }
+        
+        .auth-google-btn { width: 100%; padding: 12px; border-radius: 8px; background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; transition: background-color 0.2s; }
+        .auth-google-btn:hover { background-color: rgba(128,128,128,0.05); }
+        .auth-google-btn svg { width: 18px; height: 18px; }
+        
+        .auth-divider { display: flex; align-items: center; text-align: center; color: #888; font-size: 0.8rem; margin-bottom: 20px; }
+        .auth-divider::before, .auth-divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-color); }
+        .auth-divider:not(:empty)::before { margin-right: .5em; }
+        .auth-divider:not(:empty)::after { margin-left: .5em; }
+
         .auth-input { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); font-size: 1rem; outline: none; box-sizing: border-box; margin-bottom: 12px; transition: border-color 0.2s; }
-        .auth-input:focus { border-color: #D32F2F; }
-        .auth-btn-primary { width: 100%; padding: 14px; border-radius: 8px; background-color: #D32F2F; color: white; font-weight: bold; font-size: 1rem; border: none; cursor: pointer; margin-bottom: 10px; transition: transform 0.1s; }
+        .auth-input:focus { border-color: #D4AF37; }
+        .auth-btn-primary { width: 100%; padding: 14px; border-radius: 8px; background-color: #D4AF37; color: white; font-weight: bold; font-size: 1rem; border: none; cursor: pointer; margin-bottom: 10px; transition: transform 0.1s; }
         .auth-btn-primary:active { transform: scale(0.98); }
-        .auth-btn-secondary { width: 100%; padding: 14px; border-radius: 8px; background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); font-weight: bold; font-size: 1rem; cursor: pointer; transition: transform 0.1s; }
+        .auth-btn-secondary { width: 100%; padding: 14px; border-radius: 8px; background-color: transparent; color: var(--text-color); border: none; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: transform 0.1s; text-decoration: underline;}
         .auth-btn-secondary:active { transform: scale(0.98); }
         #auth-error { color: #D32F2F; font-size: 0.8rem; margin-top: 10px; min-height: 15px; }
+        
+        .auth-close-btn { position: absolute; top: 15px; right: 15px; background: transparent; border: none; font-size: 1.2rem; color: var(--text-color); cursor: pointer; opacity: 0.5;}
 
     </style>
 </head>
 <body>
+    <div id="splash-screen">
+        <img src="chimera-logo.jpg" alt="Chimera" class="splash-logo">
+        <div class="splash-title">Chimera Chatbot</div>
+        <div class="splash-subtitle">Premier AI Assistant</div>
+        
+        <button class="splash-btn-gold" onclick="openAuthModal()">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            Chimera Gold
+        </button>
+        
+        <button class="splash-btn-economy" onclick="enterEconomyMode()">
+            Chimera Economy (Free)
+        </button>
+    </div>
+
     <header>
         <div class="header-left">
             <img src="chimera-logo.jpg" alt="Chimera Settings" id="header-logo" onclick="openSettings()" title="Settings" onerror="this.style.display='none'">
@@ -315,13 +353,22 @@
     <div id="sidebar-overlay" class="full-overlay" onclick="closeOverlays()"></div>
     
     <div id="auth-modal">
+        <button class="auth-close-btn" onclick="closeAuthModal()">✕</button>
         <img src="chimera-logo.jpg" alt="Chimera" class="auth-logo">
-        <div class="auth-title">Chimera ID</div>
-        <div class="auth-subtitle">Establish biometric connection</div>
-        <input type="email" id="auth-email" class="auth-input" placeholder="Email Address">
-        <input type="password" id="auth-password" class="auth-input" placeholder="Encryption Key">
-        <button class="auth-btn-primary" onclick="handleAuth('login')">Authenticate</button>
-        <button class="auth-btn-secondary" onclick="handleAuth('signup')">Initialize ID</button>
+        <div class="auth-title">Chimera Gold</div>
+        <div class="auth-subtitle">Log in to sync your archives globally</div>
+        
+        <button class="auth-google-btn" onclick="signInWithGoogle()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+            Continue with Google
+        </button>
+        
+        <div class="auth-divider">or</div>
+        
+        <input type="email" id="auth-email" class="auth-input" placeholder="Email">
+        <input type="password" id="auth-password" class="auth-input" placeholder="Password">
+        <button class="auth-btn-primary" onclick="handleAuth('login')">Log In</button>
+        <button class="auth-btn-secondary" onclick="handleAuth('signup')">Create Account</button>
         <div id="auth-error"></div>
     </div>
 
@@ -331,14 +378,14 @@
             <button class="close-sidebar-btn" onclick="closeSettings()" style="font-size: 1.2rem;">✕</button>
         </div>
         <div class="settings-list">
-            <div class="settings-item gold-tier">
+            <div class="settings-item gold-tier" onclick="openAuthModal()">
                 Chimera Gold <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
             </div>
             <div class="settings-item">About Us <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
             <div class="settings-item">Support <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
             <div class="settings-item">Language: English <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
-            <div class="settings-item logout-tier" onclick="logoutUser()">
-                Sever Connection (Logout) <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            <div class="settings-item logout-tier" onclick="logoutUser()" id="logout-btn" style="display:none;">
+                Log Out <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
             </div>
         </div>
     </div>
@@ -394,37 +441,70 @@
             appId: "1:486576823008:web:f61ec578d73047c01d4e85"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-        // --- CHIMERA ID AUTHENTICATION STATE ---
+        // --- AUTHENTICATION & SPLASH STATE ---
         let currentUserId = null;
+        let isGuestMode = false;
 
         auth.onAuthStateChanged((user) => {
+            const splash = document.getElementById('splash-screen');
             const authModal = document.getElementById('auth-modal');
             const overlay = document.getElementById('sidebar-overlay');
+            const logoutBtn = document.getElementById('logout-btn');
+            
             if (user) {
+                // Logged in (Gold)
                 currentUserId = user.uid;
+                isGuestMode = false;
+                logoutBtn.style.display = 'flex';
+                
+                // Hide Modals/Splash
+                splash.style.opacity = '0';
                 authModal.style.opacity = '0';
                 overlay.style.opacity = '0';
                 setTimeout(() => { 
+                    splash.style.display = 'none';
                     authModal.style.display = 'none'; 
                     overlay.style.display = 'none'; 
-                }, 200);
-                loadChats(); // Load secured cloud data
+                }, 500);
+                
+                loadChats(); 
             } else {
+                // Logged out
                 currentUserId = null;
-                authModal.style.display = 'flex';
-                overlay.style.display = 'block';
-                setTimeout(() => { 
-                    authModal.style.opacity = '1'; 
-                    overlay.style.opacity = '1'; 
-                }, 10);
+                logoutBtn.style.display = 'none';
+                
+                if (!isGuestMode) {
+                    // Show Splash Screen on load
+                    splash.style.display = 'flex';
+                    setTimeout(() => splash.style.opacity = '1', 10);
+                }
             }
         });
 
+        // Economy Mode (Guest)
+        function enterEconomyMode() {
+            isGuestMode = true;
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            setTimeout(() => { 
+                splash.style.display = 'none'; 
+            }, 500);
+            
+            // Ensure local device ID exists
+            let deviceId = localStorage.getItem('chimera_device_id');
+            if (!deviceId) {
+                deviceId = 'ghost_' + Date.now() + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('chimera_device_id', deviceId);
+            }
+            loadChats();
+        }
+
+        // Email / Password Auth
         function handleAuth(action) {
             const email = document.getElementById('auth-email').value;
             const pass = document.getElementById('auth-password').value;
@@ -438,10 +518,24 @@
             }
         }
         
+        // Google Auth
+        function signInWithGoogle() {
+            const errorDiv = document.getElementById('auth-error');
+            errorDiv.innerText = 'Connecting to Google...';
+            auth.signInWithPopup(googleProvider).catch(e => {
+                errorDiv.innerText = e.message;
+            });
+        }
+        
         function logoutUser() {
-            auth.signOut();
-            closeSettings();
-            document.getElementById('chat-container').innerHTML = ''; // Clear visual cache
+            auth.signOut().then(() => {
+                closeSettings();
+                document.getElementById('chat-container').innerHTML = ''; 
+                isGuestMode = false;
+                const splash = document.getElementById('splash-screen');
+                splash.style.display = 'flex';
+                setTimeout(() => splash.style.opacity = '1', 10);
+            });
         }
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
@@ -453,11 +547,10 @@
         let currentImageMimeType = null;
         let chatToRenameId = null;
         
-        // --- SYNAPTIC THEME ENGINE ---
         const themeColors = {
-            'Serpent': '#D32F2F', // Crimson
-            'Ram': '#0F52BA',    // Sapphire Blue
-            'Lion': '#D4AF37'    // Chimera Gold
+            'Serpent': '#D32F2F', 
+            'Ram': '#0F52BA',    
+            'Lion': '#D4AF37'    
         };
 
         const introMessages = {
@@ -568,10 +661,35 @@
             const modal = document.getElementById('settings-modal');
             modal.style.opacity = '0';
             modal.style.transform = 'translate(-50%, -45%)';
-            if(currentUserId) document.getElementById('sidebar-overlay').style.opacity = '0';
+            document.getElementById('sidebar-overlay').style.opacity = '0';
             setTimeout(() => { 
                 modal.style.display = 'none'; 
-                if(currentUserId) document.getElementById('sidebar-overlay').style.display = 'none'; 
+                document.getElementById('sidebar-overlay').style.display = 'none'; 
+            }, 200);
+        }
+        
+        function openAuthModal() {
+            closeSettings();
+            const modal = document.getElementById('auth-modal');
+            modal.style.display = 'block';
+            document.getElementById('sidebar-overlay').style.display = 'block';
+            setTimeout(() => { 
+                modal.style.opacity = '1'; 
+                modal.style.transform = 'translate(-50%, -50%)';
+                document.getElementById('sidebar-overlay').style.opacity = '1'; 
+            }, 10);
+        }
+        function closeAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            modal.style.opacity = '0';
+            modal.style.transform = 'translate(-50%, -45%)';
+            
+            setTimeout(() => { 
+                modal.style.display = 'none'; 
+                if(!document.getElementById('splash-screen').style.display || document.getElementById('splash-screen').style.display !== 'none') {
+                    document.getElementById('sidebar-overlay').style.display = 'none'; 
+                    document.getElementById('sidebar-overlay').style.opacity = '0';
+                }
             }, 200);
         }
 
@@ -630,20 +748,20 @@
             setTimeout(() => { document.getElementById('sidebar-overlay').style.display = 'none'; }, 300);
         }
         function closeOverlays() {
-            if (currentUserId) {
-                closeSidebar();
-                closeSettings();
-                closeRenameModal();
-            }
+            closeSidebar();
+            closeSettings();
+            closeRenameModal();
+            closeAuthModal();
         }
 
         function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
 
-        // --- GHOST PROTOCOL: SECURE CLOUD LOAD ---
         async function loadChats() {
-            if(!currentUserId) return;
+            let activeId = currentUserId || localStorage.getItem('chimera_device_id');
+            if(!activeId) return;
+            
             try {
-                const docRef = db.collection("chimera_archives").doc(currentUserId);
+                const docRef = db.collection("chimera_archives").doc(activeId);
                 const docSnap = await docRef.get();
                 
                 if (docSnap.exists) {
@@ -655,21 +773,43 @@
                         createNewChat();
                     }
                 } else {
-                    createNewChat();
+                    const savedData = localStorage.getItem('chimera_chats_v2');
+                    if (savedData && currentUserId) {
+                        chats = JSON.parse(savedData);
+                        saveChats(); 
+                        if (chats.length > 0) {
+                            chats.sort((a, b) => b.isPinned - a.isPinned);
+                            selectChat(chats[0].id);
+                        } else createNewChat();
+                    } else {
+                        createNewChat();
+                    }
                 }
             } catch (error) {
                 console.error("[Chimera Cloud] Network interference.", error);
-                createNewChat();
+                const savedData = localStorage.getItem('chimera_chats_v2');
+                if (savedData) {
+                    chats = JSON.parse(savedData);
+                    if (chats.length > 0) {
+                        chats.sort((a, b) => b.isPinned - a.isPinned);
+                        selectChat(chats[0].id);
+                    } else createNewChat();
+                } else createNewChat();
             }
         }
 
-        // --- GHOST PROTOCOL: SECURE CLOUD SAVE ---
         function saveChats() { 
-            if (!currentUserId || !db) return;
-            db.collection("chimera_archives").doc(currentUserId).set({
-                chatHistory: chats,
-                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-            }, { merge: true }).catch(e => console.error("[Chimera Cloud] Write queued for network connection."));
+            let activeId = currentUserId || localStorage.getItem('chimera_device_id');
+            if(!activeId) return;
+            
+            localStorage.setItem('chimera_chats_v2', JSON.stringify(chats)); 
+            
+            if (db) {
+                db.collection("chimera_archives").doc(activeId).set({
+                    chatHistory: chats,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true }).catch(e => console.error("[Chimera Cloud] Write queued for network connection."));
+            }
         }
 
         function createNewChat() {
