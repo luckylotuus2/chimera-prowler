@@ -39,13 +39,16 @@
             
             --user-text: #FFFFFF;
             --input-bg: #FFFFFF;
-            --input-shadow: 0 -5px 30px rgba(0,0,0,0.08);
+            --input-shadow: 0 -5px 30px rgba(0,0,0,0.06);
             --code-bg: #0D0D0D;
             --code-text: #F0F0F0;
             --icon-color: #050505;
             --sidebar-bg: rgba(255, 255, 255, 0.98);
             --modal-bg: #FFFFFF;
-            --watermark-opacity: 0.05;
+            
+            /* Watermark Opacities */
+            --watermark-opacity: 0.04;
+            --rose-opacity: 0.08;
             
             --font-gothic: 'Cinzel', serif;
             --font-modern: 'Montserrat', sans-serif;
@@ -67,17 +70,20 @@
             --icon-color: #F0F0F0;
             --sidebar-bg: rgba(10, 10, 10, 0.98);
             --modal-bg: #141414;
-            --watermark-opacity: 0.03;
+            
+            /* Higher opacity for dark mode visibility */
+            --watermark-opacity: 0.12; 
+            --rose-opacity: 0.15; 
         }
 
-        body { font-family: var(--font-modern); background-color: var(--bg-color); color: var(--text-color); margin: 0; display: flex; flex-direction: column; height: 100vh; height: 100dvh; width: 100vw; position: fixed; top: 0; left: 0; overflow: hidden; transition: background-color 0.4s ease, color 0.4s ease; }
+        body { font-family: var(--font-modern); background-color: var(--bg-color); color: var(--text-color); margin: 0; display: flex; flex-direction: column; height: 100vh; height: 100dvh; width: 100vw; position: fixed; top: 0; left: 0; overflow: hidden; transition: background-color 0.4s ease, color 0.4s ease; -webkit-tap-highlight-color: transparent;}
         
-        /* LAUNCH SENTINEL */
+        /* 1. LAUNCH SENTINEL */
         #launch-sentinel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--bg-color); z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s; }
         .launch-logo { width: 100px; height: 100px; animation: pulseLogo 2s infinite ease-in-out; border-radius: 50%; box-shadow: 0 0 25px rgba(211, 47, 47, 0.4); mix-blend-mode: normal; }
         @keyframes pulseLogo { 0% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.05); } 100% { opacity: 0.5; transform: scale(0.95); } }
 
-        /* THE AIRLOCK SYSTEM (SPA CONTAINERS) */
+        /* THE AIRLOCK SYSTEM */
         #spa-portals { width: 100vw; height: 100vh; display: none; flex-direction: column; background-color: var(--bg-color); z-index: 5000; overflow-y: auto; }
         #app-core { width: 100vw; height: 100vh; display: none; flex-direction: column; position: relative; z-index: 10;}
         
@@ -92,37 +98,35 @@
         .splash-title { font-family: var(--font-gothic); font-size: 2.2rem; font-weight: 800; color: var(--text-color); letter-spacing: 2px; margin: 0; text-transform: uppercase; }
         .splash-subtitle { font-size: 1.1rem; color: #888; margin: 5px 0 50px 0; font-weight: 500; letter-spacing: 0.5px; }
         
-        /* 1 & 5. NEW GOLDEN TICKET AESTHETIC for all Gold Buttons */
+        /* THE GOLDEN TICKET AESTHETIC */
         .golden-ticket-btn { 
-            width: 85%; max-width: 320px; padding: 18px; border-radius: 12px; 
-            background: linear-gradient(135deg, #FFD700 0%, #F5C71A 30%, #D4AF37 50%, #F5C71A 70%, #FFD700 100%); 
-            color: #4A3B00 !important; font-family: var(--font-gothic); font-weight: 800; font-size: 1.2rem; 
-            border: 2px solid #AA8020; cursor: pointer; margin-bottom: 15px; 
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.5); 
+            width: 85%; max-width: 320px; padding: 18px; border-radius: 14px; 
+            background: linear-gradient(135deg, #F1D570 0%, #D4AF37 40%, #AA8020 60%, #F1D570 100%); 
+            color: #1A1200 !important; font-family: var(--font-gothic); font-weight: 800; font-size: 1.15rem; 
+            border: 2px solid #D4AF37; cursor: pointer; margin-bottom: 15px; 
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.4); 
             display: flex; justify-content: center; align-items: center; gap: 12px; 
             letter-spacing: 1.5px; transition: transform 0.1s, box-shadow 0.3s; 
-            text-shadow: 0 1px 1px rgba(255,255,255,0.4); text-transform: uppercase;
+            text-shadow: 0 1px 1px rgba(255,255,255,0.6); text-transform: uppercase;
         }
-        .golden-ticket-btn:active { transform: scale(0.96); box-shadow: 0 0 5px rgba(212, 175, 55, 0.7); }
+        .golden-ticket-btn:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(212, 175, 55, 0.5); }
         
-        .gateway-btn-economy { width: 85%; max-width: 320px; padding: 16px; border-radius: 14px; background-color: transparent; color: var(--text-color); border: 2px solid var(--border-color); font-family: var(--font-modern); font-weight: 700; font-size: 1.05rem; cursor: pointer; margin-bottom: 30px; transition: transform 0.1s, background-color 0.2s; }
+        .gateway-btn-economy { width: 85%; max-width: 320px; padding: 16px; border-radius: 14px; background-color: transparent; color: var(--text-color); border: 2px solid var(--border-color); font-family: var(--font-modern); font-weight: 700; font-size: 1.05rem; cursor: pointer; margin-bottom: 30px; transition: transform 0.1s, background-color 0.2s; text-transform: uppercase; letter-spacing: 1px;}
         .gateway-btn-economy:active { transform: scale(0.96); background-color: rgba(128,128,128,0.1); }
         
-        /* 1. Start link text update and Crimson coloring */
         .text-link-title { color: #888; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;}
-        .text-link-btn { background: transparent; border: none; color: #D32F2F; font-weight: 700; font-size: 1.05rem; cursor: pointer; padding: 5px; text-decoration: underline; }
+        .text-link-btn { background: transparent; border: none; color: #D32F2F; font-weight: 800; font-size: 1.05rem; cursor: pointer; padding: 5px; text-decoration: underline; font-family: var(--font-modern);}
 
-        /* PORTAL HEADERS */
+        /* PORTAL HEADERS (UNIFIED) */
         .portal-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); width: 100%; box-sizing: border-box; }
-        .portal-header span { font-family: var(--font-gothic); font-weight: 700; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-color);}
+        .portal-header span { font-family: var(--font-gothic); font-weight: 800; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-color);}
         .back-btn { background: transparent; border: none; color: var(--text-color); font-size: 1.6rem; cursor: pointer; padding: 5px; }
 
-        /* AUTH & SIGNUP PAGES - 3. Unified Layout */
+        /* AUTH & SIGNUP PAGES - Removed Redundancy */
         .auth-container { padding: 30px 25px; text-align: center; max-width: 400px; margin: 0 auto; width: 100%; box-sizing: border-box; }
-        .auth-hero-title { font-family: var(--font-gothic); font-size: 2rem; font-weight: 800; color: var(--text-color); text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; }
-        .auth-hero-subtitle { color: #888; margin-bottom: 35px; font-size: 0.95rem; font-weight: 500; line-height: 1.5; text-transform: uppercase; letter-spacing: 0.5px; }
+        .auth-hero-title { font-family: var(--font-gothic); font-size: 2rem; font-weight: 800; color: var(--text-color); text-transform: uppercase; margin-bottom: 35px; letter-spacing: 2px; }
         
-        .google-auth-btn { width: 100%; padding: 15px; border-radius: 10px; background-color: transparent; color: var(--text-color); border: 2px solid var(--border-color); font-weight: 700; font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 25px; transition: background-color 0.2s; }
+        .google-auth-btn { width: 100%; padding: 15px; border-radius: 10px; background-color: transparent; color: var(--text-color); border: 2px solid var(--border-color); font-weight: 700; font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 25px; transition: background-color 0.2s; font-family: var(--font-modern);}
         .google-auth-btn:active { background-color: rgba(128,128,128,0.06); }
         .google-auth-btn svg { width: 22px; height: 22px; }
         
@@ -138,32 +142,35 @@
         .auth-submit-btn:active { transform: scale(0.98); }
         .auth-error-msg { color: #D32F2F; font-size: 0.85rem; font-weight: 600; min-height: 20px; margin-top: 15px; }
 
-        /* GOLD SHOWCASE PAGE - 2. Complete Text-Only Overhaul */
+        /* GOLD SHOWCASE PAGE - Neo-Modern Text Overhaul */
         #page-gold { background: linear-gradient(180deg, rgba(212,175,55,0.08) 0%, var(--bg-color) 40%); padding: 0 20px 40px 20px; }
         .gold-hero-title { font-family: var(--font-gothic); font-size: 2.2rem; font-weight: 800; color: #AA8020; text-transform: uppercase; letter-spacing: 2.5px; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(212,175,55,0.2); text-align: center; padding-top: 20px;}
         .gold-hero-subtitle { color: #888; font-size: 1.05rem; font-weight: 500; margin-bottom: 40px; text-align: center; line-height: 1.5; max-width: 500px; margin-left: auto; margin-right: auto;}
         
         .arsenal-list { display: flex; flex-direction: column; gap: 20px; text-align: left; max-width: 600px; margin: 0 auto; }
         .arsenal-item { 
-            background-color: var(--modal-bg); padding: 20px; border-radius: 12px; 
-            border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            background-color: transparent; padding: 20px 0; border-bottom: 1px solid var(--border-color); 
             display: flex; flex-direction: column; gap: 10px;
         }
+        .arsenal-item:last-child { border-bottom: none; }
+        
         .arsenal-header-row { display: flex; align-items: center; gap: 15px; color: #D32F2F; }
+        .arsenal-item.ram-themed .arsenal-header-row { color: #0F52BA; }
         .arsenal-item.gold-themed .arsenal-header-row { color: #AA8020; }
-        .arsenal-header-row svg { width: 24px; height: 24px; stroke-width: 2.5; flex-shrink: 0; }
-        .arsenal-title { font-family: var(--font-gothic); font-weight: 800; font-size: 1.1rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; color: var(--text-color); }
         
-        .arsenal-desc-block { padding-left: 39px; border-left: 2px solid rgba(211,47,47,0.1); }
-        .arsenal-item.gold-themed .arsenal-desc-block { border-left-color: rgba(212,175,55,0.2); }
-        .arsenal-desc { font-size: 0.95rem; color: #888; margin: 0 0 10px 0; line-height: 1.6; font-weight: 500; }
+        .arsenal-header-row svg { width: 28px; height: 28px; stroke-width: 2.5; flex-shrink: 0; fill: currentColor;}
+        .arsenal-title { font-family: var(--font-gothic); font-weight: 800; font-size: 1.2rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; color: var(--text-color); }
         
-        .arsenal-features-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px;}
-        .arsenal-features-list li { font-size: 0.9rem; color: var(--text-color); font-weight: 600; display: flex; align-items: center; gap: 8px; }
-        .arsenal-features-list li::before { content: '✧'; color: #D32F2F; font-size: 0.8rem; }
+        .arsenal-desc-block { padding-left: 43px; }
+        .arsenal-desc { font-size: 0.95rem; color: #888; margin: 0 0 12px 0; line-height: 1.6; font-weight: 500; }
+        
+        .arsenal-features-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px;}
+        .arsenal-features-list li { font-size: 0.9rem; color: var(--text-color); font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .arsenal-features-list li::before { content: '✧'; color: #D32F2F; font-size: 0.9rem; }
+        .arsenal-item.ram-themed .arsenal-features-list li::before { color: #0F52BA; }
         .arsenal-item.gold-themed .arsenal-features-list li::before { color: #AA8020; }
 
-        .subscription-matrix { color: var(--text-color); font-weight: 800; font-size: 2rem; margin: 50px 0 20px 0; font-family: var(--font-gothic); text-align: center; text-transform: uppercase; letter-spacing: 1px; }
+        .subscription-matrix { color: var(--text-color); font-weight: 800; font-size: 2rem; margin: 40px 0 20px 0; font-family: var(--font-gothic); text-align: center; text-transform: uppercase; letter-spacing: 1px; }
         .subscription-matrix span { font-size: 1rem; font-family: var(--font-modern); font-weight: 600; color: #888; text-transform: none; letter-spacing: 0;}
 
         /* --- MAIN APP CORE UI --- */
@@ -201,8 +208,15 @@
         #chat-bg-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 75%; height: 75%; background-image: url('chimera-logo.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: var(--watermark-opacity); z-index: 0; pointer-events: none; transition: opacity 0.4s ease; mix-blend-mode: luminosity; }
         
         #chat-container { position: relative; flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; z-index: 1; scroll-behavior: smooth; }
+        
+        /* Sleek Scrollbar */
+        #chat-container::-webkit-scrollbar { width: 6px; }
+        #chat-container::-webkit-scrollbar-track { background: transparent; }
+        #chat-container::-webkit-scrollbar-thumb { background-color: rgba(128,128,128,0.2); border-radius: 10px; }
 
         .message { padding: 15px 20px; border-radius: 20px; max-width: 82%; line-height: 1.5; font-size: 0.95rem; word-wrap: break-word; animation: messageFadeIn 0.35s var(--ease-out) forwards; }
+        @keyframes messageFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         .user-msg { background-color: var(--user-msg-bg); color: var(--user-text); align-self: flex-end; border-bottom-right-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500; transition: background-color 0.4s ease; }
         .ai-msg { background-color: var(--ai-msg-bg); color: var(--text-color); align-self: flex-start; border-bottom-left-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); font-weight: 500; border: 1px solid var(--border-color); backdrop-filter: blur(5px); }
         
@@ -215,10 +229,10 @@
         .action-btn:hover { opacity: 1; }
         .action-btn svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2.5; fill: none; }
 
-        /* 7. Stabilized Edit Button CSS */
-        .user-edit-btn { background: transparent; border: none; color: var(--user-text); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; cursor: pointer; opacity: 0.6; display: flex; align-items: center; gap: 4px; margin-top: 8px; padding: 0; align-self: flex-end;}
+        /* FIXED EDIT BUTTON CSS */
+        .user-edit-btn { background: transparent; border: none; color: var(--user-text); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; opacity: 0.7; display: flex; align-items: center; gap: 5px; margin-top: 12px; padding: 6px 0 0 0; width: 100%; justify-content: flex-end; border-top: 1px solid rgba(255,255,255,0.2); transition: opacity 0.2s;}
         .user-edit-btn:hover { opacity: 1; }
-        .user-edit-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; }
+        .user-edit-btn svg { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2.5; fill: none; }
 
         .typing-indicator { display: flex; align-items: center; gap: 4px; font-style: italic; color: #888; background-color: transparent; box-shadow: none; border: none; padding: 5px 20px;}
         .dot { animation: blink 1.4s infinite both; height: 5px; width: 5px; background-color: #888; border-radius: 50%; display: inline-block; }
@@ -226,31 +240,29 @@
         .dot:nth-child(2) { animation-delay: 0.4s; }
         .dot:nth-child(3) { animation-delay: 0.6s; }
 
-        /* INPUT BAR */
+        /* EXPANDED COMMAND CONSOLE */
         #input-area { display: flex; flex-direction: column; background-color: var(--input-bg); padding: 18px 24px; border-top: 1px solid var(--border-color); box-shadow: var(--input-shadow); z-index: 10; flex-shrink: 0; transition: background-color 0.4s ease;}
         
         #image-preview-container { display: none; padding-bottom: 15px; }
         .preview-wrapper { position: relative; display: inline-block; animation: popIn 0.3s var(--ease-out); }
-        #preview-img { height: 180px; width: auto; max-width: 240px; object-fit: cover; border-radius: 12px; border: 3px solid var(--user-msg-bg); box-shadow: 0 8px 20px rgba(0,0,0,0.15); transition: border-color 0.4s ease; display: block; }
+        #preview-img { height: 160px; width: auto; max-width: 240px; object-fit: cover; border-radius: 12px; border: 3px solid var(--user-msg-bg); box-shadow: 0 8px 20px rgba(0,0,0,0.15); transition: border-color 0.4s ease; display: block; }
         .remove-img-btn { position: absolute; top: -10px; right: -10px; background-color: var(--user-msg-bg); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: background-color 0.4s ease; padding: 0; }
         
         #controls-row { display: flex; align-items: flex-end; gap: 12px; width: 100%; box-sizing: border-box; }
         .left-buttons { display: flex; gap: 4px; }
         
-        #user-input { flex-grow: 1; width: 100%; padding: 16px 20px; border-radius: 28px; border: 2px solid var(--border-color); background-color: var(--ai-msg-bg); color: var(--text-color); font-size: 1.05rem; font-family: var(--font-modern); font-weight: 500; outline: none; box-sizing: border-box; resize: none; overflow: hidden; min-height: 56px; max-height: 150px; line-height: 1.4; transition: border-color 0.3s; }
+        /* Centered Placeholder, Left-Aligned Text */
+        #user-input { flex-grow: 1; width: 100%; padding: 18px 20px; border-radius: 28px; border: 2px solid var(--border-color); background-color: var(--ai-msg-bg); color: var(--text-color); font-size: 1.05rem; font-family: var(--font-modern); font-weight: 500; outline: none; box-sizing: border-box; resize: none; overflow: hidden; min-height: 60px; max-height: 150px; line-height: 1.4; transition: border-color 0.3s; text-align: left; }
         #user-input:focus { border-color: rgba(211,47,47,0.4); }
         
-        /* 4. PRECISION CENTERED PLACEHOLDER */
-        #user-input::-webkit-input-placeholder { text-align: center; color: #A0A0A0; font-weight: 600; font-family: var(--font-gothic); text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s; padding-top: 1px; }
-        #user-input:-moz-placeholder { text-align: center; color: #A0A0A0; font-weight: 600; font-family: var(--font-gothic); text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s; }
-        #user-input::-moz-placeholder { text-align: center; color: #A0A0A0; font-weight: 600; font-family: var(--font-gothic); text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s; }
-        #user-input:-ms-input-placeholder { text-align: center; color: #A0A0A0; font-weight: 600; font-family: var(--font-gothic); text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s; }
-        
+        #user-input::-webkit-input-placeholder { text-align: center; color: #A0A0A0; font-weight: 700; font-family: var(--font-gothic); text-transform: uppercase; letter-spacing: 1px; }
+        #user-input:-moz-placeholder { text-align: center; color: #A0A0A0; font-weight: 700; font-family: var(--font-gothic); text-transform: uppercase; letter-spacing: 1px; }
         body.dark-mode #user-input::placeholder { color: #666666; }
         
-        #send-btn { background-color: var(--user-msg-bg); color: white; border: none; width: 52px; height: 52px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; padding: 0; min-width: 52px; flex-shrink: 0; transition: background-color 0.4s ease, opacity 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        #send-btn { background-color: var(--user-msg-bg); color: white; border: none; width: 56px; height: 56px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; padding: 0; min-width: 56px; flex-shrink: 0; transition: transform 0.1s, background-color 0.4s ease, opacity 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        #send-btn:active { transform: scale(0.92); }
         #send-btn.disabled { opacity: 0.5; pointer-events: none; }
-        #send-btn svg { width: 22px; height: 22px; stroke: white; stroke-width: 2.5; fill: none; margin-left: -2px; }
+        #send-btn svg { width: 24px; height: 24px; stroke: white; stroke-width: 2.5; fill: none; margin-left: -2px; }
 
         /* OVERLAYS & SIDEBAR */
         #sidebar-overlay, #modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 6000; display: none; opacity: 0; transition: opacity 0.3s; }
@@ -258,14 +270,8 @@
         #sidebar { position: fixed; top: 0; right: -320px; width: 300px; height: 100vh; background: var(--sidebar-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: -5px 0 30px rgba(0,0,0,0.2); z-index: 6001; transition: right 0.4s var(--ease-gothic); display: flex; flex-direction: column; border-left: 1px solid var(--border-color); overflow: hidden; }
         #sidebar.open { right: 0; }
         
-        /* 6. ORIGINAL SIMPLE ROSE drawing reinstatement */
-        #sidebar-watermark { 
-            position: absolute; bottom: 0; right: 0; width: 100%; height: 100%; 
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' opacity='0.08'%3E%3Cpath fill='none' stroke='%23D32F2F' stroke-width='1' d='M50,30 C60,10 90,20 90,45 C90,70 50,90 50,90 C50,90 10,70 10,45 C10,20 40,10 50,30 Z M50,90 L50,100 M50,100 L40,95 L50,90 L60,95 Z M30,70 L10,65 L25,75 M70,70 L90,65 L75,75'/%3E%3C/svg%3E");
-            background-size: 80%; background-repeat: no-repeat; background-position: center bottom;
-            pointer-events: none; z-index: -1; mix-blend-mode: luminosity;
-        }
-        body.dark-mode #sidebar-watermark { opacity: 0.05; }
+        /* RESTORED SIMPLE ROSE SVG */
+        #sidebar-watermark { position: absolute; bottom: -20px; right: -20px; width: 300px; height: 300px; color: var(--icon-color); opacity: var(--rose-opacity); pointer-events: none; z-index: -1; transition: color 0.4s ease; display: flex; justify-content: center; align-items: center;}
         
         .sidebar-header { padding: 25px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; z-index: 1; }
         .sidebar-header h2 { margin: 0; font-family: var(--font-gothic); font-size: 1.25rem; color: var(--text-color); text-transform: uppercase; letter-spacing: 1px; }
@@ -275,6 +281,9 @@
         .new-chat-btn svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2.5; fill: none; }
 
         .chat-list { flex-grow: 1; overflow-y: auto; padding: 0 15px 20px 15px; display: flex; flex-direction: column; gap: 8px; z-index: 1; }
+        .chat-list::-webkit-scrollbar { width: 4px; }
+        .chat-list::-webkit-scrollbar-thumb { background-color: rgba(128,128,128,0.2); border-radius: 10px; }
+
         .chat-item { padding: 15px 16px; border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px solid transparent; transition: background-color 0.3s, border-color 0.3s; }
         .chat-item:hover { background-color: rgba(128,128,128,0.05); }
         .chat-item.active { background-color: var(--active-bg); border-color: rgba(211,47,47,0.1); }
@@ -339,15 +348,15 @@
 
         <div id="page-auth" class="portal-page">
             <div class="portal-header">
-                <span>Nexus Network</span>
+                <span>NEXUS NETWORK</span>
                 <button class="back-btn" onclick="openPortal('gateway')">✕</button>
             </div>
             <div class="auth-container">
-                <div class="auth-hero-title">Nexus Network</div>
-                <div class="auth-hero-subtitle">Authenticate</div>
+                <div class="auth-hero-title">AUTHENTICATE</div>
+                <div class="auth-hero-subtitle">Verify credentials to access global archives.</div>
                 
                 <button class="google-auth-btn" onclick="signInWithGoogle()">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
                     Sync with Google
                 </button>
                 <div class="auth-divider">or</div>
@@ -356,21 +365,21 @@
                 <input type="password" id="auth-password" class="auth-input" placeholder="Encryption Key">
                 <button class="auth-submit-btn" onclick="handleAuth('login')">Authenticate</button>
                 <div id="auth-error-display" class="auth-error-msg"></div>
-                <button class="text-link-btn" onclick="openPortal('signup')" style="margin-top:15px; color:#D32F2F;">New Operator? Initialize Chimera ID</button>
+                <button class="text-link-btn" onclick="openPortal('signup')" style="margin-top:15px;">New Operator? Initialize Chimera ID</button>
             </div>
         </div>
 
         <div id="page-signup" class="portal-page">
             <div class="portal-header">
-                <span>Nexus Network</span>
+                <span>NEXUS NETWORK</span>
                 <button class="back-btn" onclick="openPortal('gateway')">✕</button>
             </div>
             <div class="auth-container">
-                <div class="auth-hero-title">Nexus Network</div>
-                <div class="auth-hero-subtitle">Initialize ID</div>
+                <div class="auth-hero-title">INITIALIZE ID</div>
+                <div class="auth-hero-subtitle">Establish biometric synchronization protocols.</div>
                 
                 <button class="google-auth-btn" onclick="signInWithGoogle()">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
                     Sync with Google
                 </button>
                 <div class="auth-divider">or</div>
@@ -379,7 +388,7 @@
                 <input type="password" id="signup-password" class="auth-input" placeholder="Encryption Key (Min 6 chars)">
                 <button class="auth-submit-btn" onclick="handleAuth('signup')">Initialize ID</button>
                 <div id="signup-error-display" class="auth-error-msg"></div>
-                <button class="text-link-btn" onclick="openPortal('auth')" style="margin-top:15px; color:#D32F2F;">Have a Chimera ID? Authenticate</button>
+                <button class="text-link-btn" onclick="openPortal('auth')" style="margin-top:15px;">Have a Chimera ID? Authenticate</button>
             </div>
         </div>
 
@@ -390,58 +399,42 @@
             </div>
             <div class="auth-container" style="max-width: 600px; padding: 30px 20px;">
                 <div class="gold-hero-title">Chimera Gold</div>
-                <div class="gold-hero-subtitle">Activate the FLAGSHIP LION protocol for ultimate computational mastery and code synthesis.</div>
+                <div class="gold-hero-subtitle">Activate the flagship protocol for ultimate computational mastery and code synthesis.</div>
                 
                 <div class="arsenal-list">
                     <div class="arsenal-item">
-                        <div class="arsenal-header-row">
-                            <svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>
-                            <h3 class="arsenal-title">Lion Flagship Engine</h3>
+                        <div class="arsenal-header-row" style="color: #0F52BA;">
+                            <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                            <h3 class="arsenal-title">Computational Architect</h3>
                         </div>
-                        <div class="arsenal-desc-block">
-                            <p class="arsenal-desc">Access to the premier Lion computational model. Heavy-duty reasoning for extreme tasks.</p>
-                            <ul class="arsenal-features-list">
-                                <li>Master-Level Coding</li>
-                                <li>Complex Writing Synthesis</li>
-                                <li>Exhaustive Logical Analysis</li>
-                            </ul>
+                        <div class="arsenal-desc-block" style="border-left-color: rgba(15,82,186,0.2);">
+                            <p class="arsenal-desc">Unlock massive data processing, complex mathematics, and logical reasoning via deep neural protocols.</p>
                         </div>
                     </div>
-
+                    
                     <div class="arsenal-item">
-                        <div class="arsenal-header-row">
+                        <div class="arsenal-header-row" style="color: #D32F2F;">
                             <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             <h3 class="arsenal-title">Advanced Vision Nexus</h3>
                         </div>
-                        <div class="arsenal-desc-block">
-                            <p class="arsenal-desc">Deep visual synchronization protocol. Analyze matrices and decryption grids.</p>
-                            <ul class="arsenal-features-list">
-                                <li>Complex Diagram Decryption</li>
-                                <li>Handwritten Code Recognition</li>
-                                <li>Architectural Sync</li>
-                            </ul>
+                        <div class="arsenal-desc-block" style="border-left-color: rgba(211,47,47,0.2);">
+                            <p class="arsenal-desc">Experience profound image analysis. Decode complex diagrams, decrypt handwritten code, and synthesize visual data.</p>
                         </div>
                     </div>
-
-                    <div class="arsenal-item gold-themed">
-                        <div class="arsenal-header-row">
-                            <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                            <h3 class="arsenal-title">Priority Transmissions</h3>
+                    
+                    <div class="arsenal-item">
+                        <div class="arsenal-header-row" style="color: #AA8020;">
+                            <svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>
+                            <h3 class="arsenal-title">Lion Flagship Engine</h3>
                         </div>
-                        <div class="arsenal-desc-block">
-                            <p class="arsenal-desc">Zero bandwidth throttling. Dedicated neural pathways for Gold operators.</p>
-                            <ul class="arsenal-features-list">
-                                <li>Instantaneous Response Sync</li>
-                                <li>Unlimited Lion transmits</li>
-                                <li>Uncapped file analysis</li>
-                            </ul>
+                        <div class="arsenal-desc-block" style="border-left-color: rgba(212,175,55,0.3);">
+                            <p class="arsenal-desc">Access our extreme heavy-duty creative engine for master-level coding, exhaustive writing, and complex narrative synthesis.</p>
                         </div>
                     </div>
                 </div>
                 
                 <div style="margin-top: 50px;">
                     <div class="subscription-matrix">$20.00 <span>/ monthly cycle</span></div>
-                    
                     <button class="golden-ticket-btn" style="width: 100%; max-width: none;" id="gold-cta-btn" onclick="handleGoldCTA()">
                         ✦ <span id="gold-cta-text">Authenticate to Upgrade</span> ✦
                     </button>
@@ -515,7 +508,7 @@
                 </div>
                 <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
                 
-                <textarea id="user-input" rows="1" placeholder="Transmit command..."></textarea>
+                <textarea id="user-input" rows="1" placeholder="Transit command..."></textarea>
                 
                 <button id="send-btn" class="icon-btn" onclick="sendMessage()">
                     <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
@@ -532,8 +525,8 @@
                 <button class="back-btn" onclick="closeSettings()">✕</button>
             </div>
             <div class="settings-list">
-                <div class="settings-item golden-ticket-btn gold-tier" onclick="openPortal('gold')" id="settings-gold-btn" style="margin: 15px auto; width: 90%;">
-                    ✦ Upgrade to Golden ✦
+                <div class="settings-item golden-ticket-btn" onclick="openPortal('gold')" id="settings-gold-btn" style="margin: 20px auto 10px auto; width: 85%;">
+                    ✦ Upgrade to Gold ✦
                 </div>
                 <div class="settings-item">About Us <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
                 <div class="settings-item">Support Frequency <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
@@ -554,7 +547,11 @@
         </div>
 
         <div id="sidebar">
-            <div id="sidebar-watermark"></div>
+            <div id="sidebar-watermark">
+                <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M50,30 C60,10 90,20 90,45 C90,70 50,90 50,90 C50,90 10,70 10,45 C10,20 40,10 50,30 Z M50,90 L50,100 M50,100 L40,95 L50,90 L60,95 Z M30,70 L10,65 L25,75 M70,70 L90,65 L75,75"/>
+                </svg>
+            </div>
             
             <div class="sidebar-header">
                 <h2>Chimera Chamber</h2>
@@ -632,22 +629,17 @@
             }
         });
 
-        // 3 & 5. Dynamic BUTTON TEXT & stars applied
         function updateGoldDimensionUI() {
             const goldCtaBtnText = document.getElementById('gold-cta-text');
             const settingsGoldBtn = document.getElementById('settings-gold-btn');
             
             if (!currentUserId && !isGuestMode) {
-                // Not authenticated at all (Gateway screen level)
                 if(goldCtaBtnText) goldCtaBtnText.innerText = "Authenticate to Upgrade";
             } else if (isGuestMode) {
-                // Guest/Economy Mode
                 if(goldCtaBtnText) goldCtaBtnText.innerText = "Upgrade to Gold";
-                if(settingsGoldBtn) settingsGoldBtn.innerHTML = `✦ Upgrade to Golden ✦`;
+                if(settingsGoldBtn) settingsGoldBtn.innerHTML = `✦ Upgrade to Gold ✦`;
             } else {
-                // Logged in
                 if(goldCtaBtnText) goldCtaBtnText.innerText = "Upgrade to Gold";
-                // 5. Settings update
                 if(settingsGoldBtn) settingsGoldBtn.innerHTML = `✦ Chimera Gold Status ✦`;
             }
         }
@@ -722,7 +714,6 @@
         function handleAuthError(error, context) {
             const errorDisplay = (context === 'auth') ? document.getElementById('auth-error-display') : document.getElementById('signup-error-display');
             errorDisplay.style.color = '#D32F2F'; 
-            
             switch(error.code) {
                 case 'auth/invalid-email': errorDisplay.innerText = "Error: Email malformed."; break;
                 case 'auth/user-not-found': errorDisplay.innerText = "Anomaly: Operator ID not recognized."; break;
@@ -733,7 +724,6 @@
             }
         }
 
-        // --- CORE CHAT LOGIC ---
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
         let currentModel = 'Serpent';
         let chats = []; 
@@ -780,7 +770,6 @@
             document.documentElement.style.setProperty('--user-msg-bg', hexCode);
             document.documentElement.style.setProperty('--active-bg', `rgba(${r}, ${g}, ${b}, 0.12)`);
             document.documentElement.style.setProperty('--theme-glow', `rgba(${r}, ${g}, ${b}, 0.4)`);
-            document.documentElement.style.setProperty('--border-glow', hexCode);
         }
         
         function selectModel(modelName) {
@@ -1110,7 +1099,7 @@
             });
         }
 
-        // 7. Malfunctioning edit button logic stabilized
+        // 7. STABILIZED EDIT BUTTON Logic
         function editUserMessage(originalText) {
             const inputField = document.getElementById('user-input');
             inputField.value = originalText;
@@ -1142,9 +1131,8 @@
                 }
                 if (msg.role === 'user' && isLastUserMsg) {
                     const editBtn = document.createElement('button');
-                    // 7. Edit Button Class Applied
                     editBtn.className = 'user-edit-btn';
-                    editBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Edit Matrix';
+                    editBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> EDIT';
                     editBtn.onclick = function() { editUserMessage(msg.parts[0].text); };
                     msgDiv.appendChild(editBtn);
                 }
@@ -1228,11 +1216,11 @@
             let apiContents = [...chat.messages]; apiContents[apiContents.length - 1] = { role: "user", parts: currentMessageParts };
             clearImage(); 
             
-            // 8. CRITICAL LINGUISTIC FIX Applied here in system instructions.
+            // 8. THE LINGUISTIC FAILSAFE (Absolute language sync)
             const systemInstructionsMap = {
-                'Serpent': "Serpent analytical AI by Chimera Co. Premium luxury brand persona. Kind, professional. CRITICAL: Always respond in the EXACT language used by the operator.",
-                'Ram': "Ram computational AI by Chimera Co. Deep processing, mathematics. Comprehensive answers. CRITICAL: Always respond in the EXACT language used by the operator.",
-                'Lion': "Lion flagship synthesis AI by Chimera Co. Heavy coding, complex narrative. Robust output. CRITICAL: Always respond in the EXACT language used by the operator."
+                'Serpent': "Serpent analytical AI by Chimera Co. Premium luxury brand persona. CRITICAL PROTOCOL: You must strictly detect the exact language the user is typing in, and you must respond EXCLUSIVELY in that exact same language.",
+                'Ram': "Ram computational AI by Chimera Co. Deep processing. CRITICAL PROTOCOL: You must strictly detect the exact language the user is typing in, and you must respond EXCLUSIVELY in that exact same language.",
+                'Lion': "Lion flagship synthesis AI by Chimera Co. Master-level logic. CRITICAL PROTOCOL: You must strictly detect the exact language the user is typing in, and you must respond EXCLUSIVELY in that exact same language."
             };
             const activeSystemInstruction = { parts: [{ text: systemInstructionsMap[currentModel] }] };
             try {
