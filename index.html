@@ -44,6 +44,9 @@
             --code-text: #F0F0F0;
             --icon-color: #050505;
             --sidebar-bg: rgba(255, 255, 255, 0.98);
+            --modal-bg: #FFFFFF;
+            
+            --watermark-opacity: 0.04;
             
             --font-gothic: 'Cinzel', serif;
             --font-modern: 'Montserrat', sans-serif;
@@ -64,11 +67,13 @@
             --code-text: var(--user-msg-bg);
             --icon-color: #F0F0F0;
             --sidebar-bg: rgba(10, 10, 10, 0.98);
+            --modal-bg: #141414;
+            --watermark-opacity: 0.12; 
         }
 
         body { font-family: var(--font-modern); background-color: var(--bg-color); color: var(--text-color); margin: 0; display: flex; flex-direction: column; height: 100vh; height: 100dvh; width: 100vw; position: fixed; top: 0; left: 0; overflow: hidden; transition: background-color 0.4s ease, color 0.4s ease; -webkit-tap-highlight-color: transparent;}
         
-        /* 1. LAUNCH SENTINEL */
+        /* LAUNCH SENTINEL */
         #launch-sentinel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--bg-color); z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s; }
         .launch-logo { width: 100px; height: 100px; animation: pulseLogo 2s infinite ease-in-out; border-radius: 50%; box-shadow: 0 0 25px rgba(211, 47, 47, 0.4); mix-blend-mode: normal; }
         @keyframes pulseLogo { 0% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.05); } 100% { opacity: 0.5; transform: scale(0.95); } }
@@ -81,6 +86,13 @@
         .portal-page.active { display: flex; animation: slideUpFade 0.4s var(--ease-out) forwards; }
         @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* GATEWAY (SPLASH SCREEN) */
+        #page-gateway { justify-content: center; align-items: center; text-align: center; }
+        .splash-logo-core { width: 110px; height: 110px; border-radius: 50%; box-shadow: 0 0 30px rgba(211, 47, 47, 0.4); background-color: #FFFFFF; padding: 6px; margin-bottom: 25px; border: 1px solid rgba(211,47,47,0.3); animation: glowPulse 4s infinite var(--ease-gothic); }
+        @keyframes glowPulse { 0% { box-shadow: 0 0 15px rgba(211, 47, 47, 0.3); } 50% { box-shadow: 0 0 35px rgba(211, 47, 47, 0.7); } 100% { box-shadow: 0 0 15px rgba(211, 47, 47, 0.3); } }
+        .splash-title { font-family: var(--font-gothic); font-size: 2.2rem; font-weight: 800; color: var(--text-color); letter-spacing: 2px; margin: 0; text-transform: uppercase; }
+        .splash-subtitle { font-size: 1.1rem; color: #888; margin: 5px 0 50px 0; font-weight: 500; letter-spacing: 0.5px; }
+        
         /* THE GOLDEN TICKET AESTHETIC */
         .golden-ticket-btn { 
             width: 85%; max-width: 320px; padding: 18px; border-radius: 14px; 
@@ -90,9 +102,12 @@
             box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.4); 
             display: flex; justify-content: center; align-items: center; gap: 12px; 
             letter-spacing: 1.5px; transition: transform 0.1s, box-shadow 0.3s; 
-            text-shadow: 0 1px 1px rgba(255,255,255,0.6); text-transform: uppercase;
+            text-shadow: 0 1px 1px rgba(255,255,255,0.6); text-transform: uppercase; white-space: nowrap;
         }
         .golden-ticket-btn:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(212, 175, 55, 0.5); }
+        
+        .gateway-btn-economy { width: 85%; max-width: 320px; padding: 16px; border-radius: 14px; background-color: transparent; color: var(--text-color); border: 2px solid var(--border-color); font-family: var(--font-modern); font-weight: 700; font-size: 1.05rem; cursor: pointer; margin-bottom: 30px; transition: transform 0.1s, background-color 0.2s; text-transform: uppercase; letter-spacing: 1px;}
+        .gateway-btn-economy:active { transform: scale(0.96); background-color: rgba(128,128,128,0.1); }
         
         .text-link-title { color: #888; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;}
         .text-link-btn { background: transparent; border: none; color: #D32F2F; font-weight: 800; font-size: 1.05rem; cursor: pointer; padding: 5px; text-decoration: underline; font-family: var(--font-modern); transition: opacity 0.2s;}
@@ -103,19 +118,10 @@
         .portal-header span { font-family: var(--font-gothic); font-weight: 800; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-color);}
         .back-btn { background: transparent; border: none; color: var(--text-color); font-size: 1.6rem; cursor: pointer; padding: 5px; }
 
-        /* GATEWAY (SPLASH SCREEN) */
-        #page-gateway { justify-content: center; align-items: center; text-align: center; }
-        .splash-logo-core { width: 110px; height: 110px; border-radius: 50%; box-shadow: 0 0 30px rgba(211, 47, 47, 0.4); background-color: #FFFFFF; padding: 6px; margin-bottom: 25px; border: 1px solid rgba(211,47,47,0.3); animation: glowPulse 4s infinite var(--ease-gothic); }
-        @keyframes glowPulse { 0% { box-shadow: 0 0 15px rgba(211, 47, 47, 0.3); } 50% { box-shadow: 0 0 35px rgba(211, 47, 47, 0.7); } 100% { box-shadow: 0 0 15px rgba(211, 47, 47, 0.3); } }
-        .splash-title { font-family: var(--font-gothic); font-size: 2.2rem; font-weight: 800; color: var(--text-color); letter-spacing: 2px; margin: 0; text-transform: uppercase; }
-        .splash-subtitle { font-size: 1.1rem; color: #888; margin: 5px 0 50px 0; font-weight: 500; letter-spacing: 0.5px; }
-        
-        .gateway-btn-economy { width: 85%; max-width: 320px; padding: 16px; border-radius: 14px; background-color: transparent; color: var(--text-color); border: 2px solid var(--border-color); font-family: var(--font-modern); font-weight: 700; font-size: 1.05rem; cursor: pointer; margin-bottom: 30px; transition: transform 0.1s, background-color 0.2s; text-transform: uppercase; letter-spacing: 1px;}
-        .gateway-btn-economy:active { transform: scale(0.96); background-color: rgba(128,128,128,0.1); }
-
         /* AUTH & SIGNUP PAGES */
         .auth-container { padding: 30px 25px; text-align: center; max-width: 400px; margin: 0 auto; width: 100%; box-sizing: border-box; }
-        .auth-hero-title { font-family: var(--font-gothic); font-size: 2rem; font-weight: 800; color: var(--text-color); text-transform: uppercase; margin-bottom: 35px; letter-spacing: 2px; }
+        .auth-hero-title { font-family: var(--font-gothic); font-size: 2rem; font-weight: 800; color: var(--text-color); text-transform: uppercase; margin-bottom: 5px; letter-spacing: 2px; }
+        .auth-hero-subtitle { color: #888; margin-bottom: 35px; font-size: 0.95rem; font-weight: 500; line-height: 1.5; text-transform: uppercase; letter-spacing: 0.5px; }
         
         .google-auth-btn { width: 100%; padding: 15px; border-radius: 10px; background-color: transparent; color: var(--text-color); border: 2px solid var(--border-color); font-weight: 700; font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 25px; transition: background-color 0.2s; font-family: var(--font-modern);}
         .google-auth-btn:active { background-color: rgba(128,128,128,0.06); }
@@ -161,26 +167,35 @@
         .subscription-matrix { color: var(--text-color); font-weight: 800; font-size: 2rem; margin: 40px 0 20px 0; font-family: var(--font-gothic); text-align: center; text-transform: uppercase; letter-spacing: 1px; }
         .subscription-matrix span { font-size: 1rem; font-family: var(--font-modern); font-weight: 600; color: #888; text-transform: none; letter-spacing: 0;}
 
-        /* SETTINGS DIMENSION (Full Page Upgrade) */
+        /* SETTINGS DIMENSION (Full Page Expansion) */
         #page-settings { background-color: var(--bg-color); }
         .settings-container { padding: 20px; max-width: 600px; margin: 0 auto; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; }
         
         .settings-card { background-color: var(--modal-bg); border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 5px 20px rgba(0,0,0,0.03); overflow: hidden; }
         .settings-card-title { padding: 15px 20px; background-color: var(--ai-msg-bg); font-family: var(--font-gothic); font-weight: 800; font-size: 0.85rem; color: #888; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 1px solid var(--border-color); }
         
-        .settings-row { padding: 18px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 1.05rem; cursor: pointer; transition: background-color 0.2s; }
+        .settings-row { padding: 18px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 1.05rem; cursor: pointer; transition: background-color 0.2s; color: var(--text-color);}
         .settings-row:last-child { border-bottom: none; }
         .settings-row:active { background-color: rgba(128,128,128,0.05); }
         .settings-row svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; opacity: 0.5; }
         
-        .settings-value { color: #888; font-size: 0.9rem; font-weight: 500; }
+        .settings-value { color: #888; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 8px;}
         .logout-text { color: #D32F2F; font-weight: 800; text-transform: uppercase; font-family: var(--font-gothic); letter-spacing: 1px;}
+        
+        /* Bespoke Theme Toggle */
+        .theme-toggle-pill { width: 44px; height: 24px; border-radius: 12px; background-color: var(--border-color); position: relative; transition: background-color 0.3s; }
+        body.dark-mode .theme-toggle-pill { background-color: #D32F2F; }
+        .toggle-knob { width: 18px; height: 18px; border-radius: 50%; background-color: #FFF; position: absolute; top: 3px; left: 3px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
+        body.dark-mode .toggle-knob { transform: translateX(20px); }
 
         /* --- MAIN APP CORE UI --- */
         header { background-color: var(--header-bg); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); min-height: 60px; z-index: 10; flex-shrink: 0; transition: background-color 0.4s ease;}
         .header-left { display: flex; align-items: center; gap: 15px; }
         
+        /* Harmonized Inverted Header Logo for Dark Mode */
         #header-logo { height: 42px; width: 42px; object-fit: contain; display: block; background-color: #FFFFFF; padding: 4px; border-radius: 50%; box-shadow: 0 0 15px var(--theme-glow); border: 2px solid var(--theme-glow); transition: box-shadow 0.4s var(--ease-in-out), border-color 0.4s var(--ease-in-out); cursor: pointer; }
+        body.dark-mode #header-logo { background-color: transparent; filter: grayscale(100%) invert(1); mix-blend-mode: screen; box-shadow: 0 0 15px rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.3); }
+        #header-logo:active { transform: scale(0.92); }
         
         .custom-dropdown { position: relative; user-select: none; }
         .dropdown-selected { background-color: transparent; color: var(--text-color); border: 2px solid var(--border-color); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: var(--font-gothic); letter-spacing: 0.5px; text-transform: uppercase; transition: border-color 0.3s; }
@@ -207,19 +222,10 @@
         
         #title-bar { background-color: var(--bg-color); padding: 10px 20px; font-size: 0.9rem; font-weight: 700; color: var(--user-msg-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; z-index: 9; flex-shrink: 0; font-family: var(--font-gothic); letter-spacing: 0.5px; text-transform: uppercase; transition: color 0.4s ease, background-color 0.4s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.02);}
 
-        /* DYNAMIC LOGO WATERMARK - Pure White Invert Fix for Dark Mode */
         #chat-wrapper { position: relative; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; background-color: transparent; }
-        #chat-bg-watermark { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            width: 75%; height: 75%; background-image: url('chimera-logo.jpg'); 
-            background-size: contain; background-repeat: no-repeat; background-position: center; 
-            opacity: 0.04; z-index: 0; pointer-events: none; transition: opacity 0.4s ease; 
-            mix-blend-mode: multiply; filter: grayscale(100%);
-        }
-        body.dark-mode #chat-bg-watermark {
-            opacity: 0.04; mix-blend-mode: screen; filter: grayscale(100%) invert(1);
-        }
-        
+        #chat-bg-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 75%; height: 75%; background-image: url('chimera-logo.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: var(--watermark-opacity); z-index: 0; pointer-events: none; transition: opacity 0.4s ease; mix-blend-mode: luminosity; }
+        body.dark-mode #chat-bg-watermark { mix-blend-mode: screen; filter: grayscale(100%) invert(1); }
+
         #chat-container { position: relative; flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; z-index: 1; scroll-behavior: smooth; }
         
         #chat-container::-webkit-scrollbar { width: 6px; }
@@ -241,12 +247,17 @@
         .action-btn:hover { opacity: 1; }
         .action-btn svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2.5; fill: none; }
 
+        .user-edit-btn { background: transparent; border: none; color: var(--user-text); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; opacity: 0.7; display: flex; align-items: center; gap: 5px; margin-top: 12px; padding: 6px 0 0 0; width: 100%; justify-content: flex-end; border-top: 1px solid rgba(255,255,255,0.2); transition: opacity 0.2s;}
+        .user-edit-btn:hover { opacity: 1; }
+        .user-edit-btn svg { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2.5; fill: none; }
+
         .typing-indicator { display: flex; align-items: center; gap: 4px; font-style: italic; color: #888; background-color: transparent; box-shadow: none; border: none; padding: 5px 20px;}
         .dot { animation: blink 1.4s infinite both; height: 5px; width: 5px; background-color: #888; border-radius: 50%; display: inline-block; }
         .dot:nth-child(1) { animation-delay: 0.2s; }
         .dot:nth-child(2) { animation-delay: 0.4s; }
         .dot:nth-child(3) { animation-delay: 0.6s; }
 
+        /* COMMAND CONSOLE EXPANSION */
         #input-area { display: flex; flex-direction: column; background-color: var(--input-bg); padding: 18px 24px; border-top: 1px solid var(--border-color); box-shadow: var(--input-shadow); z-index: 10; flex-shrink: 0; transition: background-color 0.4s ease;}
         
         #image-preview-container { display: none; padding-bottom: 15px; }
@@ -257,10 +268,10 @@
         #controls-row { display: flex; align-items: flex-end; gap: 12px; width: 100%; box-sizing: border-box; }
         .left-buttons { display: flex; gap: 4px; }
         
-        /* CENTERED PLACEHOLDER FIX */
         #user-input { flex-grow: 1; width: 100%; padding: 18px 20px; border-radius: 28px; border: 2px solid var(--border-color); background-color: var(--ai-msg-bg); color: var(--text-color); font-size: 1.05rem; font-family: var(--font-modern); font-weight: 500; outline: none; box-sizing: border-box; resize: none; overflow: hidden; min-height: 60px; max-height: 150px; line-height: 1.4; transition: border-color 0.3s; text-align: left; }
         #user-input:focus { border-color: rgba(211,47,47,0.4); }
         
+        /* PERFECT CENTER PLACEHOLDER SNAP */
         #user-input::-webkit-input-placeholder { text-align: center; color: #A0A0A0; font-weight: 700; font-family: var(--font-gothic); text-transform: uppercase; letter-spacing: 1px; }
         #user-input:-moz-placeholder { text-align: center; color: #A0A0A0; font-weight: 700; font-family: var(--font-gothic); text-transform: uppercase; letter-spacing: 1px; }
         body.dark-mode #user-input::placeholder { color: #666666; }
@@ -275,15 +286,9 @@
         #sidebar { position: fixed; top: 0; right: -320px; width: 300px; height: 100vh; background: var(--sidebar-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: -5px 0 30px rgba(0,0,0,0.2); z-index: 6001; transition: right 0.4s var(--ease-gothic); display: flex; flex-direction: column; border-left: 1px solid var(--border-color); overflow: hidden; }
         #sidebar.open { right: 0; }
         
-        /* SIDEBAR LOGO WATERMARK (Replaces Rose) */
-        #sidebar-watermark { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            width: 150%; height: 150%; background-image: url('chimera-logo.jpg'); 
-            background-size: cover; background-position: center; 
-            opacity: 0.03; pointer-events: none; z-index: -1; 
-            mix-blend-mode: multiply; filter: grayscale(100%);
-        }
-        body.dark-mode #sidebar-watermark { opacity: 0.03; mix-blend-mode: screen; filter: grayscale(100%) invert(1); }
+        /* UNIFIED LOGO WATERMARK IN SIDEBAR */
+        #sidebar-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 150%; height: 150%; background-image: url('chimera-logo.jpg'); background-size: cover; background-position: center; opacity: 0.03; pointer-events: none; z-index: -1; mix-blend-mode: multiply; filter: grayscale(100%); transition: opacity 0.4s ease;}
+        body.dark-mode #sidebar-watermark { opacity: 0.04; mix-blend-mode: screen; filter: grayscale(100%) invert(1); }
         
         .sidebar-header { padding: 25px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; z-index: 1; }
         .sidebar-header h2 { margin: 0; font-family: var(--font-gothic); font-size: 1.25rem; color: var(--text-color); text-transform: uppercase; letter-spacing: 1px; }
@@ -310,7 +315,7 @@
         .chat-action-btn:hover { color: var(--user-msg-bg); }
         .chat-action-btn svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; }
 
-        /* RENAME MODAL */
+        /* MODALS */
         .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -45%); width: 85%; max-width: 360px; background: var(--modal-bg); border-radius: 18px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); z-index: 6005; border: 1px solid var(--border-color); display: none; flex-direction: column; opacity: 0; transition: opacity 0.3s ease, transform 0.3s var(--ease-out); overflow: hidden;}
         
         #rename-modal { padding: 24px; box-sizing: border-box; }
@@ -396,7 +401,7 @@
         <div id="page-gold" class="portal-page">
             <div class="portal-header">
                 <span>Arsenal Showcase</span>
-                <button class="back-btn" onclick="openPortal('gateway')">✕</button>
+                <button class="back-btn" onclick="closeGoldPortal()">✕</button>
             </div>
             <div class="auth-container" style="max-width: 600px; padding: 30px 20px;">
                 <div class="gold-hero-title">Chimera Gold</div>
@@ -451,9 +456,9 @@
             <div class="settings-container">
                 
                 <div class="settings-card" style="border-color: #D4AF37; box-shadow: 0 5px 20px rgba(212,175,55,0.1);">
-                    <div class="settings-card-title" style="background-color: rgba(212,175,55,0.05); color: #AA8020;">Subscription</div>
+                    <div class="settings-card-title" style="background-color: rgba(212,175,55,0.05); color: #AA8020;">Subscription Tier</div>
                     <div style="padding: 20px; display: flex; justify-content: center;">
-                        <button class="golden-ticket-btn" style="margin: 0; width: 100%; max-width: none;" id="settings-gold-btn" onclick="openPortal('gold')">
+                        <button class="golden-ticket-btn" style="margin: 0; width: 100%; max-width: none;" id="settings-gold-btn" onclick="openGoldFromSettings()">
                             ✦ UPGRADE TO GOLD ✦
                         </button>
                     </div>
@@ -472,26 +477,36 @@
                 </div>
 
                 <div class="settings-card">
-                    <div class="settings-card-title">Preferences</div>
-                    <div class="settings-row" onclick="toggleTheme(); updateThemeText();">
+                    <div class="settings-card-title">System Preferences</div>
+                    <div class="settings-row" onclick="toggleTheme();">
                         <span>Obsidian Protocol (Dark Mode)</span>
-                        <span class="settings-value" id="setting-theme-val">OFF</span>
+                        <div class="theme-toggle-pill" id="theme-toggle-pill">
+                            <div class="toggle-knob"></div>
+                        </div>
                     </div>
                     <div class="settings-row">
-                        <span>Language</span>
-                        <span class="settings-value">Auto-Detect</span>
+                        <span>Language Matrix</span>
+                        <span class="settings-value">Auto-Sync</span>
+                    </div>
+                    <div class="settings-row">
+                        <span>API Configuration</span>
+                        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                     </div>
                 </div>
 
                 <div class="settings-card">
                     <div class="settings-card-title">Security & Data</div>
-                    <div class="settings-row" onclick="wipeLocalData()">
-                        <span style="color: #D32F2F;">Purge Local Cache</span>
+                    <div class="settings-row" onclick="openPurgeModal()">
+                        <span style="color: #D32F2F; font-weight: 800;">Purge Local Cache</span>
                         <svg viewBox="0 0 24 24" style="stroke: #D32F2F;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                     </div>
                     <div class="settings-row">
+                        <span>Export Data Matrix</span>
+                        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    </div>
+                    <div class="settings-row">
                         <span>System Version</span>
-                        <span class="settings-value">v4.0 Omni</span>
+                        <span class="settings-value">v4.1 Omni</span>
                     </div>
                 </div>
 
@@ -531,6 +546,9 @@
                 </div>
             </div>
             <div class="header-controls">
+                <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" title="Obsidian Protocol">
+                    <svg id="theme-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
                 <button class="icon-btn" onclick="openSidebar()" title="Chimera Chamber">
                     <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
                 </button>
@@ -570,7 +588,7 @@
             </div>
         </div>
 
-        <div id="modal-overlay" class="full-overlay" onclick="closeRenameModal();"></div>
+        <div id="modal-overlay" class="full-overlay" onclick="closeRenameModal(); closePurgeModal();"></div>
         <div id="sidebar-overlay" class="full-overlay" onclick="closeSidebar()"></div>
 
         <div id="rename-modal" class="modal-box">
@@ -579,6 +597,20 @@
             <div class="rename-buttons">
                 <button class="rename-btn rename-cancel" onclick="closeRenameModal()">Cancel</button>
                 <button class="rename-btn rename-save" onclick="saveRenamedChat()">Save</button>
+            </div>
+        </div>
+
+        <div id="purge-modal" class="modal-box">
+            <div class="modal-header">
+                <span style="color: #D32F2F;">SECURITY PROTOCOL</span>
+            </div>
+            <div style="padding: 24px; text-align: center; color: var(--text-color); font-family: var(--font-modern); font-weight: 600; line-height: 1.5;">
+                CRITICAL: Wipe all local Chimera data from this device?<br><br>
+                <span style="color: #888; font-size: 0.85rem;">(Cloud archives attached to your ID will remain safe).</span>
+            </div>
+            <div class="rename-buttons" style="padding: 0 24px 24px 24px;">
+                <button class="rename-btn rename-cancel" onclick="closePurgeModal()">Cancel</button>
+                <button class="rename-btn rename-save" style="background-color: #D32F2F; box-shadow: 0 4px 10px rgba(211,47,47,0.3);" onclick="executePurge()">Purge</button>
             </div>
         </div>
 
@@ -623,6 +655,9 @@
             const portals = document.getElementById('spa-portals');
             const appCore = document.getElementById('app-core');
             
+            // Check Ghost Mode Persistence
+            const storedGuest = localStorage.getItem('chimera_guest_mode');
+            
             if (user) {
                 currentUserId = user.uid;
                 isGuestMode = false;
@@ -639,20 +674,35 @@
                 setTimeout(() => sentinel.style.display = 'none', 1100);
                 
                 loadChats(); 
+            } else if (storedGuest === 'true') {
+                // Persistent Ghost Mode - bypass splash completely
+                currentUserId = null;
+                isGuestMode = true;
+                document.getElementById('setting-identity-val').innerText = "Guest Mode";
+                document.getElementById('setting-logout-row').style.display = 'none';
+                
+                appCore.style.display = 'flex';
+                portals.style.display = 'none';
+                
+                redrawChat(); 
+                updateGoldDimensionUI();
+                
+                setTimeout(() => sentinel.style.opacity = '0', 300); 
+                setTimeout(() => sentinel.style.display = 'none', 1100);
+                
+                loadChats(); 
             } else {
                 currentUserId = null;
                 document.getElementById('setting-identity-val').innerText = "Guest Mode";
                 document.getElementById('setting-logout-row').style.display = 'none';
                 
-                if (!isGuestMode) {
-                    appCore.style.display = 'none';
-                    portals.style.display = 'flex';
-                    openPortal('gateway');
-                    updateGoldDimensionUI();
-                    
-                    setTimeout(() => sentinel.style.opacity = '0', 300);
-                    setTimeout(() => sentinel.style.display = 'none', 1100);
-                }
+                appCore.style.display = 'none';
+                portals.style.display = 'flex';
+                openPortal('gateway');
+                updateGoldDimensionUI();
+                
+                setTimeout(() => sentinel.style.opacity = '0', 300);
+                setTimeout(() => sentinel.style.display = 'none', 1100);
             }
         });
 
@@ -671,11 +721,23 @@
             }
         }
 
+        // Gold Portal Routing Fix
+        function closeGoldPortal() {
+            if (currentUserId || isGuestMode) {
+                // If logged in or guest, return to the app interface
+                document.getElementById('spa-portals').style.display = 'none';
+                document.getElementById('app-core').style.display = 'flex';
+            } else {
+                openPortal('gateway');
+            }
+        }
+
         function handleGoldCTA() {
             if (!currentUserId && !isGuestMode) {
                 openPortal('auth');
             } else {
                 AnomalyDetect("Payment Gateway not active. Contact Support.");
+                closeGoldPortal();
             }
         }
 
@@ -689,6 +751,7 @@
 
         function enterEconomyMode() {
             isGuestMode = true;
+            localStorage.setItem('chimera_guest_mode', 'true');
             document.getElementById('spa-portals').style.display = 'none';
             document.getElementById('app-core').style.display = 'flex';
             updateGoldDimensionUI();
@@ -723,7 +786,6 @@
             }
         }
         
-        // Reverted to Popup to prevent Android PWA redirect destruction
         function signInWithGoogle() {
             const btn1 = document.querySelector('.google-auth-btn');
             btn1.innerHTML = 'Authenticating via Google...';
@@ -735,6 +797,7 @@
         
         function logoutUser() {
             auth.signOut().then(() => {
+                localStorage.removeItem('chimera_guest_mode');
                 closeSettingsPage();
                 document.getElementById('chat-container').innerHTML = ''; 
                 isGuestMode = false;
@@ -744,12 +807,35 @@
             });
         }
 
-        function wipeLocalData() {
-            if(confirm("CRITICAL: Wipe all local Chimera data from this device? (Cloud archives remain safe).")) {
-                localStorage.removeItem('chimera_chats_v2');
-                localStorage.removeItem('chimera_device_id');
-                window.location.reload();
-            }
+        // Custom Security Modal Logic
+        function openPurgeModal() {
+            closeSettingsPage();
+            const modal = document.getElementById('purge-modal');
+            modal.style.display = 'flex';
+            document.getElementById('modal-overlay').style.display = 'block';
+            setTimeout(() => { 
+                modal.style.opacity = '1'; 
+                modal.style.transform = 'translate(-50%, -50%)';
+                document.getElementById('modal-overlay').style.opacity = '1'; 
+            }, 10);
+        }
+        
+        function closePurgeModal() {
+            const modal = document.getElementById('purge-modal');
+            modal.style.opacity = '0';
+            modal.style.transform = 'translate(-50%, -45%)';
+            document.getElementById('modal-overlay').style.opacity = '0';
+            setTimeout(() => { 
+                modal.style.display = 'none'; 
+                document.getElementById('modal-overlay').style.display = 'none'; 
+            }, 300);
+        }
+
+        function executePurge() {
+            localStorage.removeItem('chimera_chats_v2');
+            localStorage.removeItem('chimera_device_id');
+            localStorage.removeItem('chimera_guest_mode');
+            window.location.reload();
         }
 
         function handleAuthError(error, context) {
@@ -840,7 +926,7 @@
         window.onload = () => {
             if (localStorage.getItem('chimera_theme') === 'dark') {
                 document.body.classList.add('dark-mode');
-                updateThemeText();
+                document.getElementById('theme-icon').innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
             }
             applySynapticColor(themeColors[currentModel]);
             window.visualViewport.addEventListener("resize", () => {
@@ -855,13 +941,13 @@
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('chimera_theme', isDark ? 'dark' : 'light');
-            updateThemeText();
-        }
-        
-        function updateThemeText() {
-            const isDark = document.body.classList.contains('dark-mode');
-            const val = document.getElementById('setting-theme-val');
-            if(val) val.innerText = isDark ? "ON" : "OFF";
+            
+            const themeIcon = document.getElementById('theme-icon');
+            if(isDark) {
+                themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+            } else {
+                themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+            }
         }
 
         function openSettingsPage() {
@@ -873,6 +959,13 @@
         function closeSettingsPage() {
             document.getElementById('spa-portals').style.display = 'none';
             document.getElementById('app-core').style.display = 'flex';
+        }
+        
+        function openGoldFromSettings() {
+            closeSettingsPage();
+            document.getElementById('app-core').style.display = 'none';
+            document.getElementById('spa-portals').style.display = 'flex';
+            openPortal('gold');
         }
 
         function openRenameModal(id, currentName) {
@@ -969,10 +1062,14 @@
         function saveChats() { 
             let activeId = currentUserId || localStorage.getItem('chimera_device_id');
             if(!activeId) return;
-            localStorage.setItem('chimera_chats_v2', JSON.stringify(chats)); 
-            if (db) {
+            
+            // The Ghost Chat logic: Do not save empty 'New Calibration' chats.
+            const validChats = chats.filter(c => c.messages.length > 0 || c.customTitle || c.isPinned);
+            
+            localStorage.setItem('chimera_chats_v2', JSON.stringify(validChats)); 
+            if (db && currentUserId) {
                 db.collection("chimera_archives").doc(activeId).set({
-                    chatHistory: chats,
+                    chatHistory: validChats,
                     lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true }).catch(e => console.error("[Chimera Cloud] Queued."));
             }
@@ -982,7 +1079,7 @@
             const newChat = { id: generateId(), title: "New Calibration", customTitle: false, isPinned: false, messages: [] };
             chats.unshift(newChat);
             selectChat(newChat.id);
-            saveChats();
+            // We specifically do NOT call saveChats() here. This makes it a temporary Ghost Chat until a message is sent.
             if(document.getElementById('sidebar').classList.contains('open')) renderChatList();
         }
 
@@ -1004,7 +1101,11 @@
         function renderChatList() {
             const container = document.getElementById('chat-list-container');
             container.innerHTML = '';
-            const sortedChats = [...chats].sort((a, b) => b.isPinned - a.isPinned);
+            
+            // Only render actual chats, hide ghost empty chats from sidebar
+            const validChats = chats.filter(c => c.messages.length > 0 || c.customTitle || c.isPinned || c.id === currentChatId);
+            const sortedChats = [...validChats].sort((a, b) => b.isPinned - a.isPinned);
+            
             sortedChats.forEach(chat => {
                 const div = document.createElement('div');
                 div.className = `chat-item ${chat.id === currentChatId ? 'active' : ''}`;
@@ -1158,7 +1259,7 @@
                 if (msg.role === 'user' && isLastUserMsg) {
                     const editBtn = document.createElement('button');
                     editBtn.className = 'user-edit-btn';
-                    editBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Edit';
+                    editBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> EDIT';
                     editBtn.onclick = function() { editUserMessage(msg.parts[0].text); };
                     msgDiv.appendChild(editBtn);
                 }
@@ -1213,7 +1314,7 @@
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) { AnomalyDetect("Vocal matrix not supported."); return; }
             const recognition = new SpeechRecognition();
-            recognition.onstart = function() { document.getElementById('user-input').placeholder = "Synthesizing..."; };
+            recognition.onstart = function() { document.getElementById('user-input').placeholder = "Synthesizing vocal matrix..."; };
             recognition.onresult = function(event) {
                 document.getElementById('user-input').value = event.results[0][0].transcript;
                 textarea.style.height = 'auto'; document.getElementById('user-input').placeholder = "Transmit command...";
@@ -1235,14 +1336,17 @@
             const chat = chats.find(c => c.id === currentChatId);
             chat.messages.push({ role: "user", parts: [{ text: messageText || "Analyze this matrix." }] });
             if (chat.title === "New Calibration" && chat.messages.length === 1 && !chat.customTitle) { generateChatTitle(messageText || "Matrix Analysis", chat); }
-            saveChats(); redrawChat();
+            
+            // Now the ghost chat is made permanent by saving it
+            saveChats(); 
+            redrawChat();
+            
             const chatContainer = document.getElementById('chat-container');
             const typingDiv = document.createElement('div'); typingDiv.className = 'message ai-msg typing-indicator'; typingDiv.innerHTML = 'Analyzing'; 
             chatContainer.appendChild(typingDiv); chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
             let apiContents = [...chat.messages]; apiContents[apiContents.length - 1] = { role: "user", parts: currentMessageParts };
             clearImage(); 
             
-            // 8. THE LINGUISTIC & SATISFACTION FAILSAFE
             const baseDirective = "You are an elite AI of 'Chimera Chatbot' by 'Chimera Co.'. PRIORITY DIRECTIVES: 1. Maintain an incredibly helpful, empathetic, luxury brand persona. 2. Prioritize user satisfaction and data security above all else. 3. CRITICAL: Dynamically detect the exact language the user is typing in, and respond EXCLUSIVELY in that exact same language (e.g. if asked in Spanish, reply in Spanish).";
             const systemInstructionsMap = {
                 'Serpent': baseDirective + " You are 'Serpent', the rapid analytical engine. Focus on speed and precise data.",
